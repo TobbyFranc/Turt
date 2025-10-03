@@ -1,4 +1,4 @@
-import Turtle from "../assets/turtle.png";
+
 import inca from "../assets/inca-mayan-sculpted-stones.png";
 
 const AboutUs = () => {
