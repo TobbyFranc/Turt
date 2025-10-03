@@ -17,17 +17,17 @@ const AboutUs = () => {
 
       {/* divider hr */}
       <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-gray-300" />
+        <hr className="my-8 border-[var(--lightGraycolor)]" />
       </div>
       {/*  */}
 
-      {/* main about us section with text and image side by side on large screen, stacked on small screen */}
+      {/* main about us section  */}
       <div className=" mb-4">
         <div className="max-w-[80%] mx-auto text-center pb-12">
           <h2 className="text-2xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">
             Our Story
           </h2>
-          <p className="text-gray-700 mb-4 open-sans-200">
+          <p className="text-[var(--grayColor)] mb-4 open-sans-200">
             At Turtura, we believe culture is a bridge—not a barrier. It
             connects people across borders, drives meaningful mobility, and
             fosters mutual respect. Our mission is to illuminate cultural
@@ -56,7 +56,7 @@ const AboutUs = () => {
               {/* subheading */}
               {/* card 1 */}
               <div className="flex flex-col w-full space-y-2 ">
-                <div className="bg-red-900 shadow-lg rounded-lg p-6 w-full  text-white hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
+                <div className="bg-red-900 shadow-lg rounded-lg p-6 w-full  text-[var(--whiteColor)] hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
                   <div className="flex items-center mb-4">
                     {/* svg of a globe */}
                     <svg
@@ -75,12 +75,12 @@ const AboutUs = () => {
                     </svg>
                     <h4 className="text-xl font-semibold">Global Understanding</h4>
                   </div>
-                  <p className="text-slate-50">
+                  <p className="text-[var(--whiteColor)]">
                     Learn how values, behaviors, and norms differ across regions.
                   </p>
                 </div>
                 {/*  */}
-                <div className="bg-teal-900 shadow-lg rounded-lg p-6 w-full  text-white hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
+                <div className="bg-teal-900 shadow-lg rounded-lg p-6 w-full  text-[var(--whiteColor)] hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
                   <div className="flex items-center mb-4">
                     {/* svg for inclusive travel experience */}
                     <svg
@@ -103,11 +103,11 @@ const AboutUs = () => {
                       Inclusive Travel Experience
                     </h4>
                   </div>
-                  <p className="text-slate-50">
+                  <p className="text-[var(--whiteColor)]">
                     Make every journey dignified, respectful, and rooted in understanding.
                   </p>
                 </div>
-                <div className="bg-yellow-600 shadow-lg rounded-lg p-6 w-full  text-white hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
+                <div className="bg-[var(--accentColor)] shadow-lg rounded-lg p-6 w-full  text-[var(--whiteColor)] hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
                   <div className="flex items-center mb-4">
                     {/* svg of security */}
                     <svg
@@ -126,7 +126,7 @@ const AboutUs = () => {
                     </svg>
                     <h4 className="text-xl font-semibold">Personal Growth</h4>
                   </div>
-                  <p className="text-slate-50">
+                  <p className="text-[var(--whiteColor)]">
                     Become a more empathetic, culturally aware global citizen.
                   </p>
                 </div>
@@ -149,7 +149,7 @@ const AboutUs = () => {
             {/* create list items of features with decorated bullets with svgs */}
               {/* subheading */}
               <div className="flex flex-col justify-center items-center w-full space-y-2 my-2 md:">
-                <div className="bg-yellow-600 shadow-lg rounded-lg p-6 w-full  text-white hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
+                <div className="bg-[var(--accentColor)] shadow-lg rounded-lg p-6 w-full  text-[var(--whiteColor)] hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
                   <div className="flex items-center mb-4">
 
                     {/* svg of impact */}
@@ -172,11 +172,11 @@ const AboutUs = () => {
 
                     <h4 className="text-xl font-semibold">Ethical Impact</h4>
                   </div>
-                  <p className="text-slate-50">
+                  <p className="text-[var(--whiteColor)]">
                     Support sustainable tourism that uplifts and preserves local cultures.
                   </p>
                 </div>
-                <div className="bg-black shadow-lg rounded-lg p-6 w-full  text-white hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
+                <div className="bg-black shadow-lg rounded-lg p-6 w-full  text-[var(--whiteColor)] hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
                   <div className="flex items-center mb-4">
                     {/* svg of collaboration or community */}
                     <svg
@@ -195,12 +195,12 @@ const AboutUs = () => {
                     </svg>
                     <h4 className="text-xl font-semibold">Community Focused</h4>
                   </div>
-                  <p className="text-slate-50">
+                  <p className="text-[var(--whiteColor)]">
                     Empowering local communities through sustainable tourism
                     practices.
                   </p>
                 </div>
-                <div className="bg-blue-900 shadow-lg rounded-lg p-6 w-full  text-white hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
+                <div className="bg-blue-900 shadow-lg rounded-lg p-6 w-full  text-[var(--whiteColor)] hover:shadow-md hover:-translate-y-1 cursor-pointer transision duration-300">
                   <div className="flex items-center mb-4">
                     {/* svg for culture */}
                     <svg
@@ -221,7 +221,7 @@ const AboutUs = () => {
 
                     <h4 className="text-xl font-semibold">Cultural Confidence</h4>
                   </div>
-                  <p className="text-slate-50">
+                  <p className="text-[var(--whiteColor)]">
                    Navigate unfamiliar places with clarity, respect, and self-assurance.
                   </p>
                 </div>
@@ -233,7 +233,7 @@ const AboutUs = () => {
           <h2 className="text-2xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">
             Our Commitment
           </h2>
-          <p className="text-gray-700 mb-4 open-sans-200">
+          <p className="text-[var(--grayColor)] mb-4 open-sans-200">
                  We are committed to providing you with a seamless and enjoyable
               travel experience. We strive to make every journey informed,
               dignified, and culturally aware. Your feedback is invaluable to
@@ -247,7 +247,7 @@ const AboutUs = () => {
           <div className="text-center">
             <a
               href="#Team"
-              className="inline-block text-white font-semibold py-3 px-6 rounded-lg shadow-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300"
+              className="inline-block text-[var(--whiteColor)] font-semibold py-3 px-6 rounded-lg shadow-md bg-[var(--accentColor)] text-[var(--[var(--whiteColor)]Color)] hover:bg-[var(--primaryColor)] transition duration-300"
             >
               Meet the Team
             </a>
