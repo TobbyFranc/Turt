@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import Turtle from "../assets/Turtle.png";
+import Turtle from "../assets/Tuur.png";
 
 const facts = [
   {
