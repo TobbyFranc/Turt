@@ -3,10 +3,10 @@ import inca from "../assets/inca-mayan-sculpted-stones.png";
 
 const AboutUs = () => {
   return (
-    <div id="About" className=" w-full  py-12">
+    <div id="About" className=" w-full py-12">
       {/* Subheader */}
       <div className=" z-10 w-full text-center cormorant-garamond-400  space-y-4 mb-12 px-4">
-        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold text-slate-500 capitalize">
+        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold text-[var(--grayColor)] capitalize">
           {/* About us */}
           About Us
         </h3>
@@ -28,13 +28,12 @@ const AboutUs = () => {
             Our Story
           </h2>
           <p className="text-gray-700 mb-4 open-sans-200">
-            {" "}
             At Turtura, we believe culture is a bridge—not a barrier. It
             connects people across borders, drives meaningful mobility, and
             fosters mutual respect. Our mission is to illuminate cultural
             blindspots and empower travelers with the intelligence to explore
             boldly, connect deeply, and move through the world with dignity and
-            understanding.{" "}
+            understanding.
           </p>
         </div>
         {/* masqurade */}
