@@ -52,7 +52,6 @@ const AboutUs = () => {
 
         <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch md:justify-around space-y-6 md:space-y-0 md:space-x-6 px-4 mb-12 max-w-[90%] mx-auto">
           <div className=" flex flex-col-reverse  md:flex-row-reverse items-center">
-            {/* <div className=""> */}
               {/* subheading */}
               {/* card 1 */}
               <div className="flex flex-col w-full space-y-2 ">
