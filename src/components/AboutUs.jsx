@@ -247,7 +247,7 @@ const AboutUs = () => {
           <div className="text-center">
             <a
               href="#Team"
-              className="inline-block text-[var(--whiteColor)] font-semibold py-3 px-6 rounded-lg shadow-md bg-[var(--accentColor)] text-[var(--[var(--whiteColor)]Color)] hover:bg-[var(--primaryColor)] transition duration-300"
+              className="inline-block text-[var(--whiteColor)] font-semibold py-3 px-6 rounded-lg shadow-md bg-[var(--accentColor)] hover:bg-[var(--primaryColor)] transition duration-300"
             >
               Meet the Team
             </a>
