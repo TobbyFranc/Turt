@@ -1,14 +1,11 @@
-import Hero from "./components/Hero"
-import Nav from "./components/Nav"
-import Map from "./components/Map"
-import About from "./components/About"
+
 import { Routes, Route } from "react-router-dom"
 import LandingPage from "./components/LandingPage"
-import Login from "./components/Login"
+import Login from "./components/LogIn"
 import Signup from "./components/Signup"
 import Dashboard from "./components/Dashboard"
 import LocationSearch from "./components/LocationSearch"
-import { ThemeProvider } from "./components/ThemeProvider"
+// import { ThemeProvider } from "./components/ThemeProvider"
 
 function App() {
 
