@@ -1,4 +1,4 @@
-
+import React from "react";
 import inca from "../assets/inca-mayan-sculpted-stones.png";
 
 const AboutUs = () => {
