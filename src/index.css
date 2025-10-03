@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+/* @import 'react-big-calendar/lib/css/react-big-calendar.css'; */
+
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* color profile */
+  --backgroundColor: #F5F0E6;
+  --accentColor: #ca8a04;
+  --primaryColor: #8C6239;
+  --alertColor: #fbf4ba;
+  --errorColor: #b00020;
+  --successColor: #2a9d8f;
+  --whiteColor: #f8fafc;
+  --blackColor: #000000;
+  --grayColor: #64748b;
+  --lightGrayColor: #d1d5db;
+  --darkGrayColor: #374151;
+  --shadowColor: rgba(0, 0, 0, 0.1);
+
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.inter-500 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+body
+{
+  font-family: 'Inter', sans-serif;
+}
+
+
+.cormorant-garamond-200 {
+  font-family: "Cormorant Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+.cormorant-garamond-400 {
+  font-family: "Cormorant Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.open-sans-200 {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+.open-sans-400 {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.clap{
+  color: var(--accentColor);
+  font-size: 2rem;
+  /* clip-path: polygon(26% 0, 100% 0, 100% 100%, 5% 100%); */
+  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
+}
+
+@media (min-width: 1024px) {
+  .xl\:clap {
+    clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
+  }
+}
+
+
+.faq-answer {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.faq-answer.open {
+  max-height: 500px; /* adjust as needed */
+  opacity: 1;
+}
+.rotate-icon {
+  transition: transform 0.3s ease;
+}
+.rotate-icon.open {
+  transform: rotate(180deg);
+}
+
+
+/* .swiper-pagination {
+  text-align: center;
+  margin-top: 1rem;
+}
+.swiper-pagination-bullet {
+  background-color: #3b82f6;
+  opacity: 0.5;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1;
+} */
+/* custom styles for react-big-calendar */
+/* .rbc-calendar {
+  background-color: var(--backgroundColor);
+  color: var(--primaryColor);
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+/* .swiper-pagination {
+  text-align: center;
+  margin-top: 1rem;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  color: #3b82f6;
+} */
