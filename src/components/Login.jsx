@@ -17,11 +17,11 @@ const Login = () => {
                 </div>
                 <button className="block w-full p-3 text-center rounded-sm text-white bg-[var(--accentColor)] hover:bg-yellow-600"><a href="/Dashboard">Login</a></button>
             </form>
+        </div>
+        {/*  */}
             <p className="text-xs text-center sm:px-6 text-gray-600">Don't have an account? 
                 <a href="/Signup" className="underline text-[var(--primaryColor)] font-semibold"> Signup</a>
             </p>
-        </div>
-        {/*  */}
         <div className="hidden lg:block w-1/2 h-screen bg-[var(--backgroundColor)]">
             {/* image of people traveling */}
             <div className="flex justify-center items-center h-[calc(100vh-64px)]">

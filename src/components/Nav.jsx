@@ -10,6 +10,7 @@ const Nav = () => {
   const [activeSection, setActiveSection] = useState("Home");
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
   const [showToast, setShowToast] = useState(false);
+  const [showToastE, setShowToastE] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMode, setChatMode] = useState("ai"); // 'ai' or 'support'
   const [chatInput, setChatInput] = useState("");
@@ -232,10 +233,10 @@ const Nav = () => {
           <button
             onClick={() => {
               setIsExpanded(!isExpanded);
-              setShowToast(true);
-              setTimeout(() => setShowToast(false), 2000);
+              setShowToastE(true);
+              setTimeout(() => setShowToastE(false), 2000);
             }}
-            className="text-sm text-gray-500 hover:text-[var(--blueColor)]"
+            className="text-md text-gray-500 hover:text-[var(--blueColor)]"
             title="Expand/Collapse"
           >
             {isExpanded ? ">🗕<" : "⛶"}
@@ -251,7 +252,7 @@ const Nav = () => {
       </div>
 
       {/* Toast Notification */}
-      {showToast && (
+      {showToastE && (
         <div className="absolute top-2 right-2 bg-black text-white dark:bg-white dark:text-black px-3 py-1 rounded-md shadow-lg text-xs z-50">
           {isExpanded ? "Expanded view enabled" : "Collapsed view"}
         </div>
