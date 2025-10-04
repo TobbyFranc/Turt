@@ -41,22 +41,22 @@ const Banner = () => {
       {/* Background Vectors */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 800 400">
-          <circle cx="100" cy="100" r="80" stroke="var(--primaryColor,#3b82f6)" strokeWidth="2" />
+          <circle cx="100" cy="100" r="80" stroke="var(--textColor,#3b82f6)" strokeWidth="2" />
           <circle cx="700" cy="300" r="80" stroke="var(--accentColor,#fbbf24)" strokeWidth="2" />
-          <circle cx="400" cy="200" r="80" stroke="var(--primaryColor,#3b82f6)" strokeWidth="2" />
+          <circle cx="400" cy="200" r="80" stroke="var(--textColor,#3b82f6)" strokeWidth="2" />
           <circle cx="200" cy="300" r="80" stroke="var(--accentColor,#fbbf24)" strokeWidth="2" />
-          <circle cx="600" cy="100" r="80" stroke="var(--primaryColor,#3b82f6)" strokeWidth="2" />
+          <circle cx="600" cy="100" r="80" stroke="var(--textColor,#3b82f6)" strokeWidth="2" />
         </svg>
       </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center">
         {/* Text Section */}
-        <div className="md:w-2/3 text-center md:text-left space-y-6">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-700 cormorant-garamond-400">
+        <div className="md:w-2/3 text-center md:text-left space-y-6 ">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--textColor)] cormorant-garamond-400">
             Stay Updated with Turtura
           </h2>
-          <p className="text-gray-600 max-w-md mx-auto md:mx-0 open-sans-400">
+          <p className="text-[var(--textColor)] max-w-md mx-auto md:mx-0 open-sans-400">
             Subscribe to our newsletter for the latest travel tips, cultural insights, and exclusive offers.
           </p>
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto md:mx-0">

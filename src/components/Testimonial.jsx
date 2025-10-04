@@ -30,14 +30,14 @@ const testimonials = [
 const TestimonialSlider = () => {
   return (
     <div className="w-full py-12">
-             <div className=" text-center cormorant-garamond-400  space-y-4 mb-12 px-4">
-          <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-500 capitalize">What Our Users Say</h3>
+             <div className=" text-center cormorant-garamond-400 text-[var(--textColor)]  space-y-4 mb-12 px-4">
+          <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold capitalize">What Our Users Say</h3>
           {/* <p className=''>We bridge the gap between travelers and local cultures, fostering understanding and respect. </p> */}
           <p className='max-w-2xl mx-auto'>Hear from our satisfied users who have experienced the benefits of Turtura in their travels.</p>
         </div>
               {/* divider hr */}
         <div className="max-w-6xl mx-auto">
-          <hr className="my-8 border-gray-300"/>
+          <hr className="my-8 border-[var(--lightGraycolor)] text-[var(--grayColor)]"/>
         </div>
       {/*  */}
 

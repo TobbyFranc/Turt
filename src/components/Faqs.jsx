@@ -91,8 +91,8 @@ const Faqs = () => {
   return (
     <div id="FAQS" className="px-4 py-12">
       {/* Header */}
-      <div className="text-center space-y-4 mb-12 cormorant-garamond-400">
-        <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold text-slate-500 font-cormorant capitalize">
+      <div className="text-center space-y-4 mb-12 cormorant-garamond-400 text-[var(--textColor)] ">
+        <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold font-cormorant capitalize">
           Have some questions?
         </h3>
         <p>We're here to help! Explore our FAQs or chat with Turturion for more info.</p>
@@ -100,7 +100,7 @@ const Faqs = () => {
 
       {/* Divider */}
       <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-gray-300" />
+        <hr className="my-8 border-[var(--lightGraycolor)] text-[var(--grayColor)]" />
       </div>
 
       {/* FAQ Accordion */}

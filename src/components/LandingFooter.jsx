@@ -46,7 +46,7 @@ const LandingFooter = () => {
                   <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo & Description */}
         <div className="space-y-4">
-          <div className="flex items-center bg-[var(--backgroundColor)] text-[var(--grayColor)] rounded-md px-2 w-fit">
+          <div className="flex items-center bg-[var(--backgroundColor)] text-[var(--textColor)] rounded-md px-2 w-fit">
             <img src={Turtle} alt="Turtura Logo" className="w-12 h-12" />
             <h2 className="text-2xl font-bold ml-2">Turtura</h2>
           </div>
@@ -57,7 +57,7 @@ const LandingFooter = () => {
 
         {/* Quick Links */}
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold bg-[var(--backgroundColor)] text-[var(--grayColor)] rounded-md px-2 py-1 w-fit">
+          <h3 className="text-xl font-semibold bg-[var(--backgroundColor)] text-[var(--textColor)] rounded-md px-2 py-1 w-fit">
             Quick Links
           </h3>
           <ul className="space-y-2 text-[var(--backgroundColor)]">
@@ -70,7 +70,7 @@ const LandingFooter = () => {
 
         {/* Contact Info */}
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold bg-[var(--backgroundColor)] text-[var(--grayColor)] rounded-md px-2 py-1 w-fit">
+          <h3 className="text-xl font-semibold bg-[var(--backgroundColor)] text-[var(--textColor)] rounded-md px-2 py-1 w-fit">
             Contact Us
           </h3>
           <ul className="space-y-2 text-[var(--backgroundColor)]">
