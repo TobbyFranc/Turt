@@ -245,7 +245,7 @@ const AboutUs = () => {
           {/* meet the team center button that redirects to the team section */}
           <div className="text-center">
             <a
-              href="#Team"
+              href="#Teams"
               className="inline-block text-[var(--whiteColor)] font-semibold py-3 px-6 rounded-lg shadow-md bg-[var(--accentColor)] hover:bg-[var(--primaryColor)] transition duration-300"
             >
               Meet the Team
