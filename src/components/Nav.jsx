@@ -192,7 +192,7 @@ const Nav = () => {
 
 {/* Floating Chat Button */}
 {/* Floating Chat Button */}
-<div className="fixed bottom-6 left-6 z-40 transition duration-300">
+<div className="fixed bottom-6 left-2 z-40 transition duration-300">
   <button
     onClick={() => setChatOpen(!chatOpen)}
     className="bg-[var(--accentColor)] text-[var(--whiteColor)] p-3 rounded-full shadow-lg hover:bg-[var(--primaryColor)] transition duration-300"
