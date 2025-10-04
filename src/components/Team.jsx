@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import Turtle from '../assets/Turtle.png';
-import orisa from '../assets/orisa.jpg';
+import orisa from '../assets/Orisa.jpg';
 import Tobi from '../assets/Tobii.jpeg'
 
 const teamMembers = [
