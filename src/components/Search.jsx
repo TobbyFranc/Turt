@@ -191,9 +191,9 @@ const Search = () => {
     <section className="py-12 my-6 text-[var(--grayColor)] open-sans-400">
       {/*  */}
       {/* Static Heading */}
-      <div className=" text-center space-y-4 mb-12 rounded-md py-2">
-        <h3 className="text-3xl font-bold text-[var(--grayColor)] capitalize">Search for Cultural Insights</h3>
-        <p className=" inter-200 text-[var(--grayColor)]">Type in a country or culture to get instant insights and tips from Turtura.</p>
+      <div className=" text-center space-y-4 mb-12 rounded-md py-2 text-[var(--textColor)]">
+        <h3 className="text-3xl font-bold  capitalize">Search for Cultural Insights</h3>
+        <p className=" inter-200 ">Type in a country or culture to get instant insights and tips from Turtura.</p>
       </div>
 
 
@@ -235,7 +235,7 @@ const Search = () => {
           <h4 className="text-2xl font-semibold text-[var(--primaryColor)] capitalize cormorant-garamond-200 mb-4">
             Cultural Overview: {query}
           </h4>
-          <p className="text-gray-700 text-lg mb-4 whitespace-pre-line">{typedResult}</p>
+          <p className="text-[var(--textColor)] text-lg mb-4 whitespace-pre-line">{typedResult}</p>
           {distance && (
             <p className="text-sm text-[var(--grayColor)]">
               Approximate distance from your location: {distance} km
@@ -247,7 +247,7 @@ const Search = () => {
       <div className="text-center mt-8">
         <button
           onClick={handleViewToggle}
-          className="hover:bg-[var(--primaryColor)] border-2 border-[var(--primaryColor)] text-[var(--grayColor)] hover:text-[var(--whiteColor)] transition duration-300 px-6 py-2 rounded-md"
+          className="hover:bg-[var(--primaryColor)] border-2 border-[var(--primaryColor)] text-[var(--textColor)] hover:text-[var(--whiteColor)] transition duration-300 px-6 py-2 rounded-md"
         >
           Switch to {viewMode === "globe" ? "Google Map" : "Globe View"}
         </button>

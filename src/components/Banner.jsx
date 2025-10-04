@@ -37,7 +37,7 @@ const Banner = () => {
   };
 
   return (
-    <div className="w-full md:w-[80%] mx-auto bg-[var(--backgroundColor,#f9fafb)] py-12 relative overflow-hidden md:rounded-3xl">
+    <div className="w-full border-1 shadow-lg shadow-[var(--shadowColor)] border-[var(--lightGrayColor)] md:w-[80%] mx-auto bg-[var(--backgroundColor,#f9fafb)] py-12 relative overflow-hidden md:rounded-3xl">
       {/* Background Vectors */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 800 400">

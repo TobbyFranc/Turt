@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Turt from "../assets/Turt.png";
 import Tuur from "../assets/Tuur.png";
+import { useTheme } from "./ThemeProvider";
 
 const sections = ["Home", "About", "Explore", "Teams", "FAQS"];
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("Home");
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+const { darkMode, setDarkMode } = useTheme();
   const [showToast, setShowToast] = useState(false);
   const [showToastE, setShowToastE] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -28,17 +29,17 @@ const Nav = () => {
     }
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 2500);
-  };
+const toggleTheme = () => {
+  setDarkMode(!darkMode);
+  setShowToast(true);
+  setTimeout(() => setShowToast(false), 2500);
+};
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+useEffect(() => {
+  document.documentElement.classList.toggle("dark", darkMode);
+  localStorage.setItem("darkMode", JSON.stringify(darkMode));
+}, [darkMode]);
+
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -97,7 +98,7 @@ const Nav = () => {
   };
 
   return (
-    <div className="fixed w-full top-0 left-0 z-50 bg-[var(--backgroundColor)] text-slate-500 md:bg-slate-50 shadow-md">
+    <div className="fixed w-full top-0 left-0 z-50 bg-[var(--whiteColor)] text-[var(--grayColor)] md:bg-[var(--whiteColor)] shadow-md">
       <div className="w-full flex justify-between p-8 items-center h-16 border-b shadow-b-md border-b-gray-300">
         {/* Logo */}
         <div className="flex items-center cursor-pointer">
@@ -168,7 +169,7 @@ const Nav = () => {
           className="bg-[var(--grayColor)] dark:bg-slate-800 text-[var(--lightGrayColor)] dark:text-yellow-400 p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-[var(--accentColor)] transition duration-300"
           title="Toggle Dark Mode"
         >
-          {theme === "light" ? (
+          {!darkMode ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round"               strokeLinejoin="round"
               strokeWidth="2"
@@ -184,11 +185,12 @@ const Nav = () => {
     </div>
 
     {/* Toast Notification */}
-    {showToast && (
-      <div className="fixed bottom-24 right-6 bg-[var(--blackColor)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--blackColor)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
-        {theme === "dark" ? "Dark mode enabled 🌙" : "Light mode enabled ☀️"}
-      </div>
-    )}
+{showToast && (
+  <div className="fixed bottom-24 right-6 bg-[var(--blackColor)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--blackColor)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
+    {darkMode ? "Dark mode enabled 🌙" : "Light mode enabled ☀️"}
+  </div>
+)}
+
 
 {/* Floating Chat Button */}
 {/* Floating Chat Button */}

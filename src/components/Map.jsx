@@ -5,20 +5,20 @@ import Search from "./Search";
 
 const Map = () => {
   return (
-    <section id="Explore" className="w-full pt-12 space-y-6">
+    <section id="Explore" className="w-full pt-12 space-y-6 bg-[var(--bgcolor)]">
       
       {/* Header Section */}
-      <header className="z-10 w-full text-center cormorant-garamond-400 space-y-4 mb-12 px-4">
-        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold text-slate-500 capitalize">
+      <header className="z-10 w-full text-center cormorant-garamond-400 text-[var(--textColor)] space-y-4 mb-12 px-4">
+        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold  capitalize">
           Exploring the Cultural Space with Ease
         </h3>
-        <p className="max-w-2xl mx-auto text-base text-gray-600">
+        <p className="max-w-2xl mx-auto text-base">
           Discover cultures, connect with communities, and unlock authentic experiences.
         </p>
       </header>
       {/* Divider */}
       <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-gray-300" />
+        <hr className="my-8 border-[var(--lightGraycolor)] text-[var(--grayColor)]" />
       </div>
 
       {/* Map Background Section */}
@@ -33,7 +33,7 @@ const Map = () => {
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-white opacity-90 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[var(--bgColor)] opacity-90 pointer-events-none"></div>
 
         {/* Search Cards */}
         <div className="relative z-10 w-full p-4">
@@ -49,10 +49,6 @@ const Map = () => {
         </p>
       </footer> */}
 
-      {/* Bottom Divider */}
-      <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-gray-300" />
-      </div>
       
     </section>
   );

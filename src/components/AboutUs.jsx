@@ -5,8 +5,8 @@ const AboutUs = () => {
   return (
     <div id="About" className=" w-full py-12">
       {/* Subheader */}
-      <div className=" z-10 w-full text-center cormorant-garamond-400  space-y-4 mb-12 px-4">
-        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold text-[var(--grayColor)] capitalize">
+      <div className=" z-10 w-full text-center cormorant-garamond-400 text-[var(--textColor)]  space-y-4 mb-12 px-4">
+        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold  capitalize">
           {/* About us */}
           About Us
         </h3>
@@ -17,7 +17,7 @@ const AboutUs = () => {
 
       {/* divider hr */}
       <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-[var(--lightGraycolor)]" />
+        <hr className="my-8 border-[var(--lightGraycolor)] text-[var(--grayColor)]" />
       </div>
       {/*  */}
 
@@ -27,7 +27,7 @@ const AboutUs = () => {
           <h2 className="text-2xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">
             Our Story
           </h2>
-          <p className="text-[var(--grayColor)] mb-4 open-sans-200">
+          <p className="text-[var(--textColor)] mb-4 open-sans-200">
             At Turtura, we believe culture is a bridge—not a barrier. It
             connects people across borders, drives meaningful mobility, and
             fosters mutual respect. Our mission is to illuminate cultural
@@ -232,7 +232,7 @@ const AboutUs = () => {
           <h2 className="text-2xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">
             Our Commitment
           </h2>
-          <p className="text-[var(--grayColor)] mb-4 open-sans-200">
+          <p className="text-[var(--textColor)] mb-4 open-sans-200">
                  We are committed to providing you with a seamless and enjoyable
               travel experience. We strive to make every journey informed,
               dignified, and culturally aware. Your feedback is invaluable to

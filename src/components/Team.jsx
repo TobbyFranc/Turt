@@ -60,16 +60,16 @@ const TeamSlider = () => {
         </svg>
       </div>
       {/* Header */}
-      <div className="text-center space-y-4 mb-12 px-4 cormorant-garamond-400">
-        <h3 className="text-4xl md:text-5xl font-bold text-slate-500 capitalize">Meet the Team</h3>
-        <p className="max-w-2xl mx-auto text-gray-700">
+      <div className="text-center space-y-4 mb-12 px-4 cormorant-garamond-400 text-[var(--textColor)]">
+        <h3 className="text-4xl md:text-5xl font-bold  capitalize">Meet the Team</h3>
+        <p className="max-w-2xl mx-auto">
           Our diverse team is passionate about travel, culture, and technology. We’re building Turtura to help travelers move through the world with dignity, curiosity, and cultural intelligence.
         </p>
       </div>
 
       {/* Divider */}
       <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-gray-300" />
+        <hr className="my-8 border-[var(--lightGraycolor)] text-[var(--grayColor)]" />
       </div>
 
       {/* Slider */}
@@ -89,11 +89,11 @@ const TeamSlider = () => {
         >
           {teamMembers.map((member, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-white shadow-lg rounded-lg p-6 text-gray-800 flex flex-col items-center justify-between min-h-[460px] pb-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-[var(--whiteColor)] shadow-lg rounded-lg p-6 text-[var(--grayColor)] flex flex-col items-center justify-between min-h-[460px] pb-6 hover:shadow-xl transition-shadow duration-300">
                 <img src={member.image} alt={member.name} onError={(e) => (e.currentTarget.src = Turtle)} className="w-32 h-32 rounded-full mb-4 transition duration-300 ease-in-out shadow-md" />
                 <h4 className="text-xl font-semibold mb-2">{member.name}</h4>
-                <p className="text-gray-600 mb-2">{member.role}</p>
-                <p className="text-gray-600 text-center mb-4 flex-grow">{member.bio}</p>
+                <p className="text-[var(--grayColor)] mb-2">{member.role}</p>
+                <p className="text-[var(--grayColor)] text-center mb-4 flex-grow">{member.bio}</p>
                 <div className="flex space-x-4 mt-auto">
                   <a href={member.email} className="text-blue-500 hover:text-blue-700 text-xl">
                     <FiMail />

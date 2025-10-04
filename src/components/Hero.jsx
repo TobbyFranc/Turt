@@ -24,13 +24,14 @@ const Hero = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl xl:text-5xl inter-500 font-bold text-[var(--primaryColor)] mb-4">
-            <span className="text-[var(--whiteColor)] lg:text-[var(--grayColor)] ">Explore Boldly.</span> Connect Deeply.
-            <span className="text-[var(--grayColor)] lg:text-black">Travel with Cultural Intelligence.</span>
+          <h1 className="text-4xl xl:text-5xl inter-500 font-bold text-[var(--grayColor)] mb-4">
+            Explore Boldly.
+            <span className="text-[var(--whiteColor)] lg:text-[var(--textColor)] "> Connect Deeply.</span> 
+            Travel with Cultural Intelligence.
           </h1>
 
           {/* Subtext */}
-          <p className="text-[var(--whiteColor)] lg:text-[var(--grayColor)] max-w-2xl">
+          <p className="text-[var(--whiteColor)] lg:text-[var(--textColor)] max-w-2xl">
             Turtura is your pocket guide to respectful exploration. From real-time cultural alerts to immersive local insights, we help you navigate unfamiliar places with confidence, curiosity, and connection—so you feel at home wherever you go.
           </p>
 

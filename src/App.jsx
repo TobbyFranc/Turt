@@ -5,16 +5,14 @@ import Signup from "./components/Signup"
 import Dashboard from "./components/Dashboard"
 import LocationSearch from "./components/LocationSearch"
 import Login from "./components/Login"
-// import { ThemeProvider } from "./components/ThemeProvider"
-// Trigger redeploy
+import { ThemeProvider } from "./components/ThemeProvider"
 
 
 function App() {
 
   return (
     <>
-    {/* <ThemeProvider> */}
-      {/* <div className="flex bg-white dark:bg-gray-900 text-gray-800 dark:text-white"> */}
+    <ThemeProvider>
         <Routes>
           <Route path="/" element={<LandingPage/>} />
           <Route path="/Login" element={<Login />} />
@@ -22,8 +20,7 @@ function App() {
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/LocationSearch" element={<LocationSearch />} />
         </Routes>
-      {/* </div> */}
-      {/* </ThemeProvider> */}
+      </ThemeProvider>
     </>
   )
 }

@@ -295,18 +295,18 @@ const About = () => {
         </svg>
       </div>
       {/* Header */}
-      <div className="text-center space-y-4 mb-12 cormorant-garamond-400">
-        <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-500 capitalize">
+      <div className="text-center space-y-4 mb-12 cormorant-garamond-400 text-[var(--textColor)]">
+        <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold capitalize">
           Connect with Cultural Reality
         </h3>
-        <p className="max-w-2xl mx-auto text-lg text-gray-700">
+        <p className="max-w-2xl mx-auto text-lg">
           We bridge the gap between travelers and local cultures, fostering understanding and respect.
         </p>
       </div>
 
       {/* Divider */}
       <div className="max-w-6xl mx-auto">
-        <hr className="my-8 border-gray-300" />
+        <hr className="my-8 border-[var(--lightGraycolor)] text-[var(--grayColor)]" />
       </div>
 
       {/* Content */}
@@ -343,7 +343,7 @@ const About = () => {
               fade ? "opacity-100" : "opacity-0"
             }`}
           >
-            <p className="text-xl text-gray-700 leading-relaxed open-sans-400 mb-6">
+            <p className="text-xl text-[var(--grayColor)] leading-relaxed open-sans-400 mb-6">
               {facts[currentFact].text.split(facts[currentFact].highlight).map((part, i) => (
                 <span key={i}>
                   {part}
