@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import Turtle from '../assets/turtle.png';
+import Turtle from '../assets/Turtle.png';
 // import './swiper-custom.css'; // optional for styling
 
 const testimonials = [

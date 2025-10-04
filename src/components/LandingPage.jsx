@@ -4,7 +4,7 @@ import Hero from './Hero'
 import About from './About'
 import Map from './Map'
 import Footer from './LandingFooter'
-import Partners from './Partners'
+// import Partners from './Partners'
 // import Contact from './Contact'
 import AboutUs from './AboutUs'
 import Faqs from './Faqs'
@@ -19,7 +19,7 @@ const LandingPage = () => {
         <Hero />
         < AboutUs />
         <About />
-        < Partners />
+        {/* < Partners /> */}
         <Map />
         <Team />
         <Faqs />
