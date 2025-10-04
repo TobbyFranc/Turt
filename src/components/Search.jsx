@@ -36,6 +36,15 @@ ghana: "africa",
   turkey: "middle-east",
   iran: "middle-east",
   iraq: "middle-east",
+  malawi: "africa",
+  yoruba: "africa",
+  igbo: "africa",
+  hausa: "africa",
+  efik: "africa",
+  viking: "europe",
+  norsemen: "europe",
+  
+
 
 };
 
@@ -180,15 +189,15 @@ const Search = () => {
 
   return (
     <section className="py-12 my-6 text-[var(--grayColor)] open-sans-400">
-      <div className="text-center space-y-4 mb-12 px-4">
-        <h3 className="text-4xl xl:text-6xl font-bold text-[var(--grayColor)] capitalize font-cormorant">
-          Search for Cultural Insights
-        </h3>
-        <p className="max-w-2xl mx-auto text-lg inter-200">
-          Type in a country or culture to get instant insights and tips from Turtura.
-        </p>
+      {/*  */}
+      {/* Static Heading */}
+      <div className=" text-center space-y-4 mb-12 rounded-md py-2">
+        <h3 className="text-3xl font-bold text-[var(--grayColor)] capitalize">Search for Cultural Insights</h3>
+        <p className=" inter-200 text-[var(--grayColor)]">Type in a country or culture to get instant insights and tips from Turtura.</p>
       </div>
 
+
+      {/*  */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-4 px-4 max-w-4xl mx-auto">
         <input
           type="text"
