@@ -184,14 +184,14 @@ const Nav = () => {
 
     {/* Toast Notification */}
     {showToast && (
-      <div className="fixed bottom-24 right-6 bg-[var(--[var(--blackColor)]color)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--blackColor)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
+      <div className="fixed bottom-24 right-6 bg-[var(--blackColor)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--blackColor)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
         {theme === "dark" ? "Dark mode enabled 🌙" : "Light mode enabled ☀️"}
       </div>
     )}
 
 {/* Floating Chat Button */}
 {/* Floating Chat Button */}
-<div className="fixed bottom-6 left-6 z-40">
+<div className="fixed bottom-6 left-6 z-40 transition duration-300">
   <button
     onClick={() => setChatOpen(!chatOpen)}
     className="bg-[var(--accentColor)] text-[var(--whiteColor)] p-3 rounded-full shadow-lg hover:bg-[var(--primaryColor)] transition duration-300"
@@ -210,7 +210,7 @@ const Nav = () => {
   </button>
 
   {chatOpen && (
-    <div className={`mt-4 ${isExpanded ? "w-[700px] h-[80vh]" : "w-[500px] max-h-[70vh]"} overflow-hidden bg-[var(--whiteColor)] dark:bg-slate-900 text-[var(--blackColor)] dark:text-[var(--whiteColor)] rounded-xl shadow-2xl flex flex-col`}>
+    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--whiteColor)] dark:bg-slate-900 text-[var(--blackColor)] dark:text-[var(--whiteColor)] rounded-xl shadow-2xl flex flex-col`}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-[var(--grayColor)]">
         <div className="flex items-center gap-3">
