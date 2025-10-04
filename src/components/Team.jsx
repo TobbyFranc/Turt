@@ -16,7 +16,7 @@ const teamMembers = [
     name: 'Tobi Francis Ogunleye',
     role: 'Founder & CEO',
     image: Tobi,
-    bio: 'Tobi is a seasoned traveler and cultural enthusiast with over a decade of experience in the travel industry. She founded Turtura to help others navigate the complexities of global cultures.',
+    bio: 'Tobi is a seasoned traveler and cultural enthusiast with over a decade of experience in the travel industry. He founded Turtura to help others navigate the complexities of global cultures.',
     email: 'mailto:tobbyfranc@gmail.com',
     linkedin: 'https://www.linkedin.com/in/tobi-frank-4-greencraft',
   },
