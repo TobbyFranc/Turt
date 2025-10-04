@@ -145,7 +145,7 @@ const Nav = () => {
         <div className="block md:hidden">
           <button
             onClick={toggleMenu}
-            className="focus:outline-none p-2 text-[var(--primaryColor)] rounded-md hover:bg-gray-200"
+            className="focus:outline-none p-2 text-[var(--primaryColor)] rounded-md hover:bg-[var(--lightGrayColor)]"
           >
             {isOpen ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,7 +164,7 @@ const Nav = () => {
       <div className={`fixed z-50 ${isOpen ? "bottom-6 right-6" : "top-20 right-6"}`}>
         <button
           onClick={toggleTheme}
-          className="bg-[var(--grayColor)] dark:bg-slate-800 text-[var(--lightGrayColor)] dark:text-yellow-400 p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-yellow-600 transition duration-300"
+          className="bg-[var(--grayColor)] dark:bg-slate-800 text-[var(--lightGrayColor)] dark:text-yellow-400 p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-[var(--accentColor)] transition duration-300"
           title="Toggle Dark Mode"
         >
           {theme === "light" ? (
@@ -212,12 +212,12 @@ const Nav = () => {
   {chatOpen && (
     <div className={`mt-4 ${isExpanded ? "w-[700px] h-[80vh]" : "w-[500px] max-h-[70vh]"} overflow-hidden bg-[var(--whiteColor)] dark:bg-slate-900 text-[var(--blackColor)] dark:text-[var(--whiteColor)] rounded-xl shadow-2xl flex flex-col`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-[var(--grayColor)]">
         <div className="flex items-center gap-3">
           <img
   src="https://randomuser.me/api/portraits/men/48.jpg"
   alt="Support 1"
-  onError={(e) => (e.currentTarget.src = Turt)}
+  onError={(e) => (e.currentTarget.src = Tuur)}
   className="w-8 h-8 rounded-full"
 />
 
@@ -235,7 +235,7 @@ const Nav = () => {
               setShowToast(true);
               setTimeout(() => setShowToast(false), 2000);
             }}
-            className="text-sm text-gray-500 hover:text-blue-600"
+            className="text-sm text-gray-500 hover:text-[var(--blueColor)]"
             title="Expand/Collapse"
           >
             {isExpanded ? ">🗕<" : "⛶"}
@@ -264,7 +264,7 @@ const Nav = () => {
             setChatMode("ai");
             setChatLog([]);
           }}
-          className={`flex-1 px-3 py-2 rounded-md text-sm ${chatMode === "ai" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
+          className={`flex-1 px-3 py-2 rounded-l-md text-sm ${chatMode === "ai" ? "bg-[var(--blueColor)] text-white" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
         >
           AI Chat 🤖
         </button>
@@ -273,7 +273,7 @@ const Nav = () => {
             setChatMode("support");
             setChatLog([]);
           }}
-          className={`flex-1 px-3 py-2 rounded-md text-sm ${chatMode === "support" ? "bg-yellow-600 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
+          className={`flex-1 px-3 py-2 rounded-r-md text-sm ${chatMode === "support" ? "bg-[var(--accentColor)] text-white" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
         >
           Support 🧑‍💼
         </button>
@@ -282,8 +282,8 @@ const Nav = () => {
       {/* Chat Log */}
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2 text-sm">
         {chatLog.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-gray-400 mt-4">
-            {chatMode === "ai" ? "Ask me any question 🤖" : "Chat with our team 🧑‍💼"}
+          <div className="text-center text-gray-500 dark:text-gray-400 mt-4 p-6">
+            {chatMode === "ai" ? "Hello, I am Tura. Ask me any question 🤖" : "Chat with our team 🧑‍💼"}
           </div>
         ) : (
           chatLog.map((msg, idx) => (
@@ -293,7 +293,7 @@ const Nav = () => {
                 msg.sender === "user"
                   ? "bg-[var(--primaryColor)] text-[var(--whiteColor)] self-end ml-auto text-right"
                   : msg.sender === "ai"
-                  ? "bg-blue-100 dark:bg-blue-800"
+                  ? "bg-blue-100 dark:bg-[var(--darkBlueColor)]"
                   : msg.sender === "support"
                   ? "bg-yellow-100 dark:bg-yellow-800"
                   : "bg-red-100 dark:bg-red-800"
@@ -306,12 +306,12 @@ const Nav = () => {
       </div>
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-gray-300 dark:border-gray-700 flex gap-2">
+      <div className="px-4 py-3 border-t border-gray-300 dark:border-[var(--grayColor)] flex gap-2">
         <textarea
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
           placeholder="Type your message..."
-          rows={2}
+          rows={1}
           className="flex-grow resize-none p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"
         />
         <button
