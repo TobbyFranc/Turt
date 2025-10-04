@@ -1,6 +1,6 @@
 import React from "react";
 import inca from "../assets/inca-mayan-sculpted-stones.png";
-
+// what to know about Turtura
 const AboutUs = () => {
   return (
     <div id="About" className=" w-full py-12">
