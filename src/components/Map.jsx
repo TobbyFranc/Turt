@@ -23,20 +23,21 @@ const Map = () => {
 
       {/* Map Background Section */}
       <div
-        className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row md:flex-wrap gap-4 justify-between rounded-lg overflow-hidden"
-        style={{
-          backgroundImage: `url(${WorldMap})`,
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          minHeight: "500px",
-        }}
+        className="relative w-full  mx-auto flex flex-col md:flex-row md:flex-wrap gap-4 justify-between rounded-lg overflow-hidden"
+style={{
+  backgroundImage: `url(${WorldMap})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  minHeight: "500px",
+}}
+
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-[var(--bgColor)] opacity-90 pointer-events-none"></div>
 
         {/* Search Cards */}
-        <div className="relative z-10 w-full p-4">
+        <div className="relative z-10 w-full max-w-6xl mx-auto p-4">
           <Search />
         </div>
       </div>

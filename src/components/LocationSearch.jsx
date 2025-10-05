@@ -122,8 +122,8 @@ const fallbackImagesMap = {
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
 
       {/* Search Bar */}
-      <div className=" p-8 mt-24 flex items-center justify-center gap-4 ">
-        <button onClick={() => navigate(-1)} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">←</button>
+      <div className="fixed top-0 left-0 bg-[var(--bgColor)]  w-full p-8 mb-4 flex items-center justify-center gap-4 ">
+        <button onClick={() => navigate(-1)} className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)]">←</button>
         <form onSubmit={handleSearch} className="flex space-x-4 max-w-6xl w-full">
           <input
             type="text"
@@ -138,7 +138,7 @@ const fallbackImagesMap = {
 
       {/* Location Info */}
       {locationData && (
-        <div className="max-w-6xl mx-auto px-4 mb-6 font-cormorant">
+        <div className="max-w-6xl mx-auto px-4 mt-28 mb-6 font-cormorant">
           <h2 className="text-3xl font-semibold text-[var(--primaryColor)] capitalize">{locationData.name}</h2>
           <p className="text-[var(--textColor)]">🌍 Continent: {locationData.continent}</p>
           <p className="text-[var(--textColor)]">📍 Lat: {locationData.lat}, Lon: {locationData.lon}</p>
