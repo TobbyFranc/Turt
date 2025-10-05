@@ -6,7 +6,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import globalCulture from "../assets/global-culture.jpg";
-import Nav from './Nav';
 import market from '../assets/market.jpg'
 import fashion from '../assets/fashion.jpg'
 import afrofashion from '../assets/afrofashion.jpg'
@@ -121,10 +120,6 @@ const fallbackImagesMap = {
 
   return (
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
-      {/* <Nav /> */}
-      <div className="hidden">
-        < Nav />
-      </div>
 
       {/* Search Bar */}
       <div className=" p-8 mt-24 flex items-center justify-center gap-4 ">
