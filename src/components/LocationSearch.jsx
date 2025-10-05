@@ -1,170 +1,191 @@
 import React, { useState, useEffect } from "react";
-import { FiMenu } from "react-icons/fi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
+import globalCulture from "../assets/global-culture.jpg";
+import Nav from './Nav';
+import market from '../assets/market.jpg'
+import fashion from '../assets/fashion.jpg'
+import afrofashion from '../assets/afrofashion.jpg'
+import afrowedding from '../assets/afrowedding.jpg'
+import indianwedding from '../assets/indianwedding.jpg'
+import marriage from '../assets/marriage.jpg'
+import cuisine from '../assets/cuisine.jpg'
 
 const LocationSearch = () => {
-  const [query, setQuery] = useState("");
-  const [locationData, setLocationData] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const passedQuery = location.state?.query || "";
+  const [query, setQuery] = useState(passedQuery);
+  const [locationData, setLocationData] = useState(location.state?.locationData || null);
+  const [images, setImages] = useState(location.state?.images || {});
   const [activeTab, setActiveTab] = useState("Description");
-  const [coords, setCoords] = useState(null);
-  const [images, setImages] = useState([]);
-  const [showSidebar, setShowSidebar] = useState(false);
   const [showTura, setShowTura] = useState(false);
   const [turaQuestion, setTuraQuestion] = useState("");
 
   const tabs = ["Description", "Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
+const fallbackImagesMap = {
+  Fashion: [fashion, afrofashion],
+  Cuisine: [cuisine],
+  Greetings: [market],
+  Taboos: [globalCulture],
+  Marriage: [afrowedding, indianwedding, marriage],
+  Festival: [globalCulture],
+};
 
-  const toggleSidebar = () => setShowSidebar(!showSidebar);
+
+  useEffect(() => {
+    if (passedQuery && !locationData) {
+      handleSearch({ preventDefault: () => {} });
+    }
+  }, [passedQuery]);
+
+  const getContinent = (code) => ({ NG: "Africa", US: "North America", FR: "Europe" }[code] || "Unknown");
+  const getLanguage = (code) => ({ NG: "English", FR: "French", JP: "Japanese" }[code] || "Unknown");
+  const getWeather = async () => "Partly Cloudy";
+
+  const fetchImagesForTab = async (topic) => {
+    try {
+      const res = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + " " + topic)}&client_id=${process.env.REACT_APP_UNSPLASH_ACCESS_KEY}`
+      );
+      const data = await res.json();
+      return data.results || [];
+    } catch {
+      return [];
+    }
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query) return;
-
     setActiveTab("Description");
 
     try {
       const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
       const wikiData = await wikiRes.json();
 
-      if (!wikiData || wikiData.title === "Not found.") {
-        setLocationData(null);
-        return;
-      }
-
       const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
       const geoData = await geoRes.json();
       const { lat, lon } = geoData[0] || {};
+      const countryCode = geoData[0]?.address?.country_code?.toUpperCase() || "NG";
 
-      const unsplashRes = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + " culture")}&client_id=UNSPLASH_ACCESS_KEY`
-      );
-      const unsplashData = await unsplashRes.json();
+      const continent = getContinent(countryCode);
+      const language = getLanguage(countryCode);
+      const weather = await getWeather();
 
-      setCoords({ lat, lon });
-      setImages(unsplashData.results || []);
+      const imageResults = {};
+      for (const tab of tabs) {
+        if (tab !== "Description") {
+          imageResults[tab] = await fetchImagesForTab(tab.toLowerCase());
+        }
+      }
 
+      setImages(imageResults);
       setLocationData({
         name: query,
-        continent: "Unknown",
+        continent,
         lat: lat || "Unknown",
         lon: lon || "Unknown",
-        weather: "Unknown",
-        heritage: "Unknown",
+        weather,
+        language,
         summary: wikiData.extract || "No cultural summary found.",
       });
     } catch (error) {
       console.error("Search error:", error);
-      setLocationData(null);
-    }
-  };
-
-  const getImageForTab = () => {
-    if (!locationData) return null;
-    // const { lat, lon } = locationData;
-
-    switch (activeTab) {
-      case "Description":
-        return `https://maps.google.com/maps?q=${lat},${lon}&z=6&output=embed`;
-      case "Fashion":
-        return images[0]?.urls?.regular || "";
-      case "Cuisine":
-        return images[1]?.urls?.regular || "";
-      case "Greetings":
-        return images[2]?.urls?.regular || "";
-      case "Taboos":
-        return images[3]?.urls?.regular || "";
-      case "Marriage":
-        return images[4]?.urls?.regular || "";
-      case "Festival":
-        return images[5]?.urls?.regular || "";
-      default:
-        return "";
+      setLocationData({
+        name: query,
+        continent: "Unknown",
+        lat: "Unknown",
+        lon: "Unknown",
+        weather: "Unknown",
+        language: "Unknown",
+        summary: "Unable to fetch cultural summary.",
+      });
     }
   };
 
   const contentMap = {
-    Description: ` ${locationData?.summary}`,
-    Fashion: `Traditional fashion in ${locationData?.name} reflects elegance and heritage. ${locationData?.fashion || ""}`,
-    Cuisine: ` ${locationData?.name} offers a rich culinary tradition with diverse flavors. ${locationData?.food || ""}`,
-    Greetings: `In ${locationData?.name}, greetings are rituals of respect. ${locationData?.greetings || ""}`,
-    Taboos: `Every culture has its boundaries. In ${locationData?.name}, taboos are deeply rooted. ${locationData?.taboos || ""}`,
-    Marriage: `Marriage in ${locationData?.name} is a tapestry of rituals and family traditions. ${locationData?.marriage || ""}`,
-    Festival: `Festivals in ${locationData?.name} are vibrant expressions of joy and community. ${locationData?.festivals || ""}`,
+    Description: locationData?.summary || "No cultural summary available.",
+    Fashion: `Traditional fashion in ${locationData?.name} reflects elegance and heritage.`,
+    Cuisine: `${locationData?.name} offers a rich culinary tradition with diverse flavors.`,
+    Greetings: `In ${locationData?.name}, greetings are rituals of respect.`,
+    Taboos: `Every culture has its boundaries. In ${locationData?.name}, taboos are deeply rooted.`,
+    Marriage: `Marriage in ${locationData?.name} is a tapestry of rituals and family traditions.`,
+    Festival: `Festivals in ${locationData?.name} are vibrant expressions of joy and community.`,
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-700 relative font-open-sans">
-      {/* Hamburger */}
-      <button onClick={toggleSidebar} className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-md shadow-md">
-        <FiMenu className="w-6 h-6 text-gray-700" />
-      </button>
-
-      {/* Sidebar */}
-      <div className={`fixed top-0 left-0 h-screen w-64 bg-white border-r z-40 transform ${showSidebar ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out md:translate-x-0 md:w-16 md:flex md:flex-col md:items-center py-4 space-y-4`}>
-        <a href="/Dashboard" className="hover:text-[var(--primaryColor)]">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 12l8.954-8.955..." />
-          </svg>
-        </a>
-        <a href="/Profile" className="hover:text-[var(--primaryColor)]">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75..." />
-          </svg>
-        </a>
-      </div>
+    <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
+      <Nav />
 
       {/* Search Bar */}
-      <div className="ml-0 md:ml-16 p-8 mt-8 flex items-center justify-center">
-        <form onSubmit={handleSearch} className="flex-1 flex space-x-4 max-w-4xl">
+      <div className=" p-8 mt-24 flex items-center justify-center gap-4 ">
+        <button onClick={() => navigate(-1)} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">←</button>
+        <form onSubmit={handleSearch} className="flex space-x-4 max-w-6xl w-full">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Enter location"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)]"
+            className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)]"
           />
-          <button type="submit" className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-            Search
-          </button>
+          <button type="submit" className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600">Search</button>
         </form>
       </div>
 
       {/* Location Info */}
-      {locationData ? (
-        <div className="max-w-5xl mx-auto px-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center font-cormorant">
-          <div className="space-y-2 text-sm text-gray-600">
-            <h2 className="text-3xl font-semibold text-[var(--primaryColor)] capitalize">{locationData.name}</h2>
-            <div><span className="mr-2">🌍</span>Continent: {locationData.continent}</div>
-            <div><span className="mr-2">📍</span>Lat: {locationData.lat}, Lon: {locationData.lon}</div>
-            <div><span className="mr-2">🌦️</span>Weather: {locationData.weather}</div>
-            <div><span className="mr-2">🧬</span>Heritage: {locationData.heritage}</div>
-          </div>
-          <button className="mt-4 md:mt-0 bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-            Join Community Chatroom
-          </button>
+      {locationData && (
+        <div className="max-w-6xl mx-auto px-4 mb-6 font-cormorant">
+          <h2 className="text-3xl font-semibold text-[var(--primaryColor)] capitalize">{locationData.name}</h2>
+          <p className="text-[var(--textColor)]">🌍 Continent: {locationData.continent}</p>
+          <p className="text-[var(--textColor)]">📍 Lat: {locationData.lat}, Lon: {locationData.lon}</p>
+          <p className="text-[var(--textColor)]">🌦️ Weather: {locationData.weather}</p>
+          <p className="text-[var(--textColor)]">🗣️ Language: {locationData.language}</p>
         </div>
-      ) : (
-        <div className="text-center text-gray-500 font-cormorant text-lg">Location not found. Try another search.</div>
       )}
 
       {/* Image Section */}
       {locationData && (
-<div className="max-w-5xl mx-auto px-4 mb-6 relative h-64 overflow-hidden rounded-md">
-  {activeTab === "Description" ? (
-    <iframe
-      title="Map"
-      src={`https://maps.google.com/maps?q=${locationData.lat},${locationData.lon}&z=6&output=embed`}
-      className="absolute top-0 left-0 w-full h-full border-0"
-      allowFullScreen
-      loading="lazy"
-    ></iframe>
-  ) : (
-    <img
-      src={getImageForTab()}
-      alt={activeTab}
-      className="absolute top-0 left-0 w-full h-full object-cover"
-    />
-  )}
+        <div className="max-w-5xl mx-auto px-4 mb-6">
+          {activeTab === "Description" ? (
+            <iframe
+              title="Map"
+              src={`https://maps.google.com/maps?q=${locationData.lat},${locationData.lon}&z=6&output=embed`}
+              className="w-full h-[400px] rounded-md border-0"
+              allowFullScreen
+              loading="lazy"
+            />
+          ) : (
+<Swiper
+  key={activeTab}
+  modules={[Navigation, Pagination]}
+  spaceBetween={10}
+  slidesPerView={1}
+  navigation
+  pagination={{ clickable: true }}
+>
+  {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => (
+    <SwiperSlide key={index}>
+<div className="w-full h-[400px] rounded-md overflow-hidden">
+  <img
+    src={img?.urls?.regular || img}
+    alt={img?.alt_description || `${activeTab}-${index}`}
+    className="w-full h-full object-cover"
+  />
 </div>
+
+
+    </SwiperSlide>
+  ))}
+</Swiper>
+
+          )}
+        </div>
       )}
 
       {/* Tabs */}
@@ -177,19 +198,54 @@ const LocationSearch = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`p-2 border-b-2 cursor-pointer ${
                   activeTab === tab
-                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
-                    : "text-gray-400 hover:text-black"
+                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)] "
+                    : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
                 }`}
-                >{tab}</li>
+              >
+                {tab}
+              </li>
             ))}
           </ul>
-          <div className="mt-4 text-gray-700 text-justify">{contentMap[activeTab]}</div>
+          <div className="mt-4 text-[var(--textColor)] text-justify">{contentMap[activeTab]}</div>
         </div>
       )}
 
-      {/* Tura Sidebar */}
-      {showTura && (
-        <div className="fixed top-0 right-0 h-screen w-80 bg-white border-l z-40 p-4 overflow-y-auto">
+      {/* Tura AI Button */}
+{/* <div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
+  {!showTura && (
+    <button
+      onClick={() => setShowTura(true)}
+      className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
+    >
+      Ask Tura AI 💬
+    </button>
+  )}
+</div> */}
+
+
+      {/* Join Community Button */}
+      <div className="max-w-5xl mx-auto px-4 mb-6 flex justify-start pointer-events-none">
+        <a
+          href="/CommunityChatroom"
+          className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)]"
+        >
+          Join Community 💬
+        </a>
+      </div>
+
+      {/* Tura AI Sidebar */}
+<div
+  className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
+    showTura ? "translate-x-0" : "translate-x-full"
+  }`}
+>
+
+          <button
+            onClick={() => setShowTura(false)}
+            className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+          >
+            ✕
+          </button>
           <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
           <textarea
             value={turaQuestion}
@@ -201,7 +257,7 @@ const LocationSearch = () => {
             Submit
           </button>
         </div>
-      )}
+    {/* </div> */}
     </div>
   );
 };

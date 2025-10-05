@@ -93,6 +93,11 @@ html {
 
 }
 
+html {
+  scroll-padding-top: 80px; /* adjust to match your header height */
+}
+
+
 
 body {
   transition: background-color 0.3s ease, color 0.3s ease;

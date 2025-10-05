@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Globe from "react-globe.gl";
+import { useNavigate } from "react-router-dom";
 
 const regionMap = {
 ghana: "africa",
@@ -48,7 +49,10 @@ ghana: "africa",
 
 };
 
+
 const Search = () => {
+
+
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("");
   const [rawResult, setRawResult] = useState("");
@@ -60,6 +64,7 @@ const Search = () => {
   const [viewMode, setViewMode] = useState(() => localStorage.getItem("viewMode") || "globe");
   const [autoRotate, setAutoRotate] = useState(true);
   const [isHoveringGlobe, setIsHoveringGlobe] = useState(false);
+  const [typingDone, setTypingDone] = useState(false);
   const [globeError, setGlobeError] = useState(false);
   const globeRef = useRef();
 
@@ -74,10 +79,11 @@ const Search = () => {
 
   useEffect(() => {
     let i = 0;
+    setTypingDone(false);
     const interval = setInterval(() => {
       setTypedResult(rawResult.slice(0, i));
       i++;
-      if (i > rawResult.length) clearInterval(interval);
+      if (i > rawResult.length){ clearInterval(interval); setTypingDone(true);}
     }, 20);
     return () => clearInterval(interval);
   }, [rawResult]);
@@ -109,6 +115,8 @@ const Search = () => {
       }
     }
   }, [isHoveringGlobe]);
+
+    const navigate = useNavigate();
 
   const degToRad = (deg) => (deg * Math.PI) / 180;
 
@@ -171,6 +179,18 @@ const Search = () => {
       setRawResult("Unable to fetch insights at the moment.");
     }
   };
+
+  const handleClearSearch = () => {
+  setQuery("");
+  setRegion("");
+  setRawResult("");
+  setTypedResult("");
+  setDistance(null);
+  setArcsData([]);
+  setMapCoords({ lat: 7.9465, lng: -1.0232 });
+  setAutoRotate(true);
+};
+
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") handleSearch();
@@ -241,16 +261,35 @@ const Search = () => {
               Approximate distance from your location: {distance} km
             </p>
           )}
+  {typingDone && (
+  <button className="text-[var(--accentColor)] hover:text-[var(--primaryColor)]" onClick={() => navigate("/LocationSearch", { state: { query } })}>
+    ...see more
+  </button>
+)}
+
+
+
         </div>
       )}
 
-      <div className="text-center mt-8">
+      <div className="text-center mt-8 flex gap-2 items-center justify-center">
         <button
           onClick={handleViewToggle}
           className="hover:bg-[var(--primaryColor)] border-2 border-[var(--primaryColor)] text-[var(--textColor)] hover:text-[var(--whiteColor)] transition duration-300 px-6 py-2 rounded-md"
         >
           Switch to {viewMode === "globe" ? "Google Map" : "Globe View"}
         </button>
+
+        {/* clear search and cultural hx btn */}
+<button
+  onClick={handleClearSearch}
+  className="bg-[var(--accentColor)] border-2 hover:bg-[var(--primaryColor)] text-[var(--textColor)] hover:text-[var(--whiteColor)] transition duration-300 px-6 py-2 rounded-md"
+>
+  Clear Search
+</button>
+
+
+
       </div>
 
       <div className="mt-8 px-4">

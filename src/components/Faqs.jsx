@@ -95,7 +95,7 @@ const Faqs = () => {
         <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold font-cormorant capitalize">
           Have some questions?
         </h3>
-        <p>We're here to help! Explore our FAQs or chat with Turturion for more info.</p>
+        <p>We're here to help! Explore our FAQs or chat with TuraAI for more info.</p>
       </div>
 
       {/* Divider */}

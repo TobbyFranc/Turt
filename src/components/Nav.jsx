@@ -186,7 +186,7 @@ useEffect(() => {
 
     {/* Toast Notification */}
 {showToast && (
-  <div className="fixed bottom-24 right-6 bg-[var(--blackColor)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--blackColor)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
+  <div className="fixed bottom-24 right-6 bg-[var(--[var(--blackColor)]Color)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--[var(--blackColor)]Color)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
     {darkMode ? "Dark mode enabled 🌙" : "Light mode enabled ☀️"}
   </div>
 )}
@@ -194,13 +194,13 @@ useEffect(() => {
 
 {/* Floating Chat Button */}
 {/* Floating Chat Button */}
-<div className="fixed bottom-6 left-2 z-40 transition duration-300">
+<div className={`fixed bottom-6 left-2 z-40 transition duration-500 ${chatOpen ? "w-[360px]" : "w-[60px]"}`}>
   <button
     onClick={() => setChatOpen(!chatOpen)}
-    className="bg-[var(--accentColor)] text-[var(--whiteColor)] p-3 rounded-full shadow-lg hover:bg-[var(--primaryColor)] transition duration-300"
+    className="bg-[var(--grayColor)] border-2  border-[var(--textColor)] text-[var(--grayColor)] p-3 rounded-full shadow-lg hover:bg-[var(--primaryColor)] transition duration-300"
   >
     {chatOpen ? (
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="9" />
         <line x1="6" y1="6" x2="18" y2="18" />
       </svg>
@@ -213,7 +213,7 @@ useEffect(() => {
   </button>
 
   {chatOpen && (
-    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--whiteColor)] dark:bg-slate-900 text-[var(--blackColor)] dark:text-[var(--whiteColor)] rounded-xl shadow-2xl flex flex-col`}>
+    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--whiteColor)] dark:bg-slate-900 text-[var(--[var(--blackColor)]Color)] dark:text-[var(--whiteColor)] rounded-xl shadow-2xl flex flex-col`}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-[var(--grayColor)]">
         <div className="flex items-center gap-3">
@@ -223,13 +223,12 @@ useEffect(() => {
   onError={(e) => (e.currentTarget.src = Tuur)}
   className="w-8 h-8 rounded-full"
 />
-
-          <img src="https://randomuser.me/api/portraits/women/48.jpg" alt="Support 2" onError={(e) => (e.currentTarget.src = Tuur)} className="w-8 h-8 rounded-full" />
-          <span className="font-semibold text-sm text-[var(--accentColor)]">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 2H4C2.89543 2 2 2.89543 2 4V22L6 18H20C21.1046 18 22 17.1046 22 16V4C22 2.89543 21.1046 2 20 2Z" fill="currentColor"/>
-</svg>
-          </span>
+  <img src="https://randomuser.me/api/portraits/women/48.jpg" alt="Support 2" onError={(e) => (e.currentTarget.src = Tuur)} className="w-8 h-8 rounded-full" />
+  <span className="font-semibold text-sm text-[var(--textColor)]">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2H4C2.89543 2 2 2.89543 2 4V22L6 18H20C21.1046 18 22 17.1046 22 16V4C22 2.89543 21.1046 2 20 2Z" fill="currentColor"/>
+    </svg>
+  </span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -255,7 +254,7 @@ useEffect(() => {
 
       {/* Toast Notification */}
       {showToastE && (
-        <div className="absolute top-2 right-2 bg-black text-white dark:bg-white dark:text-black px-3 py-1 rounded-md shadow-lg text-xs z-50">
+        <div className="absolute top-2 right-2 bg-[var(--blackColor)] text-[var(--textColor)] dark:bg-white dark:text-[var(--blackColor)] px-3 py-1 rounded-md shadow-lg text-xs z-50">
           {isExpanded ? "Expanded view enabled" : "Collapsed view"}
         </div>
       )}
@@ -267,7 +266,7 @@ useEffect(() => {
             setChatMode("ai");
             setChatLog([]);
           }}
-          className={`flex-1 px-3 py-2 rounded-l-md text-sm ${chatMode === "ai" ? "bg-[var(--blueColor)] text-white" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
+          className={`flex-1 px-3 py-2 rounded-l-md text-sm ${chatMode === "ai" ? "bg-[var(--blueColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
         >
           AI Chat 🤖
         </button>
@@ -276,7 +275,7 @@ useEffect(() => {
             setChatMode("support");
             setChatLog([]);
           }}
-          className={`flex-1 px-3 py-2 rounded-r-md text-sm ${chatMode === "support" ? "bg-[var(--accentColor)] text-white" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
+          className={`flex-1 px-3 py-2 rounded-r-md text-sm ${chatMode === "support" ? "bg-[var(--accentColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
         >
           Support 🧑‍💼
         </button>
@@ -285,7 +284,7 @@ useEffect(() => {
       {/* Chat Log */}
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2 text-sm">
         {chatLog.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-gray-400 mt-4 p-6">
+          <div className="text-center text-[var(--grayColor)] mt-4 p-6">
             {chatMode === "ai" ? "Hello, I am Tura. Ask me any question 🤖" : "Chat with our team 🧑‍💼"}
           </div>
         ) : (
@@ -309,7 +308,7 @@ useEffect(() => {
       </div>
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-gray-300 dark:border-[var(--grayColor)] flex gap-2">
+      <div className="px-4 py-3 border-t border-[var(--lightGrayColor)] dark:border-[var(--grayColor)] flex gap-2">
         <textarea
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
