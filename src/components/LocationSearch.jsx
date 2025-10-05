@@ -25,6 +25,9 @@ const LocationSearch = () => {
   const [activeTab, setActiveTab] = useState("Description");
   const [showTura, setShowTura] = useState(false);
   const [turaQuestion, setTuraQuestion] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+const [submitSuccess, setSubmitSuccess] = useState(false);
+
 
   const tabs = ["Description", "Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
 const fallbackImagesMap = {
@@ -59,10 +62,13 @@ const fallbackImagesMap = {
     }
   };
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!query) return;
-    setActiveTab("Description");
+
+const handleSearch = async (e) => {
+  e.preventDefault();
+  if (!query.trim()) return;
+
+  setIsSubmitting(true);
+  setSubmitSuccess(false);
 
     try {
       const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
@@ -83,6 +89,12 @@ const fallbackImagesMap = {
           imageResults[tab] = await fetchImagesForTab(tab.toLowerCase());
         }
       }
+      // mksw
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setSubmitSuccess(true);
+    setTimeout(() => setSubmitSuccess(false), 2000); // Reset after 2s
+  // 
 
       setImages(imageResults);
       setLocationData({
@@ -94,7 +106,9 @@ const fallbackImagesMap = {
         language,
         summary: wikiData.extract || "No cultural summary found.",
       });
+
     } catch (error) {
+          // console.error("Search error:", error);
       console.error("Search error:", error);
       setLocationData({
         name: query,
@@ -105,7 +119,9 @@ const fallbackImagesMap = {
         language: "Unknown",
         summary: "Unable to fetch cultural summary.",
       });
-    }
+    }finally {
+    setIsSubmitting(false);
+  }
   };
 
   const contentMap = {
@@ -122,9 +138,9 @@ const fallbackImagesMap = {
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
 
       {/* Search Bar */}
-      <div className="fixed top-0 left-0 bg-[var(--bgColor)]  w-full p-8 mb-4 flex items-center justify-center gap-4 ">
+      <div className="fixed top-0 left-0 bg-[var(--bgColor)]  w-full px-2 py-6 mb-4 flex flex-col md:flex-row items-start md:items-center justify-center gap-4 ">
         <button onClick={() => navigate(-1)} className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)]">←</button>
-        <form onSubmit={handleSearch} className="flex space-x-4 max-w-6xl w-full">
+        <form onSubmit={handleSearch} className="flex  gap-2 max-w-6xl w-full">
           <input
             type="text"
             value={query}
@@ -132,13 +148,30 @@ const fallbackImagesMap = {
             placeholder="Enter location"
             className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)]"
           />
-          <button type="submit" className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600">Search</button>
+<button
+  type="submit"
+  disabled={isSubmitting}
+  className={`px-4 py-2 rounded-md min-w-[140px] transition-all duration-300 ${
+    isSubmitting
+      ? "bg-gray-400 cursor-not-allowed"
+      : submitSuccess
+      ? "bg-green-500"
+      : "bg-[var(--accentColor)] hover:bg-yellow-600"
+  } text-white`}
+>
+  {isSubmitting
+    ? "Checking..."
+    : submitSuccess
+    ? "✓ Submitted"
+    : "Search"}
+</button>
+
         </form>
       </div>
 
       {/* Location Info */}
       {locationData && (
-        <div className="max-w-6xl mx-auto px-4 mt-28 mb-6 font-cormorant">
+        <div className="max-w-6xl mx-auto px-4 mt-40 md:mt-28 mb-6 font-cormorant">
           <h2 className="text-3xl font-semibold text-[var(--primaryColor)] capitalize">{locationData.name}</h2>
           <p className="text-[var(--textColor)]">🌍 Continent: {locationData.continent}</p>
           <p className="text-[var(--textColor)]">📍 Lat: {locationData.lat}, Lon: {locationData.lon}</p>
