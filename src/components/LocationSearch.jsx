@@ -121,7 +121,10 @@ const fallbackImagesMap = {
 
   return (
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
-      <Nav />
+      {/* <Nav /> */}
+      <div className="hidden">
+        < Nav />
+      </div>
 
       {/* Search Bar */}
       <div className=" p-8 mt-24 flex items-center justify-center gap-4 ">
@@ -211,7 +214,7 @@ const fallbackImagesMap = {
       )}
 
       {/* Tura AI Button */}
-{/* <div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
+<div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
   {!showTura && (
     <button
       onClick={() => setShowTura(true)}
@@ -220,7 +223,7 @@ const fallbackImagesMap = {
       Ask Tura AI 💬
     </button>
   )}
-</div> */}
+</div>
 
 
       {/* Join Community Button */}
