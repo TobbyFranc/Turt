@@ -4,29 +4,25 @@ const faqs = [
   {
     question: "What is Turtura?",
     answer:
-      "Turtura connects travelers with authentic cultural experiences worldwide, offering real-time cultural alerts and local insights for respectful and safe travel.",
+      "Turtura is a cultural mobility platform that connects travelers with authentic experiences, offering real-time cultural alerts and local insights for respectful, informed journeys.",
   },
   {
     question: "How does Turtura work?",
     answer:
-      "Turtura provides real-time cultural alerts, local insights, and community engagement. Users explore experiences, connect with locals, and stay updated on cultural norms.",
+      "Turtura delivers real-time cultural alerts, local insights, and community engagement tools. Users explore destinations, connect with locals, and stay aware of cultural norms and sensitivities.",
   },
   {
     question: "Is Turtura available worldwide?",
     answer:
-      "While Turtural is a global concept, we are currently capturing National Youth Service Corps (NYSC) members and everyday travellers within Nigeria.",
+      "Turtura is built for global impact, but our current focus is on empowering National Youth Service Corps (NYSC) members and everyday travelers across Nigeria.",
   },
-  // {
-  //   question: "Is Turtura available worldwide?",
-  //   answer:
-  //     "Yes, Turtura is a global platform offering cultural experiences and insights across the world.",
-  // },
   {
     question: "How can I join Turtura?",
     answer:
-      "Sign up on our website or download the mobile app. Create an account to start exploring and receiving alerts.",
+      "Simply sign up on our website or download the mobile app. Create an account to start exploring cultural insights, receiving alerts, and connecting with the community.",
   },
 ];
+
 
 const Faqs = () => {
   const [openIndex, setOpenIndex] = useState(null);
