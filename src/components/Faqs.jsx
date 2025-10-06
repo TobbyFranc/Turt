@@ -14,8 +14,13 @@ const faqs = [
   {
     question: "Is Turtura available worldwide?",
     answer:
-      "Yes, Turtura is a global platform offering cultural experiences and insights across the world.",
+      "While Turtural is a global concept, we are currently capturing National Youth Service Corps (NYSC) members and everyday travellers within Nigeria.",
   },
+  // {
+  //   question: "Is Turtura available worldwide?",
+  //   answer:
+  //     "Yes, Turtura is a global platform offering cultural experiences and insights across the world.",
+  // },
   {
     question: "How can I join Turtura?",
     answer:
@@ -89,7 +94,7 @@ const Faqs = () => {
   }, [chatHistory, typingIdx]);
 
   return (
-    <div id="FAQS" className="px-4 py-12">
+    <div id="FAQS" className="px-4 py-12 ">
       {/* Header */}
       <div className="text-center space-y-4 mb-12 cormorant-garamond-400 text-[var(--textColor)] ">
         <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold font-cormorant capitalize">
@@ -104,11 +109,11 @@ const Faqs = () => {
       </div>
 
       {/* FAQ Accordion */}
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg space-y-6">
-        <h3 className="text-2xl font-bold mb-4 text-slate-500 text-center">Frequently Asked Questions</h3>
+      <div className="max-w-4xl mx-auto p-6 bg-[var(--bgColor)] shadow-lg rounded-lg space-y-6">
+        <h3 className="text-2xl font-bold mb-4 text-[var(--textColor)] text-center">Frequently Asked Questions</h3>
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div key={index} className="border border-gray-300 rounded-lg">
+            <div key={index} className="border border-[var(--textColor)] rounded-lg">
               <button
                 className="w-full text-left p-4 flex justify-between items-center focus:outline-none"
                 onClick={() => toggleAccordion(index)}
@@ -122,14 +127,14 @@ const Faqs = () => {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className={`w-6 h-6 transform transition-transform duration-200 ${openIndex === index ? "rotate-180" : ""}`}
+                  className={`w-6 h-6 text-[var(--textColor)] transform transition-transform duration-200 ${openIndex === index ? "rotate-180" : ""}`}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </button>
               {openIndex === index && (
-                <div className="p-4 border-t border-gray-300" id={`faq-answer-${index}`}>
-                  <p className="text-gray-600">{faq.answer}</p>
+                <div className="p-4 border-t border-[var(--grayColor)]" id={`faq-answer-${index}`}>
+                  <p className="text-[var(--textColor)]">{faq.answer}</p>
                 </div>
               )}
             </div>
@@ -148,16 +153,16 @@ const Faqs = () => {
 
         {/* Chatbox */}
         {showChat && (
-          <div className="mt-6 p-4 border border-gray-300 rounded-lg">
-            <h5 className="text-lg font-medium mb-4 text-center">Turtura AI Chatbox</h5>
-            <div className="bg-gray-100 p-4 rounded-lg h-64 overflow-y-auto scroll-smooth">
+          <div className="mt-6 p-4 border border-[var(--lightGrayColor)] rounded-lg">
+            <h5 className="text-lg text-[var(--textColor)] font-medium mb-4 text-center">Turtura AI Chatbox</h5>
+            <div className="bg-[var(--whiteColor)] p-4 rounded-lg h-64 overflow-y-auto scroll-smooth">
               {chatHistory.length === 0 && (
-                <p className="text-gray-600">Hi, I'm Tura. <br /> Ask me anything about Turtura!</p>
+                <p className="text-[var(--grayColor)]">Hi, I'm Tura. <br /> Ask me anything about Turtura!</p>
               )}
               {chatHistory.map((msg, idx) => (
                 <div key={idx} className={`mb-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-                  <span className={`border-2 p-2 rounded-xl inline-block max-w-xs break-words ${
-                    msg.sender === "user" ? "bg-blue-500/90 text-white" : "bg-green-500/90 text-white"
+                  <span className={`border-2 p-2 bg-[var(--lightrayColor)] rounded-xl inline-block max-w-xs break-words ${
+                    msg.sender === "user" ? "bg-[var(--lightrayColor)] text-white" : "bg-green-500/90 text-white"
                   }`}>
                     {msg.sender === "ai" && idx === chatHistory.length - 1 && typingIdx === idx
                       ? typedText

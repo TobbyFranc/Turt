@@ -212,7 +212,7 @@ const Search = () => {
       {/*  */}
       {/* Static Heading */}
       <div className=" text-center space-y-4 mb-12 rounded-md py-2 text-[var(--textColor)]">
-        <h3 className="text-3xl font-bold  capitalize">Search for Cultural Insights</h3>
+        <h3 className="text-2xl font-bold  capitalize">Search for Cultural Insights</h3>
         <p className=" inter-200 ">Type in a country or culture to get instant insights and tips from Turtura.</p>
       </div>
 

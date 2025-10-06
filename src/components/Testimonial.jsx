@@ -56,13 +56,13 @@ const TestimonialSlider = () => {
         >
           {testimonials.map((t, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-white shadow-lg rounded-lg p-6 text-gray-800 h-full flex flex-col justify-between min-h-[320px]">
-                <p className="text-gray-600 mb-4 flex-grow">{t.quote}</p>
+              <div className="bg-[var(--bgColor)] shadow-lg shadow-[var(--shadowColor)] rounded-lg p-6 text-[var(--textColor)] h-full flex flex-col justify-between min-h-[320px]">
+                <p className=" mb-4 flex-grow">{t.quote}</p>
                 <div className="flex items-center mt-auto">
                   <img onError={(e) => (e.currentTarget.src = Turtle)} src={t.image} alt={t.name} className="w-12 h-12 rounded-full mr-4" />
                   <div>
                     <p className="font-semibold text-[var(--primaryColor,#3b82f6)]">{t.name}</p>
-                    <p className="text-gray-500 text-sm">{t.role}</p>
+                    <p className=" text-sm">{t.role}</p>
                   </div>
                 </div>
               </div>

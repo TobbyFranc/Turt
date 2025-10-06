@@ -47,7 +47,7 @@ const LandingFooter = () => {
         {/* Logo & Description */}
         <div className="space-y-4">
           <div className="flex items-center bg-[var(--backgroundColor)] text-[var(--textColor)] rounded-md px-2 w-fit">
-            <img src={Turtle} alt="Turtura Logo" className="w-12 h-12" />
+            <img src={Turtle} alt="Turtura Logo" className="w-12 h-12 filter -invert-10 saturate-0 brightness-200" />
             <h2 className="text-2xl font-bold ml-2">Turtura</h2>
           </div>
           <p className="text-[var(--backgroundColor)]">

@@ -89,11 +89,11 @@ const TeamSlider = () => {
         >
           {teamMembers.map((member, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-[var(--whiteColor)] shadow-lg rounded-lg p-6 text-[var(--grayColor)] flex flex-col items-center justify-between min-h-[460px] pb-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-[var(--bgColor)] shadow-lg shadow-[var(--shadowColor)] rounded-lg p-6 text-[var(--primaryColor)] flex flex-col items-center justify-between min-h-[460px] pb-6 hover:shadow-xl transition-shadow duration-300">
                 <img src={member.image} alt={member.name} onError={(e) => (e.currentTarget.src = Turtle)} className="w-32 h-32 rounded-full mb-4 transition duration-300 ease-in-out shadow-md" />
                 <h4 className="text-xl font-semibold mb-2">{member.name}</h4>
-                <p className="text-[var(--grayColor)] mb-2">{member.role}</p>
-                <p className="text-[var(--grayColor)] text-center mb-4 flex-grow">{member.bio}</p>
+                <p className="text-[var(--textColor)] mb-2">{member.role}</p>
+                <p className="text-[var(--textColor)] text-center mb-4 flex-grow">{member.bio}</p>
                 <div className="flex space-x-4 mt-auto">
                   <a href={member.email} className="text-blue-500 hover:text-blue-700 text-xl">
                     <FiMail />
