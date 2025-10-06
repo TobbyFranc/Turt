@@ -106,7 +106,8 @@ const AboutUs = () => {
     <div id="About" className="w-full py-12">
       {/* Header */}
       <div className="text-center cormorant-garamond-400 text-[var(--textColor)] space-y-4 mb-12 px-4">
-        <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold capitalize">About Us</h3>
+        <h3 className="text-4xl md:text-5xl font-bold capitalize">About Us</h3>
+        {/* <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold capitalize">About Us</h3> */}
         <p className="max-w-2xl mx-auto">Your Gateway to Cultural Understanding and Respectful Travel</p>
       </div>
 
@@ -124,9 +125,9 @@ const AboutUs = () => {
       </section>
 
       {/* Mobile Image + Heading */}
-      <div className="flex flex-col justify-center items-center md:hidden mb-8">
+      <div className="flex flex-col justify-center items-center lg:hidden mb-8">
         <img src={inca} alt="Cultural Connection" className="w-1/2 h-auto rounded-lg" />
-        <h2 className="text-3xl font-semibold mt-4 text-[var(--primaryColor)] cormorant-garamond-400">How We Empower You</h2>
+        <h2 className="text-2xl font-semibold mt-4 text-[var(--primaryColor)] cormorant-garamond-400">How We Empower You</h2>
       </div>
 
       {/* Desktop Layout: Image + Cards */}
@@ -147,7 +148,7 @@ const AboutUs = () => {
         </div>
 
         {/* Center Image with Fixed Size and Smooth Transition */}
-        <div className="hidden md:flex flex-col justify-center items-center w-full md:w-1/3">
+        <div className="hidden lg:flex flex-col justify-center items-center w-full md:w-1/3">
           <h2 className="text-3xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">How We Empower You</h2>
           <div className="relative w-full max-w-md h-[300px] overflow-hidden rounded-lg">
             <img

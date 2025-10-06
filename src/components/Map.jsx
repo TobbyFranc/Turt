@@ -9,7 +9,7 @@ const Map = () => {
       
       {/* Header Section */}
       <header className="z-10 w-full text-center cormorant-garamond-400 text-[var(--textColor)] space-y-4 mb-12 px-4">
-        <h3 className="text-2xl md:text-4xl lg:text-4xl xl:text-6xl font-bold  capitalize">
+        <h3 className="text-4xl md:text-5xl font-bold  capitalize">
           Exploring the Cultural Space with Ease
         </h3>
         <p className="max-w-2xl mx-auto text-base">

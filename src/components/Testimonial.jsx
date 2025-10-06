@@ -31,7 +31,8 @@ const TestimonialSlider = () => {
   return (
     <div className="w-full py-12">
              <div className=" text-center cormorant-garamond-400 text-[var(--textColor)]  space-y-4 mb-12 px-4">
-          <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold capitalize">What Our Users Say</h3>
+          <h3 className="text-4xl md:text-5xl font-bold capitalize">What Our Users Say</h3>
+          {/* <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold capitalize">What Our Users Say</h3> */}
           {/* <p className=''>We bridge the gap between travelers and local cultures, fostering understanding and respect. </p> */}
           <p className='max-w-2xl mx-auto'>Hear from our satisfied users who have experienced the benefits of Turtura in their travels.</p>
         </div>
@@ -56,7 +57,7 @@ const TestimonialSlider = () => {
         >
           {testimonials.map((t, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-[var(--bgColor)] shadow-lg shadow-[var(--shadowColor)] rounded-lg p-6 text-[var(--textColor)] h-full flex flex-col justify-between min-h-[320px]">
+              <div className="bg-[var(--bgColor)] hover:shadow-lg hover:shadow-[var(--shadowColor)] rounded-lg p-6 text-[var(--textColor)] h-full flex flex-col justify-between min-h-[320px]">
                 <p className=" mb-4 flex-grow">{t.quote}</p>
                 <div className="flex items-center mt-auto">
                   <img onError={(e) => (e.currentTarget.src = Turtle)} src={t.image} alt={t.name} className="w-12 h-12 rounded-full mr-4" />

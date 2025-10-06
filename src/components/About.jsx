@@ -296,7 +296,7 @@ const About = () => {
       </div>
       {/* Header */}
       <div className="text-center space-y-4 mb-12 cormorant-garamond-400 text-[var(--textColor)]">
-        <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold capitalize">
+        <h3 className="text-4xl md:text-5xl font-bold capitalize">
           Connect with Cultural Reality
         </h3>
         <p className="max-w-2xl mx-auto text-lg">

@@ -97,7 +97,7 @@ const Faqs = () => {
     <div id="FAQS" className="px-4 py-12 ">
       {/* Header */}
       <div className="text-center space-y-4 mb-12 cormorant-garamond-400 text-[var(--textColor)] ">
-        <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold font-cormorant capitalize">
+        <h3 className="text-4xl md:text-5xl font-bold font-cormorant capitalize">
           Have some questions?
         </h3>
         <p>We're here to help! Explore our FAQs or chat with TuraAI for more info.</p>
