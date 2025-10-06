@@ -69,7 +69,7 @@ const Faqs = () => {
         body: JSON.stringify({ message: chatInput }),
       });
       const data = await res.json();
-      const aiText = data.choices?.[0]?.message?.content || "Sorry, I couldn't answer that.";
+      const aiText = data.choices?.[0]?.message?.content || `Sorry, I couldn't answer that.`;
       setTypingIdx(chatHistory.length + 1);
       typeWriter(aiText, setTypedText, () => setTypingIdx(null));
       setChatHistory((prev) => [...prev, { sender: "ai", text: aiText }]);
@@ -145,7 +145,7 @@ const Faqs = () => {
         <div className="text-center mt-6">
           <button
             className="px-6 py-3 bg-[var(--primaryColor)] text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            onClick={() => setShowChat(true)}
+            onClick={() => !showChat ? setShowChat(true) : setShowChat(false)}
           >
             More questions? Ask Tura
           </button>
@@ -155,14 +155,14 @@ const Faqs = () => {
         {showChat && (
           <div className="mt-6 p-4 border border-[var(--lightGrayColor)] rounded-lg">
             <h5 className="text-lg text-[var(--textColor)] font-medium mb-4 text-center">Turtura AI Chatbox</h5>
-            <div className="bg-[var(--whiteColor)] p-4 rounded-lg h-64 overflow-y-auto scroll-smooth">
+            <div className="bg-[var(--backgroundColor)] p-4 rounded-lg h-64 overflow-y-auto scroll-smooth">
               {chatHistory.length === 0 && (
                 <p className="text-[var(--grayColor)]">Hi, I'm Tura. <br /> Ask me anything about Turtura!</p>
               )}
               {chatHistory.map((msg, idx) => (
                 <div key={idx} className={`mb-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-                  <span className={`border-2 p-2 bg-[var(--lightrayColor)] rounded-xl inline-block max-w-xs break-words ${
-                    msg.sender === "user" ? "bg-[var(--lightrayColor)] text-white" : "bg-green-500/90 text-white"
+                  <span className={` p-2 inline-block max-w-xs break-words ${
+                    msg.sender === "user" ? "bg-[var(--grayColor)] text-[var(--whiteColor)] rounded-l-xl rounded-tr-xl" : "rounded-r-xl bg-[var(--backgroundColor)] text-[var(--grayColor)]"
                   }`}>
                     {msg.sender === "ai" && idx === chatHistory.length - 1 && typingIdx === idx
                       ? typedText
@@ -197,13 +197,13 @@ const Faqs = () => {
             {/* Chat Controls */}
             <div className="text-center mt-4 space-x-2">
               <button
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                className="px-4 py-2 bg-[var(--lightGrayColor)] text-[var(--grayColor)] rounded-md hover:bg-gray-300"
                 onClick={() => setShowChat(false)}
               >
                 Close Chatbox
               </button>
               <button
-                                className="px-4 py-2 bg-red-200 text-red-700 rounded-md hover:bg-red-300"
+                className="px-4 py-2 bg-[var(--alertColor)] text-[var(--errorColor)] rounded-md hover:bg-red-300"
                 onClick={() => {
                   setChatHistory([]);
                   setTypedText("");

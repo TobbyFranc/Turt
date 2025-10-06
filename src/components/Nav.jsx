@@ -213,7 +213,7 @@ useEffect(() => {
   </button>
 
   {chatOpen && (
-    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--whiteColor)] dark:bg-slate-900 text-[var(--[var(--blackColor)]Color)] dark:text-[var(--whiteColor)] rounded-xl shadow-2xl flex flex-col`}>
+    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--backgroundColor)] text-[var(--blackColor)] rounded-xl shadow-2xl flex flex-col`}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-[var(--grayColor)]">
         <div className="flex items-center gap-3">
@@ -237,17 +237,17 @@ useEffect(() => {
               setShowToastE(true);
               setTimeout(() => setShowToastE(false), 2000);
             }}
-            className="text-md text-gray-500 hover:text-[var(--blueColor)]"
+            className="text-md text-[var(--textColor)] text-xl hover:text-[var(--blueColor)]"
             title="Expand/Collapse"
           >
             {isExpanded ? ">🗕<" : "⛶"}
           </button>
           <button
             onClick={() => setChatOpen(false)}
-            className="text-sm text-gray-500 hover:text-red-500"
+            className="text-xl text-[var(--textColor)] hover:text-red-500"
             title="Close"
           >
-            ✖
+            x
           </button>
         </div>
       </div>
@@ -260,13 +260,13 @@ useEffect(() => {
       )}
 
       {/* Mode Switch */}
-      <div className="flex justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800">
+      <div className="flex justify-between px-4 py-2 bg-[var(--bgColor)] ">
         <button
           onClick={() => {
             setChatMode("ai");
             setChatLog([]);
           }}
-          className={`flex-1 px-3 py-2 rounded-l-md text-sm ${chatMode === "ai" ? "bg-[var(--blueColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
+          className={`flex-1 px-3 py-2 rounded-l-md text-sm hover:bg-[var(--darkBlueColor)] ${chatMode === "ai" ? "bg-[var(--blueColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
         >
           AI Chat 🤖
         </button>
@@ -275,7 +275,7 @@ useEffect(() => {
             setChatMode("support");
             setChatLog([]);
           }}
-          className={`flex-1 px-3 py-2 rounded-r-md text-sm ${chatMode === "support" ? "bg-[var(--accentColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
+          className={`flex-1 px-3 py-2 rounded-r-md text-sm text-[var(--bgColor)] hover:bg-[var(--textColor)] ${chatMode === "support" ? "bg-[var(--accentColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
         >
           Support 🧑‍💼
         </button>
@@ -291,11 +291,11 @@ useEffect(() => {
           chatLog.map((msg, idx) => (
             <div
               key={idx}
-              className={`p-2 rounded-md max-w-[80%] ${
+              className={`p-2 rounded-l-xl rounded-tr-xl break-words max-w-[80%] ${
                 msg.sender === "user"
-                  ? "bg-[var(--primaryColor)] text-[var(--whiteColor)] self-end ml-auto text-right"
+                  ? "bg-[var(--grayColor)] text-[var(--whiteColor)] self-end ml-auto text-right"
                   : msg.sender === "ai"
-                  ? "bg-blue-100 dark:bg-[var(--darkBlueColor)]"
+                  ? "bg-blue-100 "
                   : msg.sender === "support"
                   ? "bg-yellow-100 dark:bg-yellow-800"
                   : "bg-red-100 dark:bg-red-800"
@@ -325,12 +325,14 @@ useEffect(() => {
 
             if (chatMode === "ai") {
               const aiReply = await getOpenAIResponse(chatInput);
-              setChatLog((prev) => [...prev, { sender: "ai", text: aiReply }]);
+              setChatLog((prev) => [...prev, { sender: "ai", text: aiReply || "Sorry I canot answer that" }]);
             } else {
               const supportReply = { sender: "support", text: "Thanks! Our team will reply shortly." };
               setChatLog((prev) => [...prev, supportReply]);
             }
           }}
+
+          // onClick={(e)=>handleSearch()}
           className="bg-[var(--accentColor)] text-[var(--whiteColor)] px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition"
         >
           Send
