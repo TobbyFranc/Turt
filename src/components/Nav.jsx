@@ -79,7 +79,7 @@ useEffect(() => {
     setChatInput("");
 
     if (chatMode === "ai") {
-      const aiResponse = { sender: "ai", text: `You said: "${chatInput}"` };
+      const aiResponse = { sender: "ai", text: "Sorry I canot answer that"  };
       setTimeout(() => setChatLog((prev) => [...prev, aiResponse]), 1000);
     } else {
       try {
@@ -312,6 +312,7 @@ useEffect(() => {
         <textarea
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleChatSubmit()}
           placeholder="Type your message..."
           rows={1}
           className="flex-grow resize-none p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"

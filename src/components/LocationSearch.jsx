@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import SearchBar from "./SearchBar";
+import LocationInfo from "./LocationInfo";
 import globalCulture from "../assets/global-culture.jpg";
-import market from '../assets/market.jpg'
-import fashion from '../assets/fashion.jpg'
-import afrofashion from '../assets/afrofashion.jpg'
-import afrowedding from '../assets/afrowedding.jpg'
-import indianwedding from '../assets/indianwedding.jpg'
-import marriage from '../assets/marriage.jpg'
-import cuisine from '../assets/cuisine.jpg'
+import market from "../assets/market.jpg";
+import fashion from "../assets/fashion.jpg";
+import afrofashion from "../assets/afrofashion.jpg";
+import afrowedding from "../assets/afrowedding.jpg";
+import indianwedding from "../assets/indianwedding.jpg";
+import marriage from "../assets/marriage.jpg";
+import cuisine from "../assets/cuisine.jpg";
+
+const tabs = ["Description", "Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
+
+const fallbackImagesMap = {
+  Fashion: [fashion, afrofashion],
+  Cuisine: [cuisine],
+  Greetings: [market],
+  Taboos: [globalCulture],
+  Marriage: [afrowedding, indianwedding, marriage],
+  Festival: [globalCulture],
+};
+
+const getContinent = (code) => ({ NG: "Africa", US: "North America", FR: "Europe" }[code] || "Unknown");
+const getLanguage = (code) => ({ NG: "English", FR: "French", JP: "Japanese" }[code] || "Unknown");
+const getWeather = async () => "Partly Cloudy";
 
 const LocationSearch = () => {
   const location = useLocation();
@@ -26,29 +43,13 @@ const LocationSearch = () => {
   const [showTura, setShowTura] = useState(false);
   const [turaQuestion, setTuraQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-const [submitSuccess, setSubmitSuccess] = useState(false);
-
-
-  const tabs = ["Description", "Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
-const fallbackImagesMap = {
-  Fashion: [fashion, afrofashion],
-  Cuisine: [cuisine],
-  Greetings: [market],
-  Taboos: [globalCulture],
-  Marriage: [afrowedding, indianwedding, marriage],
-  Festival: [globalCulture],
-};
-
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   useEffect(() => {
     if (passedQuery && !locationData) {
       handleSearch({ preventDefault: () => {} });
     }
   }, [passedQuery]);
-
-  const getContinent = (code) => ({ NG: "Africa", US: "North America", FR: "Europe" }[code] || "Unknown");
-  const getLanguage = (code) => ({ NG: "English", FR: "French", JP: "Japanese" }[code] || "Unknown");
-  const getWeather = async () => "Partly Cloudy";
 
   const fetchImagesForTab = async (topic) => {
     try {
@@ -62,13 +63,12 @@ const fallbackImagesMap = {
     }
   };
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
 
-const handleSearch = async (e) => {
-  e.preventDefault();
-  if (!query.trim()) return;
-
-  setIsSubmitting(true);
-  setSubmitSuccess(false);
+    setIsSubmitting(true);
+    setSubmitSuccess(false);
 
     try {
       const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
@@ -89,12 +89,10 @@ const handleSearch = async (e) => {
           imageResults[tab] = await fetchImagesForTab(tab.toLowerCase());
         }
       }
-      // mksw
-          await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    setSubmitSuccess(true);
-    setTimeout(() => setSubmitSuccess(false), 2000); // Reset after 2s
-  // 
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setSubmitSuccess(true);
+      setTimeout(() => setSubmitSuccess(false), 2000);
 
       setImages(imageResults);
       setLocationData({
@@ -106,9 +104,7 @@ const handleSearch = async (e) => {
         language,
         summary: wikiData.extract || "No cultural summary found.",
       });
-
     } catch (error) {
-          // console.error("Search error:", error);
       console.error("Search error:", error);
       setLocationData({
         name: query,
@@ -119,9 +115,9 @@ const handleSearch = async (e) => {
         language: "Unknown",
         summary: "Unable to fetch cultural summary.",
       });
-    }finally {
-    setIsSubmitting(false);
-  }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contentMap = {
@@ -136,51 +132,23 @@ const handleSearch = async (e) => {
 
   return (
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
-
-      {/* Search Bar */}
-      <div className="fixed top-0 left-0 bg-[var(--bgColor)]  w-full px-2 py-6 mb-4 flex flex-col md:flex-row items-start md:items-center justify-center gap-4 ">
+      {/* Header */}
+      <div className="fixed top-0 left-0 w-full px-2 py-6 bg-[var(--bgColor)] flex flex-col md:flex-row items-start md:items-center justify-center gap-4">
         <button onClick={() => navigate(-1)} className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)]">←</button>
-        <form onSubmit={handleSearch} className="flex  gap-2 max-w-6xl w-full">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter location"
-            className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)]"
-          />
-<button
-  type="submit"
-  disabled={isSubmitting}
-  className={`px-4 py-2 rounded-md min-w-[140px] transition-all duration-300 ${
-    isSubmitting
-      ? "bg-gray-400 cursor-not-allowed"
-      : submitSuccess
-      ? "bg-green-500"
-      : "bg-[var(--accentColor)] hover:bg-yellow-600"
-  } text-white`}
->
-  {isSubmitting
-    ? "Checking..."
-    : submitSuccess
-    ? "✓ Submitted"
-    : "Search"}
-</button>
+<SearchBar
+  query={query}
+  setQuery={setQuery}
+  handleSearch={handleSearch}
+  isSubmitting={isSubmitting}
+  submitSuccess={submitSuccess}
+/>
 
-        </form>
       </div>
 
       {/* Location Info */}
-      {locationData && (
-        <div className="max-w-6xl mx-auto px-4 mt-40 md:mt-28 mb-6 font-cormorant">
-          <h2 className="text-3xl font-semibold text-[var(--primaryColor)] capitalize">{locationData.name}</h2>
-          <p className="text-[var(--textColor)]">🌍 Continent: {locationData.continent}</p>
-          <p className="text-[var(--textColor)]">📍 Lat: {locationData.lat}, Lon: {locationData.lon}</p>
-          <p className="text-[var(--textColor)]">🌦️ Weather: {locationData.weather}</p>
-          <p className="text-[var(--textColor)]">🗣️ Language: {locationData.language}</p>
-        </div>
-      )}
+<LocationInfo locationData={locationData} />
 
-      {/* Image Section */}
+      {/* Map or Images */}
       {locationData && (
         <div className="max-w-5xl mx-auto px-4 mb-6">
           {activeTab === "Description" ? (
@@ -192,34 +160,24 @@ const handleSearch = async (e) => {
               loading="lazy"
             />
           ) : (
-<Swiper
-  key={activeTab}
-  modules={[Navigation, Pagination]}
-  spaceBetween={10}
-  slidesPerView={1}
-  navigation
-  pagination={{ clickable: true }}
->
-  {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => (
-    <SwiperSlide key={index}>
-<div className="w-full h-[400px] rounded-md overflow-hidden">
-  <img
-    src={img?.urls?.regular || img}
-    alt={img?.alt_description || `${activeTab}-${index}`}
-    className="w-full h-full object-cover"
-  />
-</div>
-
-
-    </SwiperSlide>
-  ))}
-</Swiper>
-
+            <Swiper key={activeTab} modules={[Navigation, Pagination]} spaceBetween={10} slidesPerView={1} navigation pagination={{ clickable: true }}>
+              {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => (
+                <SwiperSlide key={index}>
+                  <div className="w-full h-[400px] rounded-md overflow-hidden">
+                    <img
+                      src={img?.urls?.regular || img}
+                      alt={img?.alt_description || `${activeTab}-${index}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           )}
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Tabs and Content */}
       {locationData && (
         <div className="max-w-5xl mx-auto px-4 mb-6">
           <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
@@ -229,7 +187,7 @@ const handleSearch = async (e) => {
                 onClick={() => setActiveTab(tab)}
                 className={`p-2 border-b-2 cursor-pointer ${
                   activeTab === tab
-                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)] "
+                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
                     : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
                 }`}
               >
@@ -237,24 +195,25 @@ const handleSearch = async (e) => {
               </li>
             ))}
           </ul>
-          <div className="mt-4 text-[var(--textColor)] text-justify">{contentMap[activeTab]}</div>
+          <div className="mt-4 text-[var(--textColor)] text-justify">
+            {contentMap[activeTab]}
+          </div>
         </div>
       )}
 
       {/* Tura AI Button */}
-<div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
-  {!showTura && (
-    <button
-      onClick={() => setShowTura(true)}
-      className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
-    >
-      Ask Tura AI 💬
-    </button>
-  )}
-</div>
+      <div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
+        {!showTura && (
+          <button
+            onClick={() => setShowTura(true)}
+            className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
+          >
+            Ask Tura AI 💬
+          </button>
+        )}
+      </div>
 
-
-      {/* Join Community Button */}
+      {/* Community Link */}
       <div className="max-w-5xl mx-auto px-4 mb-6 flex justify-start pointer-events-none">
         <a
           href="/CommunityChatroom"
@@ -264,31 +223,29 @@ const handleSearch = async (e) => {
         </a>
       </div>
 
-      {/* Tura AI Sidebar */}
-<div
-  className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
-    showTura ? "translate-x-0" : "translate-x-full"
-  }`}
->
-
-          <button
-            onClick={() => setShowTura(false)}
-            className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-          >
-            ✕
-          </button>
-          <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
-          <textarea
-            value={turaQuestion}
-            onChange={(e) => setTuraQuestion(e.target.value)}
-            placeholder="Ask a cultural question..."
-            className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
-          ></textarea>
-          <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
-            Submit
-          </button>
-        </div>
-    {/* </div> */}
+      {/* Tura AI Chat Panel */}
+      <div
+        className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
+          showTura ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <button
+          onClick={() => setShowTura(false)}
+          className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+        >
+          ✕
+        </button>
+        <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
+        <textarea
+          value={turaQuestion}
+          onChange={(e) => setTuraQuestion(e.target.value)}
+          placeholder="Ask a cultural question..."
+          className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
+        ></textarea>
+        <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
+          Submit
+        </button>
+      </div>
     </div>
   );
 };

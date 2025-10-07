@@ -73,10 +73,11 @@ const LandingFooter = () => {
           <h3 className="text-xl font-semibold bg-[var(--backgroundColor)] text-[var(--textColor)] rounded-md px-2 py-1 w-fit">
             Contact Us
           </h3>
-          <ul className="space-y-2 text-[var(--backgroundColor)]">
-            <li>Email: <a href="mailto:turtura@gmail.com" className="hover:underline">culturetour@turtura.com</a></li>
-            <li>Phone: <a href="tel:+2348144950975" className="hover:underline">(+234) 81-4495-0975</a></li>
-            <li>Address: Ibadan, Oyo State, Nigeria</li>
+          <ul className="space-y-2">
+            <li className="text-[var(--backgroundColor)]">Email: <a href="mailto:turturatour@gmail.com" className="text-[var(--textColor)] hover:underline">help@turtura.com</a></li>
+            <li className="text-[var(--backgroundColor)]">Phone: <a href="tel:+2348144950975" className="text-[var(--textColor)] hover:underline">(+234) 81-4TUR-TURA</a></li>
+            <li className="text-[var(--backgroundColor)]">Address: <a href="googlemap.com" className="text-[var(--textColor)] hover:underline">Ibadan, Oyo State, Nigeria</a></li>
+            {/* <li>Address: Ibadan, Oyo State, Nigeria</li> */}
           </ul>
         </div>
       </div>

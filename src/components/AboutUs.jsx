@@ -38,13 +38,13 @@ const cardDataRight = [
   {
     title: "Ethical Impact",
     description: "Support sustainable tourism that uplifts and preserves local cultures.",
-    bgColor: "bg-[var(--accentColor)]",
+    bgColor: "bg-[var(--darkGrayColor)]",
     // hoverImage: imgEthical,
   },
   {
     title: "Community Focused",
     description: "Empowering local communities through sustainable tourism practices.",
-    bgColor: "bg-black",
+    bgColor: "bg-[var(--blackColor)]",
     // hoverImage: imgCommunity,
   },
   {
@@ -108,7 +108,7 @@ const AboutUs = () => {
       <div className="text-center cormorant-garamond-400 text-[var(--textColor)] space-y-4 mb-12 px-4">
         <h3 className="text-4xl md:text-5xl font-bold capitalize">About Us</h3>
         {/* <h3 className="text-2xl md:text-4xl xl:text-6xl font-bold capitalize">About Us</h3> */}
-        <p className="max-w-2xl mx-auto">Your Gateway to Cultural Understanding and Respectful Travel</p>
+        <p className="max-w-2xl mx-auto">Your gateway to cultural understanding and respectful travel</p>
       </div>
 
       {/* Divider */}
@@ -199,7 +199,7 @@ const AboutUs = () => {
           {featureCards.map((feature, index) => (
             <div
               key={index}
-              className="text-[var(--textColor)] rounded-lg p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300"
+              className="text-[var(--textColor)] rounded-lg p-6 hover:shadow-lg hover:shadow-[var(--shadowColor)] hover:-translate-y-1 transition duration-300"
             >
               {feature.icon}
               <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
