@@ -1,11 +1,11 @@
-// src/components/FaqItem.jsx
+
 import React from "react";
 
 const FaqItem = ({ faq, index, openIndex, toggle }) => {
   const isOpen = openIndex === index;
 
   return (
-    <article className="border border-[var(--textColor)] rounded-lg">
+    <article className="border border-[var(--textColor)] rounded-lg  ">
       <button
         className="w-full text-left p-4 flex justify-between items-center focus:outline-none"
         onClick={() => toggle(index)}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Turtle from "../assets/Turt.png";
 import emailjs from "@emailjs/browser";
+import { FaLinkedin } from 'react-icons/fa';
 
 const LandingFooter = () => {
   const [email, setEmail] = useState("");
@@ -53,6 +54,19 @@ const LandingFooter = () => {
           <p className="text-[var(--backgroundColor)]">
             Illuminating cultural blind spots. Navigate unfamiliar places with confidence, curiosity, and connection.
           </p>
+          <div className="">
+            {/* social links */}
+            {/* X */}
+            <span></span>
+            {/* Insta */}
+            <span></span>
+            {/* LinkdIn */}
+            <span>
+              <a href='https://www.linkedin.com/in/tobi-frank-4-greencraft' target="_blank" rel="noopener noreferrer" className="text-[var(--lightGrayColor)] hover:text-[var(--alertColor)] text-xl">
+                <FaLinkedin />
+              </a>
+            </span>
+          </div>
         </div>
 
         {/* Quick Links */}
@@ -99,7 +113,7 @@ const LandingFooter = () => {
             className={`px-4 py-2 rounded-md text-[var(--grayColor)] flex items-center justify-center transition ${
               status === "success"
                 ? "bg-green-600 text-[var(--whiteColor)]"
-                : "bg-[var(--grayColor)] text-[var(--whiteColor)] hover:bg-[var(--accentColor)] transition duration-300"
+                : "bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--accentColor)] transition duration-300"
             }`}
           >
             {status === "loading" ? (

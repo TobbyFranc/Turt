@@ -79,7 +79,7 @@ useEffect(() => {
     setChatInput("");
 
     if (chatMode === "ai") {
-      const aiResponse = { sender: "ai", text: "Sorry I canot answer that"  };
+      const aiResponse = { sender: "ai", text: `You said: "${chatInput}"` };
       setTimeout(() => setChatLog((prev) => [...prev, aiResponse]), 1000);
     } else {
       try {
@@ -166,18 +166,18 @@ useEffect(() => {
       <div className={`fixed z-50 ${isOpen ? "bottom-6 right-6" : "top-20 right-6"}`}>
         <button
           onClick={toggleTheme}
-          className="bg-[var(--grayColor)] dark:bg-slate-800 text-[var(--lightGrayColor)] dark:text-yellow-400 p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-[var(--accentColor)] transition duration-300"
+          className="bg-[var(--grayColor)] text-[var(--alertColor)] p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-[var(--accentColor)] transition duration-300"
           title="Toggle Dark Mode"
         >
           {!darkMode ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round"               strokeLinejoin="round"
               strokeWidth="2"
               d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.36 4.95l-.7-.7M6.34 6.34l-.7-.7m12.02 12.02l-.7-.7M6.34 17.66l-.7-.7M12 5a7 7 0 000 14a7 7 0 000-14z"
             />
           </svg>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
           </svg>
         )}
@@ -312,7 +312,7 @@ useEffect(() => {
         <textarea
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleChatSubmit()}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           placeholder="Type your message..."
           rows={1}
           className="flex-grow resize-none p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"

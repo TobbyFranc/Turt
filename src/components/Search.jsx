@@ -1,58 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import Globe from "react-globe.gl";
 import { useNavigate } from "react-router-dom";
-
-const regionMap = {
-ghana: "africa",
-  nigeria: "africa",
-  china: "asia",
-  japan: "asia",
-  india: "south-asia",
-  france: "europe",
-  england: "europe",
-  germany: "europe",
-  usa: "americas",
-  canada: "americas",
-  australia: "oceania",
-  "saudi arabia": "middle-east",
-  egypt: "africa",
-  kenya: "africa",
-  brazil: "americas",
-  mexico: "americas",
-  italy: "europe",
-  spain: "europe",
-  russia: "europe",
-  "united kingdom": "europe",
-  "south africa": "africa",
-  argentina: "americas",
-  chile: "americas",
-  peru: "americas",
-  colombia: "americas",
-  indonesia: "asia",
-  thailand: "asia",
-  vietnam: "asia",
-  malaysia: "asia",
-  singapore: "asia",
-  philippines: "asia",
-  turkey: "middle-east",
-  iran: "middle-east",
-  iraq: "middle-east",
-  malawi: "africa",
-  yoruba: "africa",
-  igbo: "africa",
-  hausa: "africa",
-  efik: "africa",
-  viking: "europe",
-  norsemen: "europe",
-  
-
-
-};
+import { useVoiceSearch } from "../hooks/useVoiceSearch";
+import regionMap from './regionMap'
 
 
 const Search = () => {
-
-
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("");
   const [rawResult, setRawResult] = useState("");
@@ -66,13 +19,17 @@ const Search = () => {
   const [isHoveringGlobe, setIsHoveringGlobe] = useState(false);
   const [typingDone, setTypingDone] = useState(false);
   const [globeError, setGlobeError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   const globeRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-      },
+      (pos) => setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
       (err) => console.warn("Location access denied:", err.message)
     );
   }, []);
@@ -83,7 +40,10 @@ const Search = () => {
     const interval = setInterval(() => {
       setTypedResult(rawResult.slice(0, i));
       i++;
-      if (i > rawResult.length){ clearInterval(interval); setTypingDone(true);}
+      if (i > rawResult.length) {
+        clearInterval(interval);
+        setTypingDone(true);
+      }
     }, 20);
     return () => clearInterval(interval);
   }, [rawResult]);
@@ -116,8 +76,6 @@ const Search = () => {
     }
   }, [isHoveringGlobe]);
 
-    const navigate = useNavigate();
-
   const degToRad = (deg) => (deg * Math.PI) / 180;
 
   const calculateDistance = (lat1, lng1, lat2, lng2) => {
@@ -126,71 +84,121 @@ const Search = () => {
     const dLng = degToRad(lng2 - lng1);
     const a =
       Math.sin(dLat / 2) ** 2 +
-      Math.cos(degToRad(lat1)) *
-        Math.cos(degToRad(lat2)) *
-        Math.sin(dLng / 2) ** 2;
+      Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * Math.sin(dLng / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
-  const handleSearch = async () => {
-    const normalizedQuery = query.trim().toLowerCase();
-    const correctedRegion = regionMap[normalizedQuery];
-    if (correctedRegion && correctedRegion !== region) {
-      setRegion(correctedRegion);
-    }
+const handleSearch = async () => {
+  if (!query.trim()) return;
+  setIsSubmitting(true);
+  setSubmitSuccess(false);
+  setPreviewUrl(null); // 👈 Clears preview on every search
 
-    try {
-      const wikiRes = await fetch(
-        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`
-      );
-      const wikiData = await wikiRes.json();
-      setRawResult(wikiData.extract || "No insights found.");
+  const normalizedQuery = query.trim().toLowerCase();
+  const correctedRegion = regionMap[normalizedQuery];
+  if (correctedRegion && correctedRegion !== region) {
+    setRegion(correctedRegion);
+  }
 
-      const geoRes = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
-      );
-      const geoData = await geoRes.json();
-      if (geoData.length > 0) {
-        const { lat, lon } = geoData[0];
-        const target = { lat: parseFloat(lat), lng: parseFloat(lon) };
-        setMapCoords(target);
-        setAutoRotate(false);
+  try {
+    const wikiRes = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`
+    );
+    const wikiData = await wikiRes.json();
+    setRawResult(wikiData.extract || "No insights found.");
 
-        if (globeRef.current) {
-          globeRef.current.pointOfView({ lat: target.lat, lng: target.lng, altitude: 1.5 }, 2000);
-        }
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+    );
+    const geoData = await geoRes.json();
 
-        if (location?.lat && location?.lng) {
-          const km = calculateDistance(location.lat, location.lng, target.lat, target.lng);
-          setDistance(km.toFixed(2));
-          setArcsData([
-            {
-              startLat: location.lat,
-              startLng: location.lng,
-              endLat: target.lat,
-              endLng: target.lng,
-              color: ["#f59e0b", "#1e3a8a"],
-            },
-          ]);
-        }
+    if (geoData.length > 0) {
+      const { lat, lon } = geoData[0];
+      const target = { lat: parseFloat(lat), lng: parseFloat(lon) };
+      setMapCoords(target);
+      setAutoRotate(false);
+
+      if (globeRef.current) {
+        globeRef.current.pointOfView({ lat: target.lat, lng: target.lng, altitude: 1.5 }, 2000);
       }
-    } catch {
-      setRawResult("Unable to fetch insights at the moment.");
-    }
-  };
 
-  const handleClearSearch = () => {
-  setQuery("");
-  setRegion("");
-  setRawResult("");
-  setTypedResult("");
-  setDistance(null);
-  setArcsData([]);
-  setMapCoords({ lat: 7.9465, lng: -1.0232 });
-  setAutoRotate(true);
+      if (location?.lat && location?.lng) {
+        const km = calculateDistance(location.lat, location.lng, target.lat, target.lng);
+        setDistance(km.toFixed(2));
+        setArcsData([
+          {
+            startLat: location.lat,
+            startLng: location.lng,
+            endLat: target.lat,
+            endLng: target.lng,
+            color: ["#f59e0b", "#1e3a8a"],
+          },
+        ]);
+      }
+    }
+
+    await new Promise((r) => setTimeout(r, 1500));
+    setSubmitSuccess(true);
+    setTimeout(() => setSubmitSuccess(false), 2000);
+  } catch {
+    setRawResult("Unable to fetch insights at the moment.");
+  } finally {
+    setIsSubmitting(false);
+  }
 };
 
+
+  const startVoiceRecognition = useVoiceSearch(setQuery, handleSearch);
+
+const handlePhotoUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setPreviewUrl(URL.createObjectURL(file));
+  setIsAnalyzing(true); // 👈 Start analyzing
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const response = await fetch("http://localhost:5000/api/edenai/recognize", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+    const label = result.google?.items?.[0]?.label || "unknown";
+    setQuery(label);
+    handleSearch();
+  } catch (err) {
+    console.error("Image recognition failed:", err);
+    setRawResult("Sorry, we couldn't identify anything from the photo.");
+  } finally {
+    setIsAnalyzing(false); // 👈 Done analyzing
+  }
+};
+useEffect(() => {
+  if (typedResult && !["No insights found.", "Unable to fetch insights at the moment.",  "Sorry, we couldn't identify anything from the photo."].includes(typedResult)) {
+    const recent = JSON.parse(localStorage.getItem("recentSearches") || "[]");
+    const updated = [query, ...recent.filter((q) => q !== query)].slice(0, 5);
+    localStorage.setItem("recentSearches", JSON.stringify(updated));
+  }
+}, [typedResult]);
+
+
+
+  const handleClearSearch = () => {
+    setQuery("");
+    setRegion("");
+    setRawResult("");
+    setTypedResult("");
+    setDistance(null);
+    setArcsData([]);
+    setMapCoords({ lat: 7.9465, lng: -1.0232 });
+    setAutoRotate(true);
+    setPreviewUrl(null);
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") handleSearch();
@@ -209,24 +217,57 @@ const Search = () => {
 
   return (
     <section className="py-12 my-6 text-[var(--grayColor)] open-sans-400">
-      {/*  */}
-      {/* Static Heading */}
-      <div className=" text-center space-y-4 mb-12 rounded-md py-2 text-[var(--textColor)]">
-        <h3 className="text-2xl font-bold  capitalize">Search for Cultural Insights</h3>
-        <p className=" inter-200 ">Type in a country or culture to get instant insights and tips from Turtura.</p>
+      <div className="text-center space-y-4 mb-12 rounded-md py-2 text-[var(--textColor)]">
+        <h3 className="text-2xl font-bold capitalize">Search for Cultural Insights</h3>
+        <p className="inter-200">Type in a country or culture to get instant insights and tips from Turtura.</p>
       </div>
 
+      <div className="flex flex-col md:flex-row items-center gap-4 px-4 max-w-4xl mx-auto">
+        <div className="relative w-full md:w-1/2">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Enter a country or culture..."
+            className="w-full p-4 pr-20 border border-[var(--lightGrayColor)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"
+          />
+          <div className="absolute top-1/2 right-4 flex gap-2 -translate-y-1/2 border-l pl-2 border-[var(--lightGrayColor)]">
+            <button onClick={startVoiceRecognition} className="hover:scale-110 transition">
+              {/* 🎤 Voice SVG */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                className="w-5 h-5 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
+                <path d="M12 1v11" />
+                <path d="M8 5a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg>
+            </button>
 
-      {/*  */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-4 px-4 max-w-4xl mx-auto">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder="Enter a country or culture..."
-          className="w-full md:w-1/2 p-4 border border-[var(--lightGrayColor)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"
-        />
+            <label htmlFor="photoInput" className="cursor-pointer hover:scale-110 hover: transition">
+              {/* 📷 Photo SVG */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                className="w-5 h-5 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handlePhotoUpload}
+              className="hidden"
+              id="photoInput"
+            />
+          </div>
+        </div>
+
+        {/* Region Dropdown */}
         <select
           value={region}
           onChange={(e) => setRegion(e.target.value)}
@@ -242,14 +283,35 @@ const Search = () => {
           <option value="americas">Americas</option>
           <option value="oceania">Oceania</option>
         </select>
+
+        {/* Search Button */}
         <button
+          disabled={isSubmitting}
           onClick={handleSearch}
-          className="bg-[var(--accentColor)] w-[140px] text-[var(--whiteColor)] px-6 py-4 rounded-md hover:bg-[var(--primaryColor)] transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className={`min-w-[140px] px-6 py-4 rounded-md transition duration-300 ${
+            isSubmitting
+              ? "bg-gray-400 text-white"
+              : submitSuccess
+              ? "bg-green-600 text-white"
+              : "bg-[var(--accentColor)] text-white hover:bg-[var(--primaryColor)]"
+          }`}
         >
-          Search
+          {isSubmitting ? "Loading..." : submitSuccess ? "✔ Completed" : "Search"}
         </button>
       </div>
 
+      {/* Image Preview */}
+{previewUrl && (
+  <div className="mt-6 text-center">
+    <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-md mx-auto" />
+    {isAnalyzing && (
+      <p className="text-sm text-[var(--grayColor)] mt-2">Analyzing image...</p>
+    )}
+  </div>
+)}
+
+
+      {/* Cultural Insights */}
       {typedResult && (
         <div className="mt-12 px-4 max-w-4xl mx-auto text-center">
           <h4 className="text-2xl font-semibold text-[var(--primaryColor)] capitalize cormorant-garamond-200 mb-4">
@@ -261,17 +323,21 @@ const Search = () => {
               Approximate distance from your location: {distance} km
             </p>
           )}
-  {typingDone && (
-  <button className="text-[var(--accentColor)] hover:text-[var(--primaryColor)]" onClick={() => navigate("/LocationSearch", { state: { query } })}>
-    ...see more
-  </button>
+{typingDone &&
+  typedResult &&
+  !["No insights found.", "Unable to fetch insights at the moment.", "Sorry, we couldn't identify anything from the photo."].includes(typedResult.trim()) && (
+    <button
+      onClick={() => navigate("/LocationSearch", { state: { query } })}
+      className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)]"
+    >
+      ...see more
+    </button>
 )}
-
-
 
         </div>
       )}
 
+      {/* View Toggle and Clear */}
       <div className="text-center mt-8 flex gap-2 items-center justify-center">
         <button
           onClick={handleViewToggle}
@@ -279,19 +345,16 @@ const Search = () => {
         >
           Switch to {viewMode === "globe" ? "Google Map" : "Globe View"}
         </button>
-
-        {/* clear search and cultural hx btn */}
-<button
-  onClick={handleClearSearch}
-  className="bg-[var(--accentColor)] border-2 hover:bg-[var(--primaryColor)] text-[var(--textColor)] hover:text-[var(--whiteColor)] transition duration-300 px-6 py-2 rounded-md"
->
-  Clear Search
-</button>
-
-
-
+        <button
+          onClick={handleClearSearch}
+          className="bg-[var(--accentColor)] border-2 hover:bg-[var(--primaryColor)] text-[var(--textColor)] hover:text-[var(--whiteColor)] transition duration-300 px-6 py-2 rounded-md"
+        >
+          Clear Search
+        </button>
+        
       </div>
 
+      {/* Map or Globe View */}
       <div className="mt-8 px-4">
         {viewMode === "map" ? (
           <div className="w-full h-[400px] rounded-lg overflow-hidden">
@@ -305,7 +368,7 @@ const Search = () => {
           </div>
         ) : globeError ? (
           <div className="w-full h-[400px] flex justify-center items-center">
-            <img src={sphere} alt="Fallback Globe" className="w-64 h-64 object-contain" />
+            <p className="text-[var(--grayColor)]">Unable to load globe view.</p>
           </div>
         ) : (
           <div
@@ -350,3 +413,4 @@ const Search = () => {
 };
 
 export default Search;
+
