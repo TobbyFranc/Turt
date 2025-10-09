@@ -180,7 +180,7 @@ const Search = () => {
           onClick={handleViewToggle}
           className="hover:bg-[var(--primaryColor)] border-2 border-[var(--primaryColor)] text-[var(--textColor)] hover:text-white transition duration-300 px-6 py-2 rounded-md"
         >
-          Switch to {viewMode === "globe" ? "Google Map" : "Globe View"}
+          Switch to {viewMode === "globe" ? "Map" : "Globe"}
         </button>
         <button
           onClick={handleClearSearch}

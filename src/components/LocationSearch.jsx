@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import LocationInfo from "./LocationInfo";
-import { useVoiceSearch } from "../hooks/useVoiceSearch";
+import SmartSearchInput from "./SmartSearchInput";
 import globalCulture from "../assets/global-culture.jpg";
 import market from "../assets/market.jpg";
 import fashion from "../assets/fashion.jpg";
@@ -42,8 +42,11 @@ const suggestTabs = (query) => {
 const LocationSearch = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const passedQuery = location.state?.query || "";
+  const passedQuery = location.state?.query || searchParams.get("q") || "";
+  const autoSearch = searchParams.get("auto") === "true";
+
   const [query, setQuery] = useState(passedQuery);
   const [locationData, setLocationData] = useState(location.state?.locationData || null);
   const [images, setImages] = useState({});
@@ -53,57 +56,13 @@ const LocationSearch = () => {
   const [showTura, setShowTura] = useState(false);
   const [turaQuestion, setTuraQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchComplete, setSearchComplete] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [countdown, setCountdown] = useState(null);
 
   useEffect(() => {
-  if (passedQuery) {
-    setQuery(passedQuery);
-    handleSearch({ preventDefault: () => {} });
-  }
-}, [passedQuery]);
-
-
-  const startVoiceRecognition = useVoiceSearch(
-    setQuery,
-    () => {
-      setIsListening(false);
-      setCountdown(3);
-      let timer = 3;
-      const interval = setInterval(() => {
-        timer -= 1;
-        setCountdown(timer);
-        if (timer === 0) {
-          clearInterval(interval);
-          setCountdown(null);
-          handleSearch({ preventDefault: () => {} });
-        }
-      }, 1000);
-    }
-  );
-
-  const handlePhotoUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await fetch("http://localhost:5000/api/edenai/recognize", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      const label = result.google?.items?.[0]?.label || "unknown";
-      setQuery(label);
+    if (passedQuery && autoSearch) {
+      setQuery(passedQuery);
       handleSearch({ preventDefault: () => {} });
-    } catch {
-      console.error("Photo recognition failed.");
     }
-  };
+  }, [passedQuery, autoSearch]);
 
   const fetchImagesForTab = async (topic) => {
     try {
@@ -122,7 +81,6 @@ const LocationSearch = () => {
     if (!query.trim()) return;
 
     setIsSubmitting(true);
-    setSearchComplete(false);
 
     try {
       const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
@@ -156,9 +114,6 @@ const LocationSearch = () => {
         language,
         summary: wikiData.extract || "No cultural summary found.",
       });
-
-      setSearchComplete(true);
-      setTimeout(() => setSearchComplete(false), 3000);
     } catch (error) {
       console.error("Search error:", error);
     } finally {
@@ -179,8 +134,8 @@ const LocationSearch = () => {
   return (
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
       {/* Header */}
-      <div className="fixed top-0 left-0 w-full px-4 py-4 bg-[var(--bgColor)] z-50">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-2 max-w-5xl mx-auto">
+      <div className="fixed top-0 left-0 w-full px-4 py-2 bg-[var(--bgColor)] z-50">
+        <div className="flex items-center justify-between gap-2 max-w-5xl mx-auto">
           <button
             onClick={() => navigate(-1)}
             className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)] transition"
@@ -188,79 +143,23 @@ const LocationSearch = () => {
             ← 
           </button>
 
-          <div className="relative w-full md:w-2/3">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch(e)}
-              placeholder="Search culture, country, or tradition..."
-              className="w-full px-5 py-3 pr-24 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition-all duration-300"
-              autoFocus
+          <div className="flex-1 w-full">
+            <SmartSearchInput
+              onSearch={(query) => {
+                setQuery(query);
+                handleSearch({ preventDefault: () => {} });
+              }}
+              showRegionMap={false}
+              onPreviewUpdate={() => {}}
             />
-            <div className="absolute top-1/2 right-4 flex gap-2 -translate-y-1/2">
-              <button
-                onClick={() => {
-                  setIsListening(true);
-                  startVoiceRecognition();
-                }}
-                className={`hover:scale-110 transition ${isListening ? "animate-pulse text-[var(--primaryColor)]" : ""}`}
-                title="Voice Search"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[var(--grayColor)] hover:text-[var(--primaryColor)] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 1v11m-4-6a4 4 0 118 0v6a4 4 0 11-8 0zM19 10v2a7 7 0 01-14 0v-2m7 9v3m-4 0h8" />
-</svg>
-
-              </button>
-              <label htmlFor="photoInput" className="cursor-pointer hover:scale-110 transition" title="Upload Photo">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[var(--grayColor)] hover:text-[var(--primaryColor)] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h3l2-3h8l2 3h3a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
-  <circle cx="12" cy="13" r="4" />
-</svg>
-
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handlePhotoUpload}
-                className="hidden"
-                id="photoInput"
-              />
-            </div>
-
-            {isListening && (
-              <div className="absolute top-full left-0 w-full text-center text-[var(--primaryColor)] text-sm mt-2 animate-pulse">
-                🎙️ Listening... Speak now
-              </div>
-            )}
-            {countdown !== null && (
-              <div className="absolute top-full left-0 w-full text-center text-[var(--accentColor)] text-sm mt-2 animate-pulse">
-                ⏳ Searching in {countdown}...
-              </div>
-            )}
           </div>
-
-          <button
-            disabled={isSubmitting}
-            onClick={handleSearch}
-            className={`min-w-[140px] px-6 py-3 rounded-md transition duration-300 ${
-              isSubmitting
-                ? "bg-gray-400 text-white"
-                : searchComplete
-                ? "bg-green-600 text-white"
-                : "bg-[var(--accentColor)] text-white hover:bg-[var(--primaryColor)]"
-            }`}
-          >
-            {isSubmitting ? "Searching..." : searchComplete ? "✔ Done" : "Search"}
-          </button>
         </div>
       </div>
 
       {/* Location Info */}
       <LocationInfo locationData={locationData} />
 
-      {/* Map and Image Slider Section */}
+      {/* Map or Image Slider */}
       {locationData && (
         <div className="max-w-5xl mx-auto px-4 mb-6">
           {activeTab === "Description" ? (
@@ -309,7 +208,7 @@ const LocationSearch = () => {
               <li
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`p-2 border-b-2 cursor-pointer ${
+                                className={`p-2 border-b-2 cursor-pointer ${
                   activeTab === tab
                     ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
                     : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
@@ -406,3 +305,4 @@ const LocationSearch = () => {
 };
 
 export default LocationSearch;
+
