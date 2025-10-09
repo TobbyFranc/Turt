@@ -5,8 +5,8 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import SearchBar from "./SearchBar";
 import LocationInfo from "./LocationInfo";
+import { useVoiceSearch } from "../hooks/useVoiceSearch";
 import globalCulture from "../assets/global-culture.jpg";
 import market from "../assets/market.jpg";
 import fashion from "../assets/fashion.jpg";
@@ -16,7 +16,7 @@ import indianwedding from "../assets/indianwedding.jpg";
 import marriage from "../assets/marriage.jpg";
 import cuisine from "../assets/cuisine.jpg";
 
-const tabs = ["Description", "Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
+const defaultTabs = ["Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
 
 const fallbackImagesMap = {
   Fashion: [fashion, afrofashion],
@@ -31,6 +31,14 @@ const getContinent = (code) => ({ NG: "Africa", US: "North America", FR: "Europe
 const getLanguage = (code) => ({ NG: "English", FR: "French", JP: "Japanese" }[code] || "Unknown");
 const getWeather = async () => "Partly Cloudy";
 
+const suggestTabs = (query) => {
+  const lower = query.toLowerCase();
+  if (lower.includes("food") || lower.includes("dish")) return ["Cuisine", "Festival"];
+  if (lower.includes("fashion") || lower.includes("style")) return ["Fashion", "Greetings"];
+  if (lower.includes("wedding") || lower.includes("marriage")) return ["Marriage", "Festival"];
+  return defaultTabs;
+};
+
 const LocationSearch = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,18 +46,64 @@ const LocationSearch = () => {
   const passedQuery = location.state?.query || "";
   const [query, setQuery] = useState(passedQuery);
   const [locationData, setLocationData] = useState(location.state?.locationData || null);
-  const [images, setImages] = useState(location.state?.images || {});
+  const [images, setImages] = useState({});
   const [activeTab, setActiveTab] = useState("Description");
+  const [availableTabs, setAvailableTabs] = useState(defaultTabs);
+  const [showFilter, setShowFilter] = useState(false);
   const [showTura, setShowTura] = useState(false);
   const [turaQuestion, setTuraQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [searchComplete, setSearchComplete] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [countdown, setCountdown] = useState(null);
 
   useEffect(() => {
-    if (passedQuery && !locationData) {
-      handleSearch({ preventDefault: () => {} });
+  if (passedQuery) {
+    setQuery(passedQuery);
+    handleSearch({ preventDefault: () => {} });
+  }
+}, [passedQuery]);
+
+
+  const startVoiceRecognition = useVoiceSearch(
+    setQuery,
+    () => {
+      setIsListening(false);
+      setCountdown(3);
+      let timer = 3;
+      const interval = setInterval(() => {
+        timer -= 1;
+        setCountdown(timer);
+        if (timer === 0) {
+          clearInterval(interval);
+          setCountdown(null);
+          handleSearch({ preventDefault: () => {} });
+        }
+      }, 1000);
     }
-  }, [passedQuery]);
+  );
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/edenai/recognize", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      const label = result.google?.items?.[0]?.label || "unknown";
+      setQuery(label);
+      handleSearch({ preventDefault: () => {} });
+    } catch {
+      console.error("Photo recognition failed.");
+    }
+  };
 
   const fetchImagesForTab = async (topic) => {
     try {
@@ -68,7 +122,7 @@ const LocationSearch = () => {
     if (!query.trim()) return;
 
     setIsSubmitting(true);
-    setSubmitSuccess(false);
+    setSearchComplete(false);
 
     try {
       const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
@@ -83,16 +137,14 @@ const LocationSearch = () => {
       const language = getLanguage(countryCode);
       const weather = await getWeather();
 
-      const imageResults = {};
-      for (const tab of tabs) {
-        if (tab !== "Description") {
-          imageResults[tab] = await fetchImagesForTab(tab.toLowerCase());
-        }
-      }
+      const suggested = suggestTabs(query);
+      setAvailableTabs(suggested);
+      setActiveTab("Description");
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setSubmitSuccess(true);
-      setTimeout(() => setSubmitSuccess(false), 2000);
+      const imageResults = {};
+      for (const tab of suggested) {
+        imageResults[tab] = await fetchImagesForTab(tab.toLowerCase());
+      }
 
       setImages(imageResults);
       setLocationData({
@@ -104,17 +156,11 @@ const LocationSearch = () => {
         language,
         summary: wikiData.extract || "No cultural summary found.",
       });
+
+      setSearchComplete(true);
+      setTimeout(() => setSearchComplete(false), 3000);
     } catch (error) {
       console.error("Search error:", error);
-      setLocationData({
-        name: query,
-        continent: "Unknown",
-        lat: "Unknown",
-        lon: "Unknown",
-        weather: "Unknown",
-        language: "Unknown",
-        summary: "Unable to fetch cultural summary.",
-      });
     } finally {
       setIsSubmitting(false);
     }
@@ -133,22 +179,88 @@ const LocationSearch = () => {
   return (
     <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
       {/* Header */}
-      <div className="fixed top-0 left-0 w-full px-2 py-6 bg-[var(--bgColor)] flex flex-col md:flex-row items-start md:items-center justify-center gap-4">
-        <button onClick={() => navigate(-1)} className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)]">←</button>
-<SearchBar
-  query={query}
-  setQuery={setQuery}
-  handleSearch={handleSearch}
-  isSubmitting={isSubmitting}
-  submitSuccess={submitSuccess}
-/>
+      <div className="fixed top-0 left-0 w-full px-4 py-4 bg-[var(--bgColor)] z-50">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-2 max-w-5xl mx-auto">
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)] transition"
+          >
+            ← 
+          </button>
 
+          <div className="relative w-full md:w-2/3">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch(e)}
+              placeholder="Search culture, country, or tradition..."
+              className="w-full px-5 py-3 pr-24 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition-all duration-300"
+              autoFocus
+            />
+            <div className="absolute top-1/2 right-4 flex gap-2 -translate-y-1/2">
+              <button
+                onClick={() => {
+                  setIsListening(true);
+                  startVoiceRecognition();
+                }}
+                className={`hover:scale-110 transition ${isListening ? "animate-pulse text-[var(--primaryColor)]" : ""}`}
+                title="Voice Search"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[var(--grayColor)] hover:text-[var(--primaryColor)] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 1v11m-4-6a4 4 0 118 0v6a4 4 0 11-8 0zM19 10v2a7 7 0 01-14 0v-2m7 9v3m-4 0h8" />
+</svg>
+
+              </button>
+              <label htmlFor="photoInput" className="cursor-pointer hover:scale-110 transition" title="Upload Photo">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[var(--grayColor)] hover:text-[var(--primaryColor)] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h3l2-3h8l2 3h3a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
+  <circle cx="12" cy="13" r="4" />
+</svg>
+
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handlePhotoUpload}
+                className="hidden"
+                id="photoInput"
+              />
+            </div>
+
+            {isListening && (
+              <div className="absolute top-full left-0 w-full text-center text-[var(--primaryColor)] text-sm mt-2 animate-pulse">
+                🎙️ Listening... Speak now
+              </div>
+            )}
+            {countdown !== null && (
+              <div className="absolute top-full left-0 w-full text-center text-[var(--accentColor)] text-sm mt-2 animate-pulse">
+                ⏳ Searching in {countdown}...
+              </div>
+            )}
+          </div>
+
+          <button
+            disabled={isSubmitting}
+            onClick={handleSearch}
+            className={`min-w-[140px] px-6 py-3 rounded-md transition duration-300 ${
+              isSubmitting
+                ? "bg-gray-400 text-white"
+                : searchComplete
+                ? "bg-green-600 text-white"
+                : "bg-[var(--accentColor)] text-white hover:bg-[var(--primaryColor)]"
+            }`}
+          >
+            {isSubmitting ? "Searching..." : searchComplete ? "✔ Done" : "Search"}
+          </button>
+        </div>
       </div>
 
       {/* Location Info */}
-<LocationInfo locationData={locationData} />
+      <LocationInfo locationData={locationData} />
 
-      {/* Map or Images */}
+      {/* Map and Image Slider Section */}
       {locationData && (
         <div className="max-w-5xl mx-auto px-4 mb-6">
           {activeTab === "Description" ? (
@@ -179,9 +291,21 @@ const LocationSearch = () => {
 
       {/* Tabs and Content */}
       {locationData && (
-        <div className="max-w-5xl mx-auto px-4 mb-6">
+        <div className="relative max-w-5xl mx-auto px-4 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
+            <button onClick={() => setShowFilter(true)} title="Filter Tabs">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
+                <path d="M4 6h16" />
+                <path d="M6 12h12" />
+                <path d="M10 18h4" />
+              </svg>
+            </button>
+          </div>
+
           <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
-            {tabs.map((tab) => (
+            {["Description", ...availableTabs].map((tab) => (
               <li
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -195,6 +319,37 @@ const LocationSearch = () => {
               </li>
             ))}
           </ul>
+
+          {/* Floating Filter Overlay */}
+          {showFilter && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
+                {defaultTabs.map((tab) => (
+                  <label key={tab} className="block mb-2 text-[var(--textColor)]">
+                    <input
+                      type="checkbox"
+                      checked={availableTabs.includes(tab)}
+                      onChange={(e) => {
+                        setAvailableTabs((prev) =>
+                          e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
+                        );
+                      }}
+                      className="mr-2"
+                    />
+                    {tab}
+                  </label>
+                ))}
+                <button
+                  onClick={() => setShowFilter(false)}
+                  className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="mt-4 text-[var(--textColor)] text-justify">
             {contentMap[activeTab]}
           </div>
@@ -211,16 +366,6 @@ const LocationSearch = () => {
             Ask Tura AI 💬
           </button>
         )}
-      </div>
-
-      {/* Community Link */}
-      <div className="max-w-5xl mx-auto px-4 mb-6 flex justify-start pointer-events-none">
-        <a
-          href="/CommunityChatroom"
-          className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)]"
-        >
-          Join Community 💬
-        </a>
       </div>
 
       {/* Tura AI Chat Panel */}
@@ -245,6 +390,16 @@ const LocationSearch = () => {
         <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
           Submit
         </button>
+      </div>
+
+      {/* Community Link */}
+      <div className="max-w-5xl mx-auto px-4 mb-12 flex justify-start">
+        <a
+          href="/CommunityChatroom"
+          className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
+        >
+          Join Community 💬
+        </a>
       </div>
     </div>
   );

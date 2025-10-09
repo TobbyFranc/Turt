@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import inca from "../assets/inca-mayan-sculpted-stones.png";
+// import SmartSearchInput from "./SmartSearchInput";
 
 // Unique hover images for each card
 // import imgGlobal from "../assets/Globe.png";
@@ -11,6 +12,7 @@ import inca from "../assets/inca-mayan-sculpted-stones.png";
 
 // Heroicons (SVGs)
 import { GlobeAltIcon, ChatBubbleBottomCenterTextIcon, LightBulbIcon, ShieldCheckIcon, CalendarDaysIcon, PuzzlePieceIcon, SignalIcon, SparklesIcon } from "@heroicons/react/24/outline";
+// import SmartSearchInput from "./SmartSearchInput";
 
 // Card data with unique hover images
 const cardDataLeft = [
@@ -208,6 +210,15 @@ const AboutUs = () => {
           ))}
         </div>
       </section>
+
+      {/* <SmartSearchInput
+  showRegionMap={true}
+  onSearch={(query, region) => {
+    console.log("Searching for:", query, "in region:", region);
+    // your search logic here
+  }}
+/> */}
+
 
       {/* Meet the Team Button */}
       <div className="text-center mt-8">

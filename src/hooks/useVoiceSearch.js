@@ -16,7 +16,13 @@ export const useVoiceSearch = (setQuery, onSearch) => {
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setQuery(transcript);
-      onSearch(); // auto-trigger search
+      // onSearch(); // auto-trigger search
+      if (typeof onSearch === "function") {
+  onSearch();
+} else {
+  console.warn("onSearch is not a function");
+}
+
     };
 
     recognition.onerror = (e) => console.error("Voice error:", e);
@@ -24,4 +30,12 @@ export const useVoiceSearch = (setQuery, onSearch) => {
   }, [setQuery, onSearch]);
 
   return startVoiceRecognition;
+
+  
 };
+
+
+
+
+
+
