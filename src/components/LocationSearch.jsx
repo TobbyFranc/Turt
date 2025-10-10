@@ -330,7 +330,7 @@ const LocationSearch = () => {
       </div>
 
       {/* Community Link */}
-      <div className="max-w-5xl mx-auto px-4 mb-12 flex justify-start">
+      <div className="max-w-6xl mx-auto px-4 mb-12 flex justify-start">
         <a
           href="/CommunityChatroom"
           className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
