@@ -115,7 +115,6 @@ const LocationSearch = () => {
         imageResults[tab] = await fetchImagesForTab(tab.toLowerCase(), finalQuery);
       }
 
-      // Set preview image from first available image
       const previewImage = imageResults[suggested[0]]?.[0]?.urls?.thumb;
       if (previewImage) {
         setPreviewUrl(previewImage);
@@ -150,6 +149,8 @@ const LocationSearch = () => {
     Festival: `Festivals in ${locationData?.name} are vibrant expressions of joy and community.`,
   };
 
+  const isValidCoordinates = locationData?.lat !== "Unknown" && locationData?.lon !== "Unknown";
+
   return (
     <div className="min-h-screen pt-[100px] bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
       {/* Header */}
@@ -173,17 +174,14 @@ const LocationSearch = () => {
             />
           </div>
         </div>
-
-
       </div>
 
       {/* Location Info */}
       <div className="flex items-center max-w-6xl mx-auto justify-between">
         <LocationInfo locationData={locationData} trendingToday={trendingToday} />
-
-        {/*  */}
+        {/* image preview */}
                 {previewUrl && (
-          <div className="mt-6 text-center mr-1">
+          <div className="mt-6 text-center">
             <p className="text-sm text-[var(--grayColor)] mb-2">📷 Preview:</p>
             <img
               src={previewUrl}
@@ -197,10 +195,10 @@ const LocationSearch = () => {
         )}
       </div>
 
-      {/* Map or Image Slider */}
+      {/* Map or Message */}
       {locationData && (
         <div className="max-w-6xl mx-auto px-4 mb-6">
-          {activeTab === "Description" ? (
+          {activeTab === "Description" && isValidCoordinates ? (
             <iframe
               title="Map"
               src={`https://maps.google.com/maps?q=${locationData.lat},${locationData.lon}&z=6&output=embed`}
@@ -209,19 +207,9 @@ const LocationSearch = () => {
               loading="lazy"
             />
           ) : (
-            <Swiper key={activeTab} modules={[Navigation, Pagination]} spaceBetween={10} slidesPerView={1} navigation pagination={{ clickable: true }}>
-              {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => (
-                <SwiperSlide key={index}>
-                  <div className="w-full h-[400px] rounded-md overflow-hidden">
-                                        <img
-                      src={img?.urls?.regular || img}
-                      alt={img?.alt_description || `${activeTab}-${index}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded-md text-[var(--grayColor)]">
+              Map preview not available for this location.
+            </div>
           )}
         </div>
       )}
@@ -229,67 +217,77 @@ const LocationSearch = () => {
       {/* Tabs and Content */}
       {locationData && (
         <div className="relative max-w-6xl mx-auto px-4 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
-            <button onClick={() => setShowFilter(true)} title="Filter Tabs">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
-                strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
-                <path d="M4 6h16" />
-                <path d="M6 12h12" />
-                <path d="M10 18h4" />
-              </svg>
-            </button>
-          </div>
-
-          <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
-            {["Description", ...availableTabs].map((tab) => (
-              <li
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`p-2 border-b-2 cursor-pointer ${
-                  activeTab === tab
-                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
-                    : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
-                }`}
-              >
-                {tab}
-              </li>
-            ))}
-          </ul>
-
-          {/* Floating Filter Overlay */}
-          {showFilter && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-                <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
-                {defaultTabs.map((tab) => (
-                  <label key={tab} className="block mb-2 text-[var(--textColor)]">
-                    <input
-                      type="checkbox"
-                      checked={availableTabs.includes(tab)}
-                      onChange={(e) => {
-                        setAvailableTabs((prev) =>
-                          e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
-                        );
-                      }}
-                      className="mr-2"
-                    />
-                    {tab}
-                  </label>
-                ))}
-                <button
-                  onClick={() => setShowFilter(false)}
-                  className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
-                >
-                  Done
+          {isValidCoordinates && (
+            <>
+                            <div className="flex justify-between items-center mb-4">
+                <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
+                <button onClick={() => setShowFilter(true)} title="Filter Tabs">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
+                    <path d="M4 6h16" />
+                    <path d="M6 12h12" />
+                    <path d="M10 18h4" />
+                  </svg>
                 </button>
               </div>
-            </div>
+
+              <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
+                {["Description", ...availableTabs].map((tab) => (
+                  <li
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`p-2 border-b-2 cursor-pointer ${
+                      activeTab === tab
+                        ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
+                        : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
+                    }`}
+                  >
+                    {tab}
+                  </li>
+                ))}
+              </ul>
+
+              {/* Floating Filter Overlay */}
+              {showFilter && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                  <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                    <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
+                    {defaultTabs.map((tab) => (
+                      <label key={tab} className="block mb-2 text-[var(--textColor)]">
+                        <input
+                          type="checkbox"
+                          checked={availableTabs.includes(tab)}
+                          onChange={(e) => {
+                            setAvailableTabs((prev) =>
+                              e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
+                            );
+                          }}
+                          className="mr-2"
+                        />
+                        {tab}
+                      </label>
+                    ))}
+                    <button
+                      onClick={() => setShowFilter(false)}
+                      className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-4 text-[var(--textColor)] text-justify">
+                {contentMap[activeTab]}
+              </div>
+            </>
           )}
 
-          <div className="mt-4 text-[var(--textColor)] text-justify">
-            {contentMap[activeTab]}
-          </div>
+          {!isValidCoordinates && (
+            <div className="mt-4 text-[var(--grayColor)] text-center">
+              Cultural details are unavailable due to missing location data.
+            </div>
+          )}
         </div>
       )}
 
