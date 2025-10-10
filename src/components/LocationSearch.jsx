@@ -183,7 +183,7 @@ const LocationSearch = () => {
 
         {/*  */}
                 {previewUrl && (
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center mr-1">
             <p className="text-sm text-[var(--grayColor)] mb-2">📷 Preview:</p>
             <img
               src={previewUrl}
