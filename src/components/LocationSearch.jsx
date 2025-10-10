@@ -132,7 +132,7 @@ const LocationSearch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
+    <div className="min-h-screen pt-[100px] bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
       {/* Header */}
       <div className="fixed top-0 left-0 w-full px-4 py-2 bg-[var(--bgColor)] z-50">
         <div className="flex items-center justify-between gap-2 max-w-5xl mx-auto">

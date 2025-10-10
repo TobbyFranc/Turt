@@ -125,26 +125,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
 
   return (
     <div className="w-full p-4 rounded-md">
-      <div className="h-6 mb-2 text-center text-sm relative">
-        <span
-          className={`absolute left-0 right-0 transition-opacity duration-500 ease-in-out ${
-            isListening ? "opacity-100 text-blue-600 animate-pulse" : "opacity-0"
-          }`}
-        >
-          🎙️ Listening... Speak now
-        </span>
-        <span
-          className={`absolute left-0 right-0 transition-opacity duration-500 ease-in-out ${
-            !isListening && countdown !== null
-              ? "opacity-100 text-[var(--accentColor)] animate-pulse"
-              : "opacity-0"
-          }`}
-        >
-          ⏳ Searching in {countdown}...
-        </span>
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-center gap-2">
+      <div className="relative flex flex-col md:flex-row md:items-center gap-2">
         <div className="relative w-full md:flex-1">
           <div className="flex items-stretch h-[56px] border border-gray-300 rounded-md overflow-hidden bg-transparent">
             <input
@@ -244,6 +225,26 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
             )}
           </button>
         </div>
+        {/*  */}
+              <div className=" h-6 mb-2 text-center text-sm absolute -top-6 left-0">
+        <span
+          className={` transition-opacity duration-500 ease-in-out ${
+            isListening ? "opacity-100 text-blue-600 animate-pulse" : "opacity-0"
+          }`}
+        >
+          🎙️ Listening... Speak now
+        </span>
+        <span
+          className={` transition-opacity duration-500 ease-in-out ${
+            !isListening && countdown !== null
+              ? "opacity-100 text-[var(--accentColor)] animate-pulse"
+              : "opacity-0"
+          }`}
+        >
+          ⏳ Searching in {countdown}...
+        </span>
+      </div>
+        {/*  */}
       </div>
     </div>
   );
