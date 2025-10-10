@@ -5,8 +5,11 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
 import LocationInfo from "./LocationInfo";
 import SmartSearchInput from "./SmartSearchInput";
+import regionMap from "./regionMap";
+
 import globalCulture from "../assets/global-culture.jpg";
 import market from "../assets/market.jpg";
 import fashion from "../assets/fashion.jpg";
@@ -27,9 +30,13 @@ const fallbackImagesMap = {
   Festival: [globalCulture],
 };
 
-const getContinent = (code) => ({ NG: "Africa", US: "North America", FR: "Europe" }[code] || "Unknown");
-const getLanguage = (code) => ({ NG: "English", FR: "French", JP: "Japanese" }[code] || "Unknown");
-const getWeather = async () => "Partly Cloudy";
+const languageMap = {
+  nigeria: "English (widely spoken: Nigerian Pidgin)",
+  yoruba: "English (widely spoken: Yoruba)",
+  france: "French",
+  japan: "Japanese",
+  india: "Hindi, English",
+};
 
 const suggestTabs = (query) => {
   const lower = query.toLowerCase();
@@ -56,6 +63,7 @@ const LocationSearch = () => {
   const [showTura, setShowTura] = useState(false);
   const [turaQuestion, setTuraQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [trendingToday, setTrendingToday] = useState([]);
 
   useEffect(() => {
     if (passedQuery && autoSearch) {
@@ -90,11 +98,12 @@ const LocationSearch = () => {
       const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(finalQuery)}`);
       const geoData = await geoRes.json();
       const { lat, lon } = geoData[0] || {};
-      const countryCode = geoData[0]?.address?.country_code?.toUpperCase() || "NG";
 
-      const continent = getContinent(countryCode);
-      const language = getLanguage(countryCode);
-      const weather = await getWeather();
+      const normalizedQuery = finalQuery.toLowerCase().replace(/\s+/g, "");
+      const continent = regionMap[normalizedQuery] || "Unknown";
+      const language = languageMap[normalizedQuery] || "Unknown";
+      const weather = "Mostly Cloudy, 29°C";
+      const trending = `#CulturalFusion — trending in ${finalQuery}`;
 
       const suggested = suggestTabs(finalQuery);
       setAvailableTabs(suggested);
@@ -115,6 +124,8 @@ const LocationSearch = () => {
         language,
         summary: wikiData.extract || "No cultural summary found.",
       });
+
+      setTrendingToday([trending]);
     } catch (error) {
       console.error("Search error:", error);
     } finally {
@@ -158,7 +169,7 @@ const LocationSearch = () => {
       </div>
 
       {/* Location Info */}
-      <LocationInfo locationData={locationData} />
+      <LocationInfo locationData={locationData} trendingToday={trendingToday} />
 
       {/* Map or Image Slider */}
       {locationData && (
@@ -191,7 +202,7 @@ const LocationSearch = () => {
 
       {/* Tabs and Content */}
       {locationData && (
-        <div className="relative max-w-5xl mx-auto px-4 mb-6">
+        <div className="relative max-w-6xl mx-auto px-4 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
             <button onClick={() => setShowFilter(true)} title="Filter Tabs">
