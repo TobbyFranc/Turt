@@ -60,14 +60,14 @@ const LocationSearch = () => {
   useEffect(() => {
     if (passedQuery && autoSearch) {
       setQuery(passedQuery);
-      handleSearch({ preventDefault: () => {} });
+      handleSearch({ preventDefault: () => {} }, passedQuery);
     }
   }, [passedQuery, autoSearch]);
 
-  const fetchImagesForTab = async (topic) => {
+  const fetchImagesForTab = async (topic, baseQuery) => {
     try {
       const res = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + " " + topic)}&client_id=${process.env.REACT_APP_UNSPLASH_ACCESS_KEY}`
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(baseQuery + " " + topic)}&client_id=${process.env.REACT_APP_UNSPLASH_ACCESS_KEY}`
       );
       const data = await res.json();
       return data.results || [];
@@ -76,17 +76,18 @@ const LocationSearch = () => {
     }
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = async (e, overrideQuery = null) => {
     e.preventDefault();
-    if (!query.trim()) return;
+    const finalQuery = overrideQuery || query;
+    if (!finalQuery.trim()) return;
 
     setIsSubmitting(true);
 
     try {
-      const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+      const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(finalQuery)}`);
       const wikiData = await wikiRes.json();
 
-      const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+      const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(finalQuery)}`);
       const geoData = await geoRes.json();
       const { lat, lon } = geoData[0] || {};
       const countryCode = geoData[0]?.address?.country_code?.toUpperCase() || "NG";
@@ -95,18 +96,18 @@ const LocationSearch = () => {
       const language = getLanguage(countryCode);
       const weather = await getWeather();
 
-      const suggested = suggestTabs(query);
+      const suggested = suggestTabs(finalQuery);
       setAvailableTabs(suggested);
       setActiveTab("Description");
 
       const imageResults = {};
       for (const tab of suggested) {
-        imageResults[tab] = await fetchImagesForTab(tab.toLowerCase());
+        imageResults[tab] = await fetchImagesForTab(tab.toLowerCase(), finalQuery);
       }
 
       setImages(imageResults);
       setLocationData({
-        name: query,
+        name: finalQuery,
         continent,
         lat: lat || "Unknown",
         lon: lon || "Unknown",
@@ -140,14 +141,14 @@ const LocationSearch = () => {
             onClick={() => navigate(-1)}
             className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)] transition"
           >
-            ← 
+            ←
           </button>
 
           <div className="flex-1 w-full">
             <SmartSearchInput
-              onSearch={(query) => {
-                setQuery(query);
-                handleSearch({ preventDefault: () => {} });
+              onSearch={(incomingQuery) => {
+                setQuery(incomingQuery);
+                handleSearch({ preventDefault: () => {} }, incomingQuery);
               }}
               showRegionMap={false}
               onPreviewUpdate={() => {}}
@@ -196,113 +197,112 @@ const LocationSearch = () => {
             <button onClick={() => setShowFilter(true)} title="Filter Tabs">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
-                <path d="M4 6h16" />
-                <path d="M6 12h12" />
-                <path d="M10 18h4" />
-              </svg>
-            </button>
-          </div>
+  <path d="M4 6h16" />
+  <path d="M6 12h12" />
+  <path d="M10 18h4" />
+</svg>
+</button>
+</div>
 
-          <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
-            {["Description", ...availableTabs].map((tab) => (
-              <li
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                                className={`p-2 border-b-2 cursor-pointer ${
-                  activeTab === tab
-                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
-                    : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
-                }`}
-              >
-                {tab}
-              </li>
-            ))}
-          </ul>
+<ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
+  {["Description", ...availableTabs].map((tab) => (
+    <li
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      className={`p-2 border-b-2 cursor-pointer ${
+        activeTab === tab
+          ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
+          : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
+      }`}
+    >
+      {tab}
+    </li>
+  ))}
+</ul>
 
-          {/* Floating Filter Overlay */}
-          {showFilter && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-                <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
-                {defaultTabs.map((tab) => (
-                  <label key={tab} className="block mb-2 text-[var(--textColor)]">
-                    <input
-                      type="checkbox"
-                      checked={availableTabs.includes(tab)}
-                      onChange={(e) => {
-                        setAvailableTabs((prev) =>
-                          e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
-                        );
-                      }}
-                      className="mr-2"
-                    />
-                    {tab}
-                  </label>
-                ))}
-                <button
-                  onClick={() => setShowFilter(false)}
-                  className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
-                >
-                  Done
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className="mt-4 text-[var(--textColor)] text-justify">
-            {contentMap[activeTab]}
-          </div>
-        </div>
-      )}
-
-      {/* Tura AI Button */}
-      <div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
-        {!showTura && (
-          <button
-            onClick={() => setShowTura(true)}
-            className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
-          >
-            Ask Tura AI 💬
-          </button>
-        )}
-      </div>
-
-      {/* Tura AI Chat Panel */}
-      <div
-        className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
-          showTura ? "translate-x-0" : "translate-x-full"
-        }`}
+{/* Floating Filter Overlay */}
+{showFilter && (
+  <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+      <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
+      {defaultTabs.map((tab) => (
+        <label key={tab} className="block mb-2 text-[var(--textColor)]">
+          <input
+            type="checkbox"
+            checked={availableTabs.includes(tab)}
+            onChange={(e) => {
+              setAvailableTabs((prev) =>
+                e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
+              );
+            }}
+            className="mr-2"
+          />
+          {tab}
+        </label>
+      ))}
+      <button
+        onClick={() => setShowFilter(false)}
+        className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
       >
-        <button
-          onClick={() => setShowTura(false)}
-          className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-        >
-          ✕
-        </button>
-        <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
-        <textarea
-          value={turaQuestion}
-          onChange={(e) => setTuraQuestion(e.target.value)}
-          placeholder="Ask a cultural question..."
-          className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
-        ></textarea>
-        <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
-          Submit
-        </button>
-      </div>
-
-      {/* Community Link */}
-      <div className="max-w-5xl mx-auto px-4 mb-12 flex justify-start">
-        <a
-          href="/CommunityChatroom"
-          className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
-        >
-          Join Community 💬
-        </a>
-      </div>
+        Done
+      </button>
     </div>
-  );
+  </div>
+)}
+
+<div className="mt-4 text-[var(--textColor)] text-justify">
+  {contentMap[activeTab]}
+</div>
+</div>
+)}
+
+{/* Tura AI Button */}
+<div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
+  {!showTura && (
+    <button
+      onClick={() => setShowTura(true)}
+      className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
+    >
+      Ask Tura AI 💬
+    </button>
+  )}
+</div>
+
+{/* Tura AI Chat Panel */}
+<div
+  className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
+    showTura ? "translate-x-0" : "translate-x-full"
+  }`}
+>
+  <button
+    onClick={() => setShowTura(false)}
+    className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+  >
+    ✕
+  </button>
+  <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
+  <textarea
+    value={turaQuestion}
+    onChange={(e) => setTuraQuestion(e.target.value)}
+    placeholder="Ask a cultural question..."
+    className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
+  ></textarea>
+  <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
+    Submit
+  </button>
+</div>
+
+{/* Community Link */}
+<div className="max-w-5xl mx-auto px-4 mb-12 flex justify-start">
+  <a
+    href="/CommunityChatroom"
+    className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
+  >
+    Join Community 💬
+  </a>
+</div>
+</div>
+);
 };
 
 export default LocationSearch;
-

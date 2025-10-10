@@ -97,7 +97,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
 
       if (!label) {
         setQuery("");
-        onSearch?.("Image insight unavailable", region);
+        onSearch?.("Image insight unavailable");
         return;
       }
 
@@ -109,14 +109,14 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
     } catch {
       console.error("Photo recognition failed.");
       setQuery("");
-      onSearch?.("Image insight unavailable", region);
+      onSearch?.("Image insight unavailable");
     }
   };
 
   const triggerSearch = () => {
     if (!query.trim()) return;
     setStatusPhase("loading");
-    onSearch?.(query, region);
+    onSearch?.(query); // ✅ Corrected: only pass query
     setTimeout(() => {
       setStatusPhase("done");
       setTimeout(() => setStatusPhase("idle"), 1500);
@@ -187,7 +187,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
           <button
             onClick={triggerSearch}
             disabled={statusPhase === "loading"}
-                        className={`w-full md:min-w-[150px] px-6 py-3 rounded-md transition duration-500 ease-in-out flex items-center justify-center gap-2 ${
+            className={`w-full md:min-w-[150px] px-6 py-3 rounded-md transition duration-500 ease-in-out flex items-center justify-center gap-2 ${
               statusPhase === "done"
                 ? "bg-green-600 text-white"
                 : statusPhase === "loading"
@@ -210,11 +210,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v6h6M20 20v-6h-6"
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}                     d="M4 4v6h6M20 20v-6h-6"
                   />
                 </svg>
               </>
@@ -225,26 +221,26 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
             )}
           </button>
         </div>
-        {/*  */}
-              <div className=" h-6 mb-2 text-center text-sm absolute -top-6 left-0">
-        <span
-          className={` transition-opacity duration-500 ease-in-out ${
-            isListening ? "opacity-100 text-blue-600 animate-pulse" : "opacity-0"
-          }`}
-        >
-          🎙️ Listening... Speak now
-        </span>
-        <span
-          className={` transition-opacity duration-500 ease-in-out ${
-            !isListening && countdown !== null
-              ? "opacity-100 text-[var(--accentColor)] animate-pulse"
-              : "opacity-0"
-          }`}
-        >
-          ⏳ Searching in {countdown}...
-        </span>
-      </div>
-        {/*  */}
+
+        {/* Status Indicators */}
+        <div className="h-6 mb-2 text-center text-sm absolute -top-6 -left-2 w-full">
+          <span
+            className={`transition-opacity duration-500 ease-in-out ${
+              isListening ? "opacity-100 text-blue-600 animate-pulse" : "opacity-0"
+            }`}
+          >
+            🎙️ Listening... Speak now
+          </span>
+          <span
+            className={`transition-opacity duration-500 ease-in-out ${
+              !isListening && countdown !== null
+                ? "opacity-100 text-[var(--accentColor)] animate-pulse"
+                : "opacity-0"
+            }`}
+          >
+            ⏳ Searching in {countdown}...
+          </span>
+        </div>
       </div>
     </div>
   );
