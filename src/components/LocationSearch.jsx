@@ -64,6 +64,7 @@ const LocationSearch = () => {
   const [turaQuestion, setTuraQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trendingToday, setTrendingToday] = useState([]);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     if (passedQuery && autoSearch) {
@@ -114,6 +115,12 @@ const LocationSearch = () => {
         imageResults[tab] = await fetchImagesForTab(tab.toLowerCase(), finalQuery);
       }
 
+      // Set preview image from first available image
+      const previewImage = imageResults[suggested[0]]?.[0]?.urls?.thumb;
+      if (previewImage) {
+        setPreviewUrl(previewImage);
+      }
+
       setImages(imageResults);
       setLocationData({
         name: finalQuery,
@@ -162,14 +169,33 @@ const LocationSearch = () => {
                 handleSearch({ preventDefault: () => {} }, incomingQuery);
               }}
               showRegionMap={false}
-              onPreviewUpdate={() => {}}
+              onPreviewUpdate={(url) => setPreviewUrl(url)}
             />
           </div>
         </div>
+
+
       </div>
 
       {/* Location Info */}
-      <LocationInfo locationData={locationData} trendingToday={trendingToday} />
+      <div className="flex items-center max-w-6xl mx-auto justify-between">
+        <LocationInfo locationData={locationData} trendingToday={trendingToday} />
+
+        {/*  */}
+                {previewUrl && (
+          <div className="mt-6 text-center">
+            <p className="text-sm text-[var(--grayColor)] mb-2">📷 Preview:</p>
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded-md mx-auto shadow-md"
+            />
+            {query && (
+              <p className="text-sm text-[var(--grayColor)] mt-2">Detected: {query}</p>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Map or Image Slider */}
       {locationData && (
@@ -187,7 +213,7 @@ const LocationSearch = () => {
               {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => (
                 <SwiperSlide key={index}>
                   <div className="w-full h-[400px] rounded-md overflow-hidden">
-                    <img
+                                        <img
                       src={img?.urls?.regular || img}
                       alt={img?.alt_description || `${activeTab}-${index}`}
                       className="w-full h-full object-cover"
@@ -208,112 +234,112 @@ const LocationSearch = () => {
             <button onClick={() => setShowFilter(true)} title="Filter Tabs">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
-  <path d="M4 6h16" />
-  <path d="M6 12h12" />
-  <path d="M10 18h4" />
-</svg>
-</button>
-</div>
+                <path d="M4 6h16" />
+                <path d="M6 12h12" />
+                <path d="M10 18h4" />
+              </svg>
+            </button>
+          </div>
 
-<ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
-  {["Description", ...availableTabs].map((tab) => (
-    <li
-      key={tab}
-      onClick={() => setActiveTab(tab)}
-      className={`p-2 border-b-2 cursor-pointer ${
-        activeTab === tab
-          ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
-          : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
-      }`}
-    >
-      {tab}
-    </li>
-  ))}
-</ul>
+          <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
+            {["Description", ...availableTabs].map((tab) => (
+              <li
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`p-2 border-b-2 cursor-pointer ${
+                  activeTab === tab
+                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
+                    : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
+                }`}
+              >
+                {tab}
+              </li>
+            ))}
+          </ul>
 
-{/* Floating Filter Overlay */}
-{showFilter && (
-  <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-      <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
-      {defaultTabs.map((tab) => (
-        <label key={tab} className="block mb-2 text-[var(--textColor)]">
-          <input
-            type="checkbox"
-            checked={availableTabs.includes(tab)}
-            onChange={(e) => {
-              setAvailableTabs((prev) =>
-                e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
-              );
-            }}
-            className="mr-2"
-          />
-          {tab}
-        </label>
-      ))}
-      <button
-        onClick={() => setShowFilter(false)}
-        className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
+          {/* Floating Filter Overlay */}
+          {showFilter && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
+                {defaultTabs.map((tab) => (
+                  <label key={tab} className="block mb-2 text-[var(--textColor)]">
+                    <input
+                      type="checkbox"
+                      checked={availableTabs.includes(tab)}
+                      onChange={(e) => {
+                        setAvailableTabs((prev) =>
+                          e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
+                        );
+                      }}
+                      className="mr-2"
+                    />
+                    {tab}
+                  </label>
+                ))}
+                <button
+                  onClick={() => setShowFilter(false)}
+                  className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-4 text-[var(--textColor)] text-justify">
+            {contentMap[activeTab]}
+          </div>
+        </div>
+      )}
+
+      {/* Tura AI Button */}
+      <div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
+        {!showTura && (
+          <button
+            onClick={() => setShowTura(true)}
+            className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
+          >
+            Ask Tura AI 💬
+          </button>
+        )}
+      </div>
+
+      {/* Tura AI Chat Panel */}
+      <div
+        className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
+          showTura ? "translate-x-0" : "translate-x-full"
+        }`}
       >
-        Done
-      </button>
+        <button
+          onClick={() => setShowTura(false)}
+          className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+        >
+          ✕
+        </button>
+        <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
+        <textarea
+          value={turaQuestion}
+          onChange={(e) => setTuraQuestion(e.target.value)}
+          placeholder="Ask a cultural question..."
+          className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
+        ></textarea>
+        <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
+          Submit
+        </button>
+      </div>
+
+      {/* Community Link */}
+      <div className="max-w-5xl mx-auto px-4 mb-12 flex justify-start">
+        <a
+          href="/CommunityChatroom"
+          className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
+        >
+          Join Community 💬
+        </a>
+      </div>
     </div>
-  </div>
-)}
-
-<div className="mt-4 text-[var(--textColor)] text-justify">
-  {contentMap[activeTab]}
-</div>
-</div>
-)}
-
-{/* Tura AI Button */}
-<div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
-  {!showTura && (
-    <button
-      onClick={() => setShowTura(true)}
-      className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
-    >
-      Ask Tura AI 💬
-    </button>
-  )}
-</div>
-
-{/* Tura AI Chat Panel */}
-<div
-  className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
-    showTura ? "translate-x-0" : "translate-x-full"
-  }`}
->
-  <button
-    onClick={() => setShowTura(false)}
-    className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-  >
-    ✕
-  </button>
-  <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
-  <textarea
-    value={turaQuestion}
-    onChange={(e) => setTuraQuestion(e.target.value)}
-    placeholder="Ask a cultural question..."
-    className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
-  ></textarea>
-  <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
-    Submit
-  </button>
-</div>
-
-{/* Community Link */}
-<div className="max-w-5xl mx-auto px-4 mb-12 flex justify-start">
-  <a
-    href="/CommunityChatroom"
-    className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
-  >
-    Join Community 💬
-  </a>
-</div>
-</div>
-);
+  );
 };
 
 export default LocationSearch;

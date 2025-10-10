@@ -4,7 +4,7 @@ const LocationInfo = ({ locationData, trendingToday = [] }) => {
   if (!locationData) return null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 mt-40 md:mt-28 mb-6 font-cormorant">
+    <div className="max-w-6xl px-4 mt-40 md:mt-28 mb-6 ">
       <h2 className="text-3xl font-semibold text-[var(--primaryColor)] capitalize">
         {locationData.name}
       </h2>
