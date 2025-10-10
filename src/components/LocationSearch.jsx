@@ -135,7 +135,7 @@ const LocationSearch = () => {
     <div className="min-h-screen pt-[100px] bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
       {/* Header */}
       <div className="fixed top-0 left-0 w-full px-4 py-2 bg-[var(--bgColor)] z-50">
-        <div className="flex items-center justify-between gap-2 max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 max-w-6xl mx-auto">
           <button
             onClick={() => navigate(-1)}
             className="bg-gray-200 text-[var(--grayColor)] px-4 py-2 rounded-md hover:bg-[var(--accentColor)] transition"
@@ -161,7 +161,7 @@ const LocationSearch = () => {
 
       {/* Map or Image Slider */}
       {locationData && (
-        <div className="max-w-5xl mx-auto px-4 mb-6">
+        <div className="max-w-6xl mx-auto px-4 mb-6">
           {activeTab === "Description" ? (
             <iframe
               title="Map"
