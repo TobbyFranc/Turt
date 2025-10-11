@@ -84,11 +84,15 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
     reader.readAsDataURL(file);
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("providers", "google");
+    formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:5000/api/edenai/recognize", {
+      const response = await fetch("https://api.edenai.run/v2/vision/image/label_detection", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_EDENAI_API_KEY}`,
+        },
         body: formData,
       });
 
@@ -116,7 +120,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
   const triggerSearch = () => {
     if (!query.trim()) return;
     setStatusPhase("loading");
-    onSearch?.(query); // ✅ Corrected: only pass query
+    onSearch?.(query);
     setTimeout(() => {
       setStatusPhase("done");
       setTimeout(() => setStatusPhase("idle"), 1500);
@@ -210,8 +214,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}                     d="M4 4v6h6M20 20v-6h-6"
-                  />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v6h6M20 20v-6h-6" />
                 </svg>
               </>
             ) : (

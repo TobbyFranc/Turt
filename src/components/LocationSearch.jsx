@@ -50,6 +50,8 @@ const LocationSearch = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  // console.log("Unsplash key:", import.meta.env.VITE_UNSPLASH_ACCESS_KEY);
+
 
   const passedQuery = location.state?.query || searchParams.get("q") || "";
   const autoSearch = searchParams.get("auto") === "true";
@@ -65,6 +67,9 @@ const LocationSearch = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trendingToday, setTrendingToday] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [savedGallery, setSavedGallery] = useState([]);
+
+  const isValidCoordinates = locationData?.lat !== "Unknown" && locationData?.lon !== "Unknown";
 
   useEffect(() => {
     if (passedQuery && autoSearch) {
@@ -76,7 +81,8 @@ const LocationSearch = () => {
   const fetchImagesForTab = async (topic, baseQuery) => {
     try {
       const res = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(baseQuery + " " + topic)}&client_id=${process.env.REACT_APP_UNSPLASH_ACCESS_KEY}`
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(baseQuery + " " + topic)}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+}`
       );
       const data = await res.json();
       return data.results || [];
@@ -149,8 +155,6 @@ const LocationSearch = () => {
     Festival: `Festivals in ${locationData?.name} are vibrant expressions of joy and community.`,
   };
 
-  const isValidCoordinates = locationData?.lat !== "Unknown" && locationData?.lon !== "Unknown";
-
   return (
     <div className="min-h-screen pt-[100px] bg-[var(--bgColor)] open-sans-400 transition-all duration-300">
       {/* Header */}
@@ -193,9 +197,10 @@ const LocationSearch = () => {
             )}
           </div>
         )}
+
       </div>
 
-      {/* Map or Message */}
+      {/* Map or Image Slider */}
       {locationData && (
         <div className="max-w-6xl mx-auto px-4 mb-6">
           {activeTab === "Description" && isValidCoordinates ? (
@@ -206,6 +211,36 @@ const LocationSearch = () => {
               allowFullScreen
               loading="lazy"
             />
+          ) : isValidCoordinates ? (
+            <Swiper key={activeTab} modules={[Navigation, Pagination]} spaceBetween={10} slidesPerView={1} navigation pagination={{ clickable: true }}>
+              {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => {
+                const imageUrl = img?.urls?.regular || img;
+                                const caption = img?.alt_description || `${activeTab} culture`;
+                const credit = img?.user?.name || "Unknown";
+
+                return (
+                  <SwiperSlide key={index}>
+                    <div className="w-full h-[400px] rounded-md overflow-hidden relative">
+                      <img
+                        src={imageUrl}
+                        alt={caption}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-sm p-2 flex justify-between items-center">
+                        <span>{caption}</span>
+                        <span className="italic">📸 {credit}</span>
+                      </div>
+                      <button
+                        onClick={() => setSavedGallery((prev) => [...prev, imageUrl])}
+                        className="absolute top-2 right-2 bg-white text-[var(--primaryColor)] px-2 py-1 rounded-md text-xs shadow hover:bg-[var(--accentColor)] hover:text-white"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
           ) : (
             <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded-md text-[var(--grayColor)]">
               Map preview not available for this location.
@@ -219,7 +254,7 @@ const LocationSearch = () => {
         <div className="relative max-w-6xl mx-auto px-4 mb-6">
           {isValidCoordinates && (
             <>
-                            <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-4">
                 <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
                 <button onClick={() => setShowFilter(true)} title="Filter Tabs">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
@@ -247,7 +282,6 @@ const LocationSearch = () => {
                 ))}
               </ul>
 
-              {/* Floating Filter Overlay */}
               {showFilter && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                   <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
@@ -288,6 +322,18 @@ const LocationSearch = () => {
               Cultural details are unavailable due to missing location data.
             </div>
           )}
+        </div>
+      )}
+
+      {/* Saved Gallery */}
+      {savedGallery.length > 0 && (
+        <div className="max-w-6xl mx-auto px-4 mb-12">
+          <h4 className="text-lg font-semibold text-[var(--primaryColor)] mb-2">Your Saved Gallery</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {savedGallery.map((url, i) => (
+              <img key={i} src={url} alt={`Saved-${i}`} className="w-full h-40 object-cover rounded-md shadow" />
+            ))}
+          </div>
         </div>
       )}
 
