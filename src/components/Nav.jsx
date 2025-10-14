@@ -213,7 +213,7 @@ useEffect(() => {
   </button>
 
   {chatOpen && (
-    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--backgroundColor)] text-[var(--blackColor)] rounded-xl shadow-2xl flex flex-col`}>
+    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--backgroundColor)] text-[var(--blackColor)] border-2 border-[var(--textColor)] rounded-xl shadow-2xl flex flex-col`}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-[var(--grayColor)]">
         <div className="flex items-center gap-3">

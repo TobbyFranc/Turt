@@ -25,6 +25,12 @@ const testimonials = [
     role: 'Eco-conscious Traveler',
     image: 'https://randomuser.me/api/portraits/women/48.jpg',
   },
+  {
+    quote: `"I was going to visit my inlaw for the first time as I was newly engaged. I was scared as I do not know what to expect or how to behave. Turtura made it smooth for me."`,
+    name: 'Emily Campbell',
+    role: 'Diaspora',
+    image: 'https://randomuser.me/api/portraits/women/38.jpg',
+  },
 ];
 
 const TestimonialSlider = () => {
