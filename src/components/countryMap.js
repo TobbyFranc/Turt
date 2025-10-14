@@ -1,4 +1,5 @@
 const countryMap = {
+  // Africa
   nigeria: "africa",
   ghana: "africa",
   egypt: "africa",
@@ -13,6 +14,7 @@ const countryMap = {
   uganda: "africa",
   tanzania: "africa",
   malawi: "africa",
+  // Asia
   china: "asia",
   japan: "asia",
   india: "asia",

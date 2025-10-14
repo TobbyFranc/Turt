@@ -1,90 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import {
+  HomeIcon,
+  CalendarIcon,
+  ChatBubbleBottomCenterTextIcon,
+  Cog6ToothIcon,
+  MoonIcon,
+  SunIcon,
+  ChevronDownIcon,
+  ArrowRightOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 
+const navItems = [
+  { label: "Home", icon: <HomeIcon className="w-5 h-5" /> },
+  { label: "Events", icon: <CalendarIcon className="w-5 h-5" /> },
+  { label: "Chat", icon: <ChatBubbleBottomCenterTextIcon className="w-5 h-5" /> },
+  { label: "Settings", icon: <Cog6ToothIcon className="w-5 h-5" /> },
+];
 
-const Dashnav = () => {
-  const [darkMode, setDarkMode] = useState(() => {
-  // Check localStorage or system preference
-  const saved = localStorage.getItem('darkMode');
-  if (saved !== null) return JSON.parse(saved);
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-});
+const Dashnav = ({ isCollapsed, toggleCollapse }) => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
-  // Apply dark mode class to <html>
-useEffect(() => {
-  const root = window.document.documentElement;
-  if (darkMode) {
-    root.classList.add('dark');
-  } else {
-    root.classList.remove('dark');
-  }
-  localStorage.setItem('darkMode', JSON.stringify(darkMode));
-}, [darkMode]);
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+    document.documentElement.classList.toggle("dark");
+  };
 
   return (
-    <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-white h-screen w-64 fixed top-0 left-0 shadow-lg">
-      <div className="flex justify-end items-center h-16 px-4">
-        <button className="p-2 rounded-full hover:bg-[var(--grayColor)]">
-          {/* Back button icon */}
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
-          </svg>
-        </button>
-      </div>
-
-      <nav className="p-6 space-y-6">
-        {[
-          { label: 'Dashboard', href: '/Dashboard', icon: 'home' },
-          { label: 'Profile', href: '/Profile', icon: 'user' },
-          { label: 'Support', href: '/Support', icon: 'lifebuoy' },
-          { label: 'Messages', href: '/Messages', icon: 'chat' },
-          { label: 'Bookmarks', href: '/Bookmarks', icon: 'bookmark' },
-          { label: 'Notes', href: '/Notes', icon: 'note' },
-          { label: 'Settings', href: '/Settings', icon: 'cog' },
-        ].map((item, idx) => (
-          <a key={idx} href={item.href} className="flex items-center justify-between p-2 rounded-full border hover:text-[var(--primaryColor)] hover:shadow-md">
-            <span className="flex items-center gap-2">
-              {/* Replace with actual icons or use Heroicons */}
-              <span className="w-6 h-6 bg-gray-300 rounded-full"></span>
-              {item.label}
-            </span>
-            {item.label === 'Messages' && (
-              <span className="bg-[var(--accentColor)] text-white rounded-full h-6 w-6 flex items-center justify-center text-sm">5</span>
-            )}
-          </a>
-        ))}
-
-        <hr className="my-4 border-gray-300 dark:border-gray-600" />
-
-        {/* Dark Mode Toggle */}
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-[var(--grayColor)]">Dark Mode</span>
+    <>
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:flex flex-col h-full bg-white dark:bg-gray-900 shadow-lg transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"}`}>
+        {/* Collapse Toggle */}
+        <div className="flex justify-end items-center h-16 px-4">
           <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`w-12 h-6 rounded-full p-1 flex items-center transition-colors duration-300 border-1 ${
-              darkMode ? 'bg-[var(--lightGrayColor)]' : 'bg-[var(--grayColor)]'
-            }`}
+            onClick={toggleCollapse}
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            aria-label="Collapse"
           >
-            <div
-              className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                darkMode ? 'translate-x-6' : 'translate-x-0'
-              }`}
-            ></div>
+            <svg className={`w-6 h-6 text-gray-500 transition-transform ${isCollapsed ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
           </button>
         </div>
 
-        <hr className="my-4 border-gray-300 dark:border-gray-600" />
+        {/* Navigation Items */}
+        <nav className="flex-1 px-2 py-4 space-y-2">
+          {navItems.map((item, index) => (
+            <div key={index} className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition ${isCollapsed ? "justify-center" : ""}`}>
+              {item.icon}
+              {!isCollapsed && <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{item.label}</span>}
+            </div>
+          ))}
+        </nav>
 
-        {/* Logout */}
-        <a href="/" className="flex items-center justify-center p-2 rounded-full border bg-[var(--grayColor)] text-white hover:shadow-md">
-          <span className="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-            </svg>
-            Logout
-          </span>
-        </a>
+        {/* Bottom Controls */}
+        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 space-y-3">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 hover:opacity-80"
+          >
+            {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+            {!isCollapsed && <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>}
+          </button>
+
+          {/* Profile Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center justify-between w-full text-sm text-gray-700 dark:text-gray-200 hover:opacity-80"
+            >
+              <div className="flex items-center gap-2">
+                <img
+                  src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=687&q=80"
+                  alt="User"
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+                {!isCollapsed && <span>Tobi</span>}
+              </div>
+              {!isCollapsed && <ChevronDownIcon className="w-4 h-4" />}
+            </button>
+
+            {profileOpen && (
+              <div className="absolute bottom-10 left-0 w-48 bg-white dark:bg-gray-800 border rounded shadow-lg z-50">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">Profile</button>
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">Settings</button>
+                <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900 flex items-center gap-2">
+                  <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 shadow-inner flex justify-around items-center h-16 lg:hidden z-50">
+        {navItems.map((item, index) => (
+          <button key={index} className="flex flex-col items-center text-xs text-gray-700 dark:text-gray-200">
+            {item.icon}
+            <span>{item.label}</span>
+          </button>
+        ))}
       </nav>
-    </div>
+    </>
   );
 };
 
