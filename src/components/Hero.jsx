@@ -36,21 +36,21 @@ const Hero = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col md:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 pt-4 pb-8">
-            <button onClick={() => navigate("/Login")} className="flex items-center justify-center w-[280px] lg:w-auto px-4 py-2 rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300">
+          <div className=" flex flex-col md:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 pt-4 pb-8">
+            <button onClick={() => navigate("/Login")} className="group flex items-center justify-center w-[280px] lg:w-auto px-4 py-2 rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300">
               Get Started
                 {/* span icon for get started */}
-                <span className="ml-2">
+                <span className="ml-2 trasform -rotate-45 group-hover:rotate-0 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                     </svg>
                 </span>
 
             </button>
-            <button onClick={handleScroll} className="flex items-center justify-center w-[280px] lg:w-auto px-4 py-2 rounded-md bg-[var(--lightGrayColor)] lg:bg-[var(--whiteColor)] text-[var(--primaryColor)] hover:bg-[var(--primaryColor)] hover:text-[var(--backgroundColor)] transition duration-300">
+            <button onClick={handleScroll} className="group flex items-center justify-center w-[280px] lg:w-auto px-4 py-2 rounded-md bg-[var(--lightGrayColor)] lg:bg-[var(--whiteColor)] text-[var(--primaryColor)] hover:bg-[var(--primaryColor)] hover:text-[var(--textColor)] transition duration-300">
               Start Exploring
               {/* span icon for explore */}
-              <span className="ml-2">
+              <span className="ml-2 trasform -rotate-0 group-hover:rotate-90 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
