@@ -26,9 +26,9 @@ const testimonials = [
     image: 'https://randomuser.me/api/portraits/women/48.jpg',
   },
   {
-    quote: `"I was going to visit my inlaw for the first time as I was newly engaged. I was scared as I do not know what to expect or how to behave. Turtura made it smooth for me."`,
+    quote: `"Visiting my in-laws for the first time as a newly engaged woman felt overwhelming — I didn’t know what to expect or how to carry myself. But Turtura gave me the cultural confidence I needed. It turned anxiety into ease, and the experience became something I’ll always cherish."`,
     name: 'Emily Campbell',
-    role: 'Diaspora',
+    role: 'Bride-to-be',
     image: 'https://randomuser.me/api/portraits/women/38.jpg',
   },
 ];
