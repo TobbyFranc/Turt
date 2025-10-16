@@ -7,6 +7,38 @@ import Turtle from '../assets/Turtle.png';
 // import './swiper-custom.css'; // optional for styling
 
 const testimonials = [
+  // 
+    {
+    "quote": "Visiting my in-laws for the first time as a newly engaged woman felt overwhelming — I didn’t know what to expect or how to carry myself. But Turtura gave me the cultural confidence I needed. It turned anxiety into ease, and the experience became something I’ll always cherish.",
+    "name": "Emily Campbell",
+    "role": "Cross-Cultural Bride",
+    "image": "https://randomuser.me/api/portraits/women/38.jpg"
+  },
+  {
+    "quote": "During my NYSC posting, I was placed in a region I had never visited before. Turtura helped me understand the local customs and avoid cultural missteps. It made my service year smoother and more meaningful.",
+    "name": "Chinedu Okafor",
+    "role": "NYSC Member",
+    "image": "https://randomuser.me/api/portraits/men/45.jpg"
+  },
+  {
+    "quote": "As someone returning home after years abroad, I felt disconnected from my roots. Turtura helped me reconnect with my heritage and navigate cultural spaces with confidence.",
+    "name": "Amina Yusuf",
+    "role": "Returning Diaspora",
+    "image": "https://randomuser.me/api/portraits/women/65.jpg"
+  },
+  {
+    "quote": "I travel frequently for work and often find myself in unfamiliar cultural settings. Turtura has become my go-to guide for respectful engagement and local insight.",
+    "name": "David Chen",
+    "role": "Business Traveler",
+    "image": "https://randomuser.me/api/portraits/men/33.jpg"
+  },
+  {
+    "quote": "I used Turtura to prepare for a cultural exchange program in Northern Nigeria. It helped me understand the nuances of hospitality, dress, and communication. I felt welcomed and informed.",
+    "name": "Kemi Balogun",
+    "role": "Exchange Participant",
+    "image": "https://randomuser.me/api/portraits/women/22.jpg"
+  },
+  // 
   {
     quote: `"Turtura transformed my travel experience! The real-time cultural alerts helped me avoid awkward situations and truly connect with the locals. Highly recommend!"`,
     name: 'Jane Doe',
@@ -25,12 +57,12 @@ const testimonials = [
     role: 'Eco-conscious Traveler',
     image: 'https://randomuser.me/api/portraits/women/48.jpg',
   },
-  {
-    quote: `"Visiting my in-laws for the first time as a newly engaged woman felt overwhelming — I didn’t know what to expect or how to carry myself. But Turtura gave me the cultural confidence I needed. It turned anxiety into ease, and the experience became something I’ll always cherish."`,
-    name: 'Emily Campbell',
-    role: 'Bride-to-be',
-    image: 'https://randomuser.me/api/portraits/women/38.jpg',
-  },
+  // {
+  //   quote: `"Visiting my in-laws for the first time as a newly engaged woman felt overwhelming — I didn’t know what to expect or how to carry myself. But Turtura gave me the cultural confidence I needed. It turned anxiety into ease, and the experience became something I’ll always cherish."`,
+  //   name: 'Emily Campbell',
+  //   role: 'Cross-Cultural Bride-to-be',
+  //   image: 'https://randomuser.me/api/portraits/women/38.jpg',
+  // },
 ];
 
 const TestimonialSlider = () => {
