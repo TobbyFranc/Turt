@@ -6,6 +6,9 @@ import indigenousPeople from "../assets/indigenous-people.jpg";
 import Rajas from "../assets/Rajasthani.png";
 import Thai from "../assets/Thai.jpg";
 import Obatala from "../assets/Obatala_Priest.webp";
+import macharia from '../assets/macharia.jpg'
+import kyle from '../assets/kyle.jpg'
+import mcarthur from '../assets/johnmcarthur.jpg'
 
 // Import slick-carousel css files
 import "slick-carousel/slick/slick.css"; 
@@ -13,7 +16,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 // Array of images for the slider
 
-const images = [heroImg, culturehorn, indigenousPeople, Rajas, Thai, Obatala];
+const images = [heroImg, culturehorn, indigenousPeople, Rajas, Thai, Obatala, kyle, macharia, mcarthur];
 
 const HeroSlider = () => {
   const settings = {
@@ -23,7 +26,7 @@ const HeroSlider = () => {
     slidesToShow: 1,
     slidesToScroll: -1,
     autoplay: true,
-    autoplaySpeed: 50000,
+    autoplaySpeed: 20000,
     arrows: false,
   };
 

@@ -134,7 +134,7 @@ useEffect(() => {
             {/* Get Started Button */}
             <div className="flex flex-col items-center md:space-x-4 md:flex-row">
               <button
-                onClick={() => navigate("/Signup")}
+                onClick={() => navigate("/AuthPage")}
                 className="px-4 py-2 w-[280px] md:w-auto rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300"
               >
                 Get Started

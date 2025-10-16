@@ -3,12 +3,12 @@ import inca from "../assets/inca-mayan-sculpted-stones.png";
 // import SmartSearchInput from "./SmartSearchInput";
 
 // Unique hover images for each card
-// import imgGlobal from "../assets/Globe.png";
-// import imgInclusive from "../assets/Tobi.png";
+// import imgGlobal from "../assets/colorfulglobe.webp";
+// import imgInclusive from "../assets/Cultureleaf.png";
 // import imgGrowth from "../assets/Tuur.png";
 // import imgEthical from "../assets/posing.png";
 // import imgCommunity from "../assets/Rajasthani.png";
-// import imgConfidence from "../assets/Turt.png";
+// import imgConfidence from "../assets/intricatepatterns.webp";
 
 // Heroicons (SVGs)
 import { GlobeAltIcon, ChatBubbleBottomCenterTextIcon, LightBulbIcon, ShieldCheckIcon, CalendarDaysIcon, PuzzlePieceIcon, SignalIcon, SparklesIcon } from "@heroicons/react/24/outline";
@@ -164,7 +164,7 @@ const AboutUs = () => {
               <img
                 src={hoveredImage}
                 alt="Hover Cultural Connection"
-                className="absolute top-0 left-0 w-full h-full object-cover opacity-100 transition-opacity duration-500 ease-in-out"
+                className="absolute top-0 left-0 w-full h-full flex justify-center items-center object-cover opacity-100 transition-opacity duration-500 ease-in-out"
               />
             )}
           </div>
