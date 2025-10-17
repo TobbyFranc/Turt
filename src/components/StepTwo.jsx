@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import SelectField from "./SelectField";
+import TextAreaField from "./TextAreaField";
 
 const StepTwo = ({ data, updateForm, nextStep, prevStep }) => {
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     updateForm({ [e.target.name]: e.target.value });
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
+
+  const validateAll = () => {
+    const newErrors = {};
+    if (!data.role) newErrors.role = "Please select a role.";
+    if (!data.intent.trim()) newErrors.intent = "Intent is required.";
+    return newErrors;
+  };
+
+  const isValid = () => {
+    return data.role && data.intent.trim();
+  };
+
+  const handleNext = () => {
+    const validationErrors = validateAll();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      nextStep();
+    }
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       {/* Optional SVG */}
       <div className="flex justify-center">
         <img
@@ -17,59 +42,51 @@ const StepTwo = ({ data, updateForm, nextStep, prevStep }) => {
       </div>
 
       {/* Role Selection */}
-      <div>
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          What best describes you?
-        </label>
-        <select
-          id="role"
-          name="role"
-          value={data.role}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition"
-        >
-          <option value="">Select one</option>
-          <option value="traveler">Traveler</option>
-          <option value="tourist">Tourist</option>
-          <option value="enthusiast">Culture Enthusiast</option>
-          <option value="local">Local Host</option>
-          <option value="researcher">Researcher</option>
-        </select>
-      </div>
+      <SelectField
+        label="What best describes you? *"
+        name="role"
+        value={data.role}
+        options={[
+          "Traveler",
+          "Tourist",
+          "Culture Enthusiast",
+          "Local Host",
+          "Researcher",
+        ]}
+        onChange={handleChange}
+        error={errors.role}
+      />
 
       {/* Intent Textarea */}
-      <div>
-        <label htmlFor="intent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Why are you joining Turtura?
-        </label>
-        <textarea
-          id="intent"
-          name="intent"
-          value={data.intent}
-          onChange={handleChange}
-          placeholder="Share your goals, dreams, or curiosity..."
-          rows={4}
-          required
-          className="w-full px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition resize-none"
-        />
-      </div>
+      <TextAreaField
+        label="Why are you joining Turtura? *"
+        name="intent"
+        value={data.intent}
+        placeholder="Share your goals, dreams, or curiosity..."
+        onChange={handleChange}
+        error={errors.intent}
+      />
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex justify-between pt-4">
         <button
           type="button"
           onClick={prevStep}
-          className="px-6 py-3 rounded-md bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white font-semibold hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-300"
+          className="text-[var(--primaryColor)] underline font-medium"
         >
-          Back
+          ← Back
         </button>
         <button
           type="button"
-          onClick={nextStep}
-          className="px-6 py-3 rounded-md bg-[var(--accentColor)] text-white font-semibold hover:bg-yellow-600 transition duration-300"
+          onClick={handleNext}
+          disabled={!isValid()}
+          className={`inline-flex items-center gap-2 px-6 py-3 rounded-md font-medium transition ${
+            isValid()
+              ? "text-[var(--primaryColor)] border border-[var(--primaryColor)] hover:bg-[var(--primaryColor)] hover:text-white"
+              : "text-gray-400 border border-gray-300 cursor-not-allowed"
+          }`}
         >
-          Next
+          Next →
         </button>
       </div>
     </div>

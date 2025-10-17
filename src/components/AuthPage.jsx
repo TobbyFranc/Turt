@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import MultiStepSignup from "./MultiStepSignup";
 import LoginForm from "./LoginForm";
-import { useNavigate } from "react-router-dom";
 
 // Import SVGs as static assets
 import profileSvg from "../assets/undraw_profile-data_xkr9.svg";
@@ -11,9 +11,13 @@ import celebrationSvg from "../assets/undraw_celebration_wtm8.svg";
 import adventureSvg from "../assets/undraw_adventure_9my9.svg";
 
 const AuthPage = () => {
-  const [isReturningUser, setIsReturningUser] = useState(false);
-  const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const isReturning = query.get("returning") === "true";
+
+  const [isReturningUser, setIsReturningUser] = useState(isReturning);
+  const [step, setStep] = useState(1);
 
   const quotes = [
     "“Every journey begins with a single step.” — Lao Tzu",
@@ -24,13 +28,16 @@ const AuthPage = () => {
   ];
 
   const illustrations = [
-  adventureSvg,
-  profileSvg,
-  travelingSvg,
-  experienceSvg,
-  celebrationSvg,
-];
+    adventureSvg,
+    profileSvg,
+    travelingSvg,
+    experienceSvg,
+    celebrationSvg,
+  ];
 
+  const currentStep = Math.max(1, Math.min(step, 5));
+  const illustration = illustrations[currentStep - 1] || profileSvg;
+  const quote = quotes[currentStep - 1] || "";
 
   return (
     <div className="min-h-screen w-full grid md:grid-cols-2 bg-gradient-to-br from-teal-100 via-indigo-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-700">
@@ -44,11 +51,11 @@ const AuthPage = () => {
           ← Home
         </button>
         <img
-          src={illustrations[step - 1] || profileSvg}
+          src={illustration}
           alt="Step Illustration"
           className="w-full max-w-md"
         />
-        <p className="text-sm italic max-w-sm">{quotes[step - 1]}</p>
+        <p className="text-sm italic max-w-sm">{quote}</p>
       </div>
 
       {/* Right: Form Panel */}
@@ -73,6 +80,7 @@ const AuthPage = () => {
                 : "Already onboarded? Log in instead"}
             </button>
           </div>
+
           {isReturningUser ? (
             <LoginForm />
           ) : (

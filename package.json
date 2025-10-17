@@ -23,6 +23,7 @@
     "react": "^19.1.1",
     "react-big-calendar": "^1.19.4",
     "react-calendar": "^6.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.1.1",
     "react-globe.gl": "^2.36.0",
     "react-i18next": "^16.0.0",

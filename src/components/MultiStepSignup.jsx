@@ -7,6 +7,7 @@ import StepFive from "./StepFive";
 
 const MultiStepSignup = ({ step, setStep }) => {
   const [showWelcome, setShowWelcome] = useState(true);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,6 +33,8 @@ const MultiStepSignup = ({ step, setStep }) => {
     <StepFive data={formData} updateForm={updateForm} prevStep={prevStep} />,
   ];
 
+  const progressPercent = ((step - 1) / (steps.length - 1)) * 100;
+
   if (showWelcome) {
     return (
       <div className="text-center space-y-6 animate-fade-in">
@@ -50,10 +53,21 @@ const MultiStepSignup = ({ step, setStep }) => {
   }
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      <h2 className="text-xl font-semibold text-[var(--primaryColor)] text-center">
-        Step {step} of 5
-      </h2>
+    <div className="space-y-6 animate-fade-in">
+      {/* Progress Header */}
+      <div className="text-center space-y-2">
+        <h2 className="text-xl font-semibold text-[var(--primaryColor)]">
+          Step {step} of 5
+        </h2>
+        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-[var(--primaryColor)] transition-all duration-500"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Step Content */}
       {steps[step - 1]}
     </div>
   );

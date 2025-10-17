@@ -1,80 +1,153 @@
-import React from "react";
+import React, { useState } from "react";
+import InputField from "./InputField";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const StepOne = ({ data, updateForm, nextStep }) => {
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleChange = (e) => {
     updateForm({ [e.target.name]: e.target.value });
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
 
+  const validateAll = () => {
+    const newErrors = {};
+    if (!data.fullName.trim()) newErrors.fullName = "Full name is required.";
+    if (!data.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+    if (!data.password) {
+      newErrors.password = "Password is required.";
+    } else if (!isPasswordValid()) {
+      newErrors.password = "Password does not meet all requirements.";
+    }
+    return newErrors;
+  };
+
+  const isPasswordValid = () => {
+    return (
+      data.password.length >= 8 &&
+      /[A-Z]/.test(data.password) &&
+      /[a-z]/.test(data.password) &&
+      /[0-9]/.test(data.password) &&
+      /[^A-Za-z0-9]/.test(data.password)
+    );
+  };
+
+  const handleNext = () => {
+    const validationErrors = validateAll();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      nextStep();
+    }
+  };
+
+  const passwordRules = [
+    {
+      label: "At least 8 characters",
+      valid: data.password.length >= 8,
+    },
+    {
+      label: "At least one uppercase letter",
+      valid: /[A-Z]/.test(data.password),
+    },
+    {
+      label: "At least one lowercase letter",
+      valid: /[a-z]/.test(data.password),
+    },
+    {
+      label: "At least one number",
+      valid: /[0-9]/.test(data.password),
+    },
+    {
+      label: "At least one special character",
+      valid: /[^A-Za-z0-9]/.test(data.password),
+    },
+  ];
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Optional SVG */}
-      <div className="flex justify-center">
-        <img
-          src="https://www.svgrepo.com/show/354262/user-profile-avatar.svg"
-          alt="Profile"
-          className="w-24 h-24 opacity-80"
-        />
-      </div>
-
+    <div className="space-y-8 animate-fade-in">
       {/* Full Name */}
-      <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Full Name
-        </label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          value={data.fullName}
-          onChange={handleChange}
-          placeholder="e.g. Tobi Adeyemi"
-          required
-          className="w-full px-4 py-3 mt-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition"
-        />
-      </div>
+      <InputField
+        label="Full Name *"
+        name="fullName"
+        value={data.fullName}
+        placeholder="e.g. Tobi Adeyemi"
+        onChange={handleChange}
+        error={errors.fullName}
+      />
 
-      {/* Email */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Email Address
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={data.email}
-          onChange={handleChange}
-          placeholder="you@example.com"
-          required
-          className="w-full px-4 py-3 mt-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition"
-        />
-      </div>
+      {/* Email Address */}
+      <InputField
+        label="Email Address *"
+        name="email"
+        type="email"
+        value={data.email}
+        placeholder="you@example.com"
+        onChange={handleChange}
+        error={errors.email}
+      />
 
-      {/* Password */}
-      <div>
+      {/* Password Field with Toggle and Rules */}
+      <div className="space-y-1 relative">
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Password
+          Password <span className="text-red-500">*</span>
         </label>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           id="password"
           name="password"
           value={data.password}
           onChange={handleChange}
           placeholder="••••••••"
-          required
-          className="w-full px-4 py-3 mt-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition"
+          className={`w-full px-4 py-3 rounded-md border ${
+            errors.password ? "border-red-500" : "border-gray-300 dark:border-gray-600"
+          } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition`}
         />
-      </div>
-
-      {/* Next Button */}
-      <div className="flex justify-end">
         <button
           type="button"
-          onClick={nextStep}
-          className="px-6 py-3 rounded-md bg-[var(--accentColor)] text-white font-semibold hover:bg-yellow-600 transition duration-300"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-4 top-[38px] text-gray-500 hover:text-[var(--primaryColor)]"
+          aria-label="Toggle password visibility"
         >
-          Next
+          {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+        </button>
+        {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+
+        {/* Password Rules */}
+        <ul className="mt-2 space-y-1 text-sm">
+          {passwordRules.map((rule, index) => (
+            <li
+              key={index}
+              className={`flex items-center gap-2 ${
+                rule.valid ? "text-green-600" : "text-red-500"
+              }`}
+            >
+              {rule.valid ? <FaCheckCircle size={14} /> : <FaTimesCircle size={14} />}
+              {rule.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex justify-end pt-4">
+        <button
+          type="button"
+          onClick={handleNext}
+          disabled={!isPasswordValid()}
+          className={`inline-flex items-center gap-2 px-6 py-3 rounded-md font-medium transition ${
+            isPasswordValid()
+              ? "text-[var(--primaryColor)] border border-[var(--primaryColor)] hover:bg-[var(--primaryColor)] hover:text-white"
+              : "text-gray-400 border border-gray-300 cursor-not-allowed"
+          }`}
+        >
+          Next →
         </button>
       </div>
     </div>

@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 
 const StepFour = ({ data, updateForm, nextStep, prevStep }) => {
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     updateForm({ [e.target.name]: e.target.value });
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!data.travelStyle) {
+      newErrors.travelStyle = "Please select a travel style.";
+    }
+    return newErrors;
+  };
+
+  const isValid = () => {
+    return !!data.travelStyle;
+  };
+
+  const handleNext = () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      nextStep();
+    }
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       {/* Optional SVG */}
       <div className="flex justify-center">
         <img
@@ -17,17 +41,18 @@ const StepFour = ({ data, updateForm, nextStep, prevStep }) => {
       </div>
 
       {/* Travel Style */}
-      <div>
-        <label htmlFor="travelStyle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          What’s your preferred travel style?
+      <div className="space-y-1">
+        <label htmlFor="travelStyle" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          What’s your preferred travel style? <span className="text-red-500">*</span>
         </label>
         <select
           id="travelStyle"
           name="travelStyle"
           value={data.travelStyle}
           onChange={handleChange}
-          required
-          className="w-full px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition"
+          className={`w-full px-4 py-3 rounded-md border ${
+            errors.travelStyle ? "border-red-500" : "border-gray-300 dark:border-gray-600"
+          } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] transition`}
         >
           <option value="">Select one</option>
           <option value="solo">Solo</option>
@@ -35,12 +60,13 @@ const StepFour = ({ data, updateForm, nextStep, prevStep }) => {
           <option value="guided">Guided</option>
           <option value="immersive">Immersive</option>
         </select>
+        {errors.travelStyle && <p className="text-sm text-red-500">{errors.travelStyle}</p>}
       </div>
 
       {/* Accessibility / Language Needs */}
-      <div>
-        <label htmlFor="accessibility" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Any accessibility or language needs?
+      <div className="space-y-1">
+        <label htmlFor="accessibility" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Any accessibility or language needs? <span className="text-gray-400">(optional)</span>
         </label>
         <textarea
           id="accessibility"
@@ -54,20 +80,25 @@ const StepFour = ({ data, updateForm, nextStep, prevStep }) => {
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex justify-between pt-4">
         <button
           type="button"
           onClick={prevStep}
-          className="px-6 py-3 rounded-md bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white font-semibold hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-300"
+          className="text-[var(--primaryColor)] underline font-medium"
         >
-          Back
+          ← Back
         </button>
         <button
           type="button"
-          onClick={nextStep}
-          className="px-6 py-3 rounded-md bg-[var(--accentColor)] text-white font-semibold hover:bg-yellow-600 transition duration-300"
+          onClick={handleNext}
+          disabled={!isValid()}
+          className={`inline-flex items-center gap-2 px-6 py-3 rounded-md font-medium transition ${
+            isValid()
+              ? "text-[var(--primaryColor)] border border-[var(--primaryColor)] hover:bg-[var(--primaryColor)] hover:text-white"
+              : "text-gray-400 border border-gray-300 cursor-not-allowed"
+          }`}
         >
-          Next
+          Next →
         </button>
       </div>
     </div>
