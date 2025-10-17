@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Turt from "../assets/Turt.png";
-import Tuur from "../assets/Tuur.png";
 import { useTheme } from "./ThemeProvider";
 
 const sections = ["Home", "About", "Explore", "Teams", "FAQS"];
@@ -9,14 +8,8 @@ const sections = ["Home", "About", "Explore", "Teams", "FAQS"];
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("Home");
-const { darkMode, setDarkMode } = useTheme();
+  const { darkMode, setDarkMode } = useTheme();
   const [showToast, setShowToast] = useState(false);
-  const [showToastE, setShowToastE] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatMode, setChatMode] = useState("ai"); // 'ai' or 'support'
-  const [chatInput, setChatInput] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [chatLog, setChatLog] = useState([]);
   const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -29,17 +22,16 @@ const { darkMode, setDarkMode } = useTheme();
     }
   };
 
-const toggleTheme = () => {
-  setDarkMode(!darkMode);
-  setShowToast(true);
-  setTimeout(() => setShowToast(false), 2500);
-};
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2500);
+  };
 
-useEffect(() => {
-  document.documentElement.classList.toggle("dark", darkMode);
-  localStorage.setItem("darkMode", JSON.stringify(darkMode));
-}, [darkMode]);
-
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -54,12 +46,11 @@ useEffect(() => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
-            entry.target.classList.add("animate-fadeIn");
           }
         });
       },
       {
-        threshold: 0.3,
+        threshold: 0.1,
         rootMargin: "0px 0px -20% 0px",
       }
     );
@@ -72,98 +63,89 @@ useEffect(() => {
     return () => observer.disconnect();
   }, []);
 
-  const handleChatSubmit = async () => {
-    if (!chatInput.trim()) return;
-    const userMessage = { sender: "user", text: chatInput };
-    setChatLog((prev) => [...prev, userMessage]);
-    setChatInput("");
-
-    if (chatMode === "ai") {
-      const aiResponse = { sender: "ai", text: `You said: "${chatInput}"` };
-      setTimeout(() => setChatLog((prev) => [...prev, aiResponse]), 1000);
-    } else {
-      try {
-        await fetch("https://your-support-api.com/message", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: chatInput }),
-        });
-        const supportResponse = { sender: "support", text: "Support team will reply shortly." };
-        setChatLog((prev) => [...prev, supportResponse]);
-      } catch {
-        const errorResponse = { sender: "system", text: "Failed to reach support. Try again later." };
-        setChatLog((prev) => [...prev, errorResponse]);
-      }
-    }
-  };
-
   return (
-    <div className="fixed w-full top-0 left-0 z-50 bg-[var(--whiteColor)] text-[var(--grayColor)] md:bg-[var(--whiteColor)] shadow-md">
-      <div className="w-full flex justify-between p-8 items-center h-16 border-b shadow-b-md border-b-gray-300">
-        {/* Logo */}
-        <div className="flex items-center cursor-pointer">
-          <img src={Turt} alt="Turtura Logo" className="w-20 h-20" />
-          <p className="text-2xl lg:text-3xl inter-500">Turtura</p>
+    <div className="fixed w-full top-0 left-0 z-50 bg-[var(--whiteColor)] text-[var(--grayColor)] shadow-md">
+      <div className="w-full flex justify-between items-center px-6 h-16 border-b border-b-gray-300">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <img src={Turt} alt="Turtura Logo" className="w-14 h-14" />
+          <p className="text-xl lg:text-2xl inter-500 ml-2">Turtura</p>
         </div>
 
-        {/* Navigation */}
-        <div className="flex md:justify-end md:items-end">
-          <nav
-            className={`${
-              isOpen
-                ? "py-6 flex flex-1 absolute right-0 top-16 z-50 flex-col space-y-8 bg-[var(--backgroundColor)] w-full min-h-[100dvh] pb-24 overflow-y-auto items-center md:bg-transparent md:sticky md:flex-row md:py-0 md:space-y-0 md:space-x-8"
-                : "hidden md:flex"
-            }`}
-          >
-            <ul className="flex flex-col space-y-12 items-center w-full md:flex-1 md:space-y-0 md:space-x-8 lg:space-x-12 xl:space-x-20 md:justify-end md:flex-row sm:mr-2 md:mr-6 lg:mr-24">
-              {sections.map((section) => (
-                <li
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`border-b-2 w-full h-16 flex justify-center items-center cursor-pointer md:w-auto transition duration-300 ${
-                    activeSection === section
-                      ? "text-[var(--primaryColor)] font-semibold border-b-[var(--primaryColor)]"
-                      : "border-b-2 md:border-b-transparent hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
-                  }`}
-                >
-                  <button>{section === "FAQS" ? "FAQs" : section}</button>
-                </li>
-              ))}
-            </ul>
-
-            {/* Get Started Button */}
-            <div className="flex flex-col items-center md:space-x-4 md:flex-row">
-              <button
-                onClick={() => navigate("/auth")}
-                className="px-4 py-2 w-[280px] md:w-auto rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300"
-              >
-                Get Started
-              </button>
-            </div>
-          </nav>
-        </div>
-
-        {/* Mobile Menu Toggle */}
-        <div className="block md:hidden">
+        <nav className="hidden md:flex md:items-center md:space-x-10">
+          {sections.map((section) => (
+            <button
+              key={section}
+              onClick={() => scrollToSection(section)}
+              className={`relative text-sm font-normal px-2 py-1 transition duration-300 outline-none focus:outline-none ${
+                activeSection === section
+                  ? "text-[var(--primaryColor)] border-b-2 border-[var(--primaryColor)]"
+                  : "hover:text-[var(--accentColor)] group"
+              }`}
+            >
+              {section === "FAQS" ? "FAQs" : section}
+              {activeSection !== section && (
+                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-[var(--accentColor)] transition-all duration-300 group-hover:w-full"></span>
+              )}
+            </button>
+          ))}
           <button
-            onClick={toggleMenu}
-            className="focus:outline-none p-2 text-[var(--primaryColor)] rounded-md hover:bg-[var(--lightGrayColor)]"
+            onClick={() => navigate("/auth")}
+            className="px-4 py-2 rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300"
           >
-            {isOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
-            )}
+            Get Started
           </button>
-        </div>
+        </nav>
+
+        <button
+          onClick={toggleMenu}
+          className="block md:hidden p-2 text-[var(--primaryColor)] rounded-md hover:bg-[var(--lightGrayColor)] focus:outline-none"
+        >
+          {isOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          )}
+        </button>
       </div>
 
-      {/* Dark Mode Toggle */}
-      <div className={`fixed z-50 ${isOpen ? "bottom-6 right-6" : "top-20 right-6"}`}>
+      {isOpen && (
+        <div className="absolute top-16 left-0 w-full h-[calc(100vh-4rem)] bg-[var(--backgroundColor)] text-[var(--textColor)] z-[60] flex flex-col items-center pt-10 space-y-5 px-6 md:hidden">
+          {sections.map((section) => (
+            <button
+              key={section}
+              onClick={() => scrollToSection(section)}
+              className={`relative text-base font-normal px-2 py-1 transition duration-300 outline-none focus:outline-none ${
+                activeSection === section
+                  ? "text-[var(--primaryColor)] border-b-2 border-[var(--primaryColor)]"
+                  : "hover:text-[var(--accentColor)] group"
+              }`}
+            >
+              {section === "FAQS" ? "FAQs" : section}
+              {activeSection !== section && (
+                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-[var(--accentColor)] transition-all duration-300 group-hover:w-full"></span>
+              )}
+            </button>
+          ))}
+          <button
+            onClick={() => {
+              navigate("/auth");
+              setIsOpen(false);
+            }}
+            className="mt-6 px-6 py-3 rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300"
+          >
+            Get Started
+          </button>
+        </div>
+      )}
+
+      <div className="fixed top-20 right-6 z-50">
         <button
           onClick={toggleTheme}
           className="bg-[var(--grayColor)] text-[var(--alertColor)] p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-[var(--accentColor)] transition duration-300"
@@ -171,182 +153,23 @@ useEffect(() => {
         >
           {!darkMode ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round"               strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.36 4.95l-.7-.7M6.34 6.34l-.7-.7m12.02 12.02l-.7-.7M6.34 17.66l-.7-.7M12 5a7 7 0 000 14a7 7 0 000-14z"
-            />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-          </svg>
-        )}
-      </button>
-    </div>
-
-    {/* Toast Notification */}
-{showToast && (
-  <div className="fixed bottom-24 right-6 bg-[var(--[var(--blackColor)]Color)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--[var(--blackColor)]Color)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
-    {darkMode ? "Dark mode enabled 🌙" : "Light mode enabled ☀️"}
-  </div>
-)}
-
-
-{/* Floating Chat Button */}
-{/* Floating Chat Button */}
-<div className={`fixed bottom-6 left-2 z-40 transition duration-500 ${chatOpen ? "w-[360px]" : "w-[60px]"}`}>
-  <button
-    onClick={() => setChatOpen(!chatOpen)}
-    className="bg-[var(--grayColor)] border-2  border-[var(--textColor)] text-[var(--grayColor)] p-3 rounded-full shadow-lg hover:bg-[var(--primaryColor)] transition duration-300"
-  >
-    {chatOpen ? (
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="9" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
-    ) : (
-      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 13v-3a8 8 0 0116 0v3" />
-        <path d="M6 13h1a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3a2 2 0 012-2zM17 13h1a2 2 0 012 2v3a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2z" />
-      </svg>
-    )}
-  </button>
-
-  {chatOpen && (
-    <div className={`mt-4 ${isExpanded ? "w-full h-[80vh]" : "w-full max-h-[70vh]"} overflow-hidden bg-[var(--backgroundColor)] text-[var(--blackColor)] border-2 border-[var(--textColor)] rounded-xl shadow-2xl flex flex-col`}>
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-[var(--grayColor)]">
-        <div className="flex items-center gap-3">
-          <img
-  src="https://randomuser.me/api/portraits/men/48.jpg"
-  alt="Support 1"
-  onError={(e) => (e.currentTarget.src = Tuur)}
-  className="w-8 h-8 rounded-full"
-/>
-  <img src="https://randomuser.me/api/portraits/women/48.jpg" alt="Support 2" onError={(e) => (e.currentTarget.src = Tuur)} className="w-8 h-8 rounded-full" />
-  <span className="font-semibold text-sm text-[var(--textColor)]">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2H4C2.89543 2 2 2.89543 2 4V22L6 18H20C21.1046 18 22 17.1046 22 16V4C22 2.89543 21.1046 2 20 2Z" fill="currentColor"/>
-    </svg>
-  </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => {
-              setIsExpanded(!isExpanded);
-              setShowToastE(true);
-              setTimeout(() => setShowToastE(false), 2000);
-            }}
-            className="text-md text-[var(--textColor)] text-xl hover:text-[var(--blueColor)]"
-            title="Expand/Collapse"
-          >
-            {isExpanded ? ">🗕<" : "⛶"}
-          </button>
-          <button
-            onClick={() => setChatOpen(false)}
-            className="text-xl text-[var(--textColor)] hover:text-red-500"
-            title="Close"
-          >
-            x
-          </button>
-        </div>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.36 4.95l-.7-.7M6.34 6.34l-.7-.7m12.02 12.02l-.7-.7M6.34 17.66l-.7-.7M12 5a7 7 0 000 14a7 7 0 000-14z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+          )}
+        </button>
       </div>
 
-      {/* Toast Notification */}
-      {showToastE && (
-        <div className="absolute top-2 right-2 bg-[var(--blackColor)] text-[var(--textColor)] dark:bg-white dark:text-[var(--blackColor)] px-3 py-1 rounded-md shadow-lg text-xs z-50">
-          {isExpanded ? "Expanded view enabled" : "Collapsed view"}
+      {showToast && (
+        <div className="fixed bottom-24 right-6 bg-[var(--blackColor)] text-[var(--whiteColor)] dark:bg-[var(--whiteColor)] dark:text-[var(--blackColor)] px-4 py-2 rounded-md shadow-lg animate-fadeIn z-50">
+          {darkMode ? "Dark mode enabled 🌙" : "Light mode enabled ☀️"}
         </div>
       )}
-
-      {/* Mode Switch */}
-      <div className="flex justify-between px-4 py-2 bg-[var(--bgColor)] ">
-        <button
-          onClick={() => {
-            setChatMode("ai");
-            setChatLog([]);
-          }}
-          className={`flex-1 px-3 py-2 rounded-l-md text-sm hover:bg-[var(--darkBlueColor)] ${chatMode === "ai" ? "bg-[var(--blueColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
-        >
-          AI Chat 🤖
-        </button>
-        <button
-          onClick={() => {
-            setChatMode("support");
-            setChatLog([]);
-          }}
-          className={`flex-1 px-3 py-2 rounded-r-md text-sm text-[var(--bgColor)] hover:bg-[var(--textColor)] ${chatMode === "support" ? "bg-[var(--accentColor)] text-[var(--textColor)]" : "bg-[var(--lightGrayColor)] dark:bg-[var(--grayColor)]"}`}
-        >
-          Support 🧑‍💼
-        </button>
-      </div>
-
-      {/* Chat Log */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2 text-sm">
-        {chatLog.length === 0 ? (
-          <div className="text-center text-[var(--grayColor)] mt-4 p-6">
-            {chatMode === "ai" ? "Hello, I am Tura. Ask me any question 🤖" : "Chat with our team 🧑‍💼"}
-          </div>
-        ) : (
-          chatLog.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`p-2 rounded-l-xl rounded-tr-xl break-words max-w-[80%] ${
-                msg.sender === "user"
-                  ? "bg-[var(--grayColor)] text-[var(--whiteColor)] self-end ml-auto text-right"
-                  : msg.sender === "ai"
-                  ? "bg-blue-100 "
-                  : msg.sender === "support"
-                  ? "bg-yellow-100 dark:bg-yellow-800"
-                  : "bg-red-100 dark:bg-red-800"
-              }`}
-            >
-              {msg.text}
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Input */}
-      <div className="px-4 py-3 border-t border-[var(--lightGrayColor)] dark:border-[var(--grayColor)] flex gap-2">
-        <textarea
-          value={chatInput}
-          onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          placeholder="Type your message..."
-          rows={1}
-          className="flex-grow resize-none p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"
-        />
-        <button
-          onClick={async () => {
-            if (!chatInput.trim()) return;
-            const userMessage = { sender: "user", text: chatInput };
-            setChatLog((prev) => [...prev, userMessage]);
-            setChatInput("");
-
-            if (chatMode === "ai") {
-              const aiReply = await getOpenAIResponse(chatInput);
-              setChatLog((prev) => [...prev, { sender: "ai", text: aiReply || "Sorry I canot answer that" }]);
-            } else {
-              const supportReply = { sender: "support", text: "Thanks! Our team will reply shortly." };
-              setChatLog((prev) => [...prev, supportReply]);
-            }
-          }}
-
-          // onClick={(e)=>handleSearch()}
-          className="bg-[var(--accentColor)] text-[var(--whiteColor)] px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition"
-        >
-          Send
-        </button>
-      </div>
     </div>
-  )}
-</div>
-
-
-
-  </div>
-);
+  );
 };
 
 export default Nav;

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MultiStepSignup from "./MultiStepSignup";
 import LoginForm from "./LoginForm";
 
-// Import SVGs as static assets
+// SVG illustrations
 import profileSvg from "../assets/undraw_profile-data_xkr9.svg";
 import travelingSvg from "../assets/undraw_traveling_c18z.svg";
 import experienceSvg from "../assets/undraw_experience-design_d4md.svg";
@@ -41,7 +41,7 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen w-full grid md:grid-cols-2 bg-gradient-to-br from-teal-100 via-indigo-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-700">
-      {/* Left: Illustration + Quote (hidden on mobile) */}
+      {/* Left: Illustration + Quote */}
       <div className="hidden md:flex flex-col items-center justify-center px-10 space-y-6 text-center text-gray-700 dark:text-gray-300 bg-white/40 dark:bg-gray-900/40 backdrop-blur-md relative">
         <button
           onClick={() => navigate("/")}

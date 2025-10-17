@@ -5,6 +5,7 @@ import AuthPage from "./components/AuthPage";
 import LocationSearch from "./components/LocationSearch";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { LanguageProvider } from "./components/LanguageProvider";
+import ChatWidget from "./components/ChatWidget";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/locationsearch" element={<LocationSearch />} />
         </Routes>
+        <ChatWidget />
       </ThemeProvider>
     </LanguageProvider>
   );

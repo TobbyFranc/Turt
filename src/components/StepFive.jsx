@@ -13,6 +13,7 @@ const StepFive = ({ data, updateForm, prevStep }) => {
 
     // Simulate redirect after delay
     setTimeout(() => {
+      console.log("Redirecting to login...");
       navigate("/auth?returning=true");
     }, 5000);
   };
