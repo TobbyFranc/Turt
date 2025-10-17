@@ -6,22 +6,23 @@ const AuthPage = () => {
   const [isReturningUser, setIsReturningUser] = useState(false);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-700">
-      {/* Optional Background Image */}
-      <div className="absolute inset-0 z-0">
+    <div className="h-screen w-full grid md:grid-cols-2 bg-gradient-to-br from-teal-100 via-indigo-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-700">
+      {/* Left: Illustration + Quote */}
+      <div className="hidden md:flex flex-col items-center justify-center px-10 space-y-6 text-center text-gray-700 dark:text-gray-300 bg-white/40 dark:bg-gray-900/40 backdrop-blur-md">
         <img
-          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1170&q=80"
+          src={`/assets/undraw_adventure_re_ncqp.svg`}
           alt="Cultural Journey"
-          className="w-full h-full object-cover opacity-30"
+          className="w-full max-w-md"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
+        <p className="text-sm italic max-w-sm">
+          “Culture is the widening of the mind and of the spirit.”<br />— Jawaharlal Nehru
+        </p>
       </div>
 
-      {/* Auth Panel */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        <div className="w-full max-w-4xl bg-white/30 dark:bg-gray-900/30 backdrop-blur-md p-10 rounded-2xl shadow-2xl text-gray-900 dark:text-white transition-all duration-700 ease-in-out">
-          {/* Toggle */}
-          <div className="mb-6 text-center">
+      {/* Right: Form Panel */}
+      <div className="flex flex-col items-center justify-center px-6 py-10">
+        <div className="w-full max-w-xl space-y-6">
+          <div className="text-center">
             <button
               onClick={() => setIsReturningUser(!isReturningUser)}
               className="text-sm text-[var(--primaryColor)] underline font-medium"
@@ -31,8 +32,6 @@ const AuthPage = () => {
                 : "Already onboarded? Log in instead"}
             </button>
           </div>
-
-          {/* Form Content */}
           {isReturningUser ? <LoginForm /> : <MultiStepSignup />}
         </div>
       </div>
