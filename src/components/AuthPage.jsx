@@ -1,26 +1,67 @@
 import React, { useState } from "react";
 import MultiStepSignup from "./MultiStepSignup";
 import LoginForm from "./LoginForm";
+import { useNavigate } from "react-router-dom";
+
+// Import SVGs as static assets
+import profileSvg from "../assets/undraw_profile-data_xkr9.svg";
+import travelingSvg from "../assets/undraw_traveling_c18z.svg";
+import experienceSvg from "../assets/undraw_experience-design_d4md.svg";
+import celebrationSvg from "../assets/undraw_celebration_wtm8.svg";
+import adventureSvg from "../assets/undraw_adventure_9my9.svg";
 
 const AuthPage = () => {
   const [isReturningUser, setIsReturningUser] = useState(false);
+  const [step, setStep] = useState(1);
+  const navigate = useNavigate();
+
+  const quotes = [
+    "“Every journey begins with a single step.” — Lao Tzu",
+    "“To travel is to live.” — Hans Christian Andersen",
+    "“Culture is the widening of the mind and of the spirit.” — Nehru",
+    "“Travel far enough, you meet yourself.” — David Mitchell",
+    "“The world is a book, and those who do not travel read only one page.” — Augustine",
+  ];
+
+  const illustrations = [
+  adventureSvg,
+  profileSvg,
+  travelingSvg,
+  experienceSvg,
+  celebrationSvg,
+];
+
 
   return (
-    <div className="h-screen w-full grid md:grid-cols-2 bg-gradient-to-br from-teal-100 via-indigo-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-700">
-      {/* Left: Illustration + Quote */}
-      <div className="hidden md:flex flex-col items-center justify-center px-10 space-y-6 text-center text-gray-700 dark:text-gray-300 bg-white/40 dark:bg-gray-900/40 backdrop-blur-md">
+    <div className="min-h-screen w-full grid md:grid-cols-2 bg-gradient-to-br from-teal-100 via-indigo-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-700">
+      {/* Left: Illustration + Quote (hidden on mobile) */}
+      <div className="hidden md:flex flex-col items-center justify-center px-10 space-y-6 text-center text-gray-700 dark:text-gray-300 bg-white/40 dark:bg-gray-900/40 backdrop-blur-md relative">
+        <button
+          onClick={() => navigate("/")}
+          className="absolute top-6 left-6 text-[var(--primaryColor)] hover:text-[var(--accentColor)] transition"
+          aria-label="Go to home"
+        >
+          ← Home
+        </button>
         <img
-          src={`/assets/undraw_adventure_re_ncqp.svg`}
-          alt="Cultural Journey"
+          src={illustrations[step - 1] || profileSvg}
+          alt="Step Illustration"
           className="w-full max-w-md"
         />
-        <p className="text-sm italic max-w-sm">
-          “Culture is the widening of the mind and of the spirit.”<br />— Jawaharlal Nehru
-        </p>
+        <p className="text-sm italic max-w-sm">{quotes[step - 1]}</p>
       </div>
 
       {/* Right: Form Panel */}
-      <div className="flex flex-col items-center justify-center px-6 py-10">
+      <div className="relative flex flex-col items-center justify-center px-6 py-10">
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate("/")}
+          className="md:hidden absolute top-4 left-4 text-[var(--primaryColor)] hover:text-[var(--accentColor)] transition"
+          aria-label="Go to home"
+        >
+          ← Home
+        </button>
+
         <div className="w-full max-w-xl space-y-6">
           <div className="text-center">
             <button
@@ -32,7 +73,11 @@ const AuthPage = () => {
                 : "Already onboarded? Log in instead"}
             </button>
           </div>
-          {isReturningUser ? <LoginForm /> : <MultiStepSignup />}
+          {isReturningUser ? (
+            <LoginForm />
+          ) : (
+            <MultiStepSignup step={step} setStep={setStep} />
+          )}
         </div>
       </div>
     </div>
