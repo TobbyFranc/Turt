@@ -37,7 +37,7 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className=" flex flex-col md:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 pt-4 pb-8">
-            <button onClick={() => navigate("/Login")} className="group flex items-center justify-center w-[280px] lg:w-auto px-4 py-2 rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300">
+            <button onClick={() => navigate("/AuthPage")} className="group flex items-center justify-center w-[280px] lg:w-auto px-4 py-2 rounded-md bg-[var(--accentColor)] text-[var(--whiteColor)] hover:bg-[var(--primaryColor)] transition duration-300">
               Get Started
                 {/* span icon for get started */}
                 <span className="ml-2 trasform -rotate-45 group-hover:rotate-0 transition-all duration-300">
