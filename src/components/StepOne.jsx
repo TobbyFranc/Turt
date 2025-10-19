@@ -125,10 +125,10 @@ const StepOne = ({ data, updateForm, nextStep }) => {
             <li
               key={index}
               className={`flex items-center gap-2 ${
-                rule.valid ? "text-green-600" : "text-red-500"
+                rule.valid ? "text-green-600" : "text-[var(--grayColor)]"
               }`}
             >
-              {rule.valid ? <FaCheckCircle size={14} /> : <FaTimesCircle size={14} />}
+              {rule.valid ? <FaCheckCircle size={10} /> : <FaTimesCircle size={10} />}
               {rule.label}
             </li>
           ))}

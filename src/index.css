@@ -13,7 +13,8 @@ html {
 
 body {
   background-color: var(--bgColor);
-  font-family: 'Inter', sans-serif;
+  /* font-family: 'Inter', sans-serif; */
+  font-family: 'Open sans', sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -62,11 +63,11 @@ a {
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
-button:focus,
+/* button:focus,
 a:focus {
   outline: 2px solid var(--accentColor);
   outline-offset: 2px;
-}
+} */
 
 @keyframes fadeIn {
   from {

@@ -37,7 +37,7 @@ const MultiStepSignup = ({ step, setStep }) => {
 
   if (showWelcome) {
     return (
-      <div className="text-center space-y-6 animate-fade-in">
+      <div className="text-center space-y-6 animate-fade-in ">
         <h1 className="text-3xl font-bold text-[var(--primaryColor)]">Welcome to Turtura</h1>
         <p className="text-gray-600 dark:text-gray-400">
           Begin your cultural journey by telling us a little about yourself.
@@ -59,7 +59,7 @@ const MultiStepSignup = ({ step, setStep }) => {
         <h2 className="text-xl font-semibold text-[var(--primaryColor)]">
           Step {step} of 5
         </h2>
-        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-[var(--lightGrayColor)] dark:bg-gray-700 rounded-full overflow-hidden">
           <div
             className="h-full bg-[var(--primaryColor)] transition-all duration-500"
             style={{ width: `${progressPercent}%` }}

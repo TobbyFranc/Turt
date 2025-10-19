@@ -73,7 +73,7 @@ const AuthPage = () => {
           <div className="text-center">
             <button
               onClick={() => setIsReturningUser(!isReturningUser)}
-              className="text-sm text-[var(--primaryColor)] underline font-medium"
+              className="text-sm text-[var(--grayColor)]  underline hover:text-[var(--primaryColor)] px-3 py-1 rounded-full  bg-[var(--alertColor)]"
             >
               {isReturningUser
                 ? "New to Turtura? Start your journey"

@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <>
       <h1 className="text-3xl font-bold text-center text-[var(--primaryColor)] mb-2">Welcome Back</h1>
@@ -26,19 +29,31 @@ const LoginForm = () => {
         </div>
 
         {/* Password */}
-        <div>
+        <div className="relative">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Password
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             name="password"
             placeholder="••••••••"
             autoComplete="current-password"
             required
-            className="w-full px-4 py-3 mt-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)]"
+            className="w-full px-4 py-3 mt-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primaryColor)] pr-10"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute top-[38px] right-3 text-gray-500 dark:text-gray-300 hover:text-[var(--primaryColor)]"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <FiEyeOff size={20} />
+            ) : (
+             <FiEye size={20} />
+            )}
+          </button>
         </div>
 
         {/* Options */}

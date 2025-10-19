@@ -21,6 +21,7 @@ import cuisine from "../assets/cuisine.jpg";
 
 const defaultTabs = ["Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
 
+
 const fallbackImagesMap = {
   Fashion: [fashion, afrofashion],
   Cuisine: [cuisine],
@@ -284,10 +285,10 @@ const LocationSearch = () => {
 
               {showFilter && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-                  <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                  <div className="bg-[var(--alertColor)] p-6 rounded-lg shadow-lg w-[90%] max-w-md">
                     <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
                     {defaultTabs.map((tab) => (
-                      <label key={tab} className="block mb-2 text-[var(--textColor)]">
+                      <label key={tab} className="block mb-2 text-[var(--grayColor)]">
                         <input
                           type="checkbox"
                           checked={availableTabs.includes(tab)}
@@ -336,42 +337,6 @@ const LocationSearch = () => {
           </div>
         </div>
       )}
-
-      {/* Tura AI Button */}
-      <div className="fixed bottom-8 right-8 z-50 transition-all duration-500">
-        {!showTura && (
-          <button
-            onClick={() => setShowTura(true)}
-            className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[var(--blueColor)]"
-          >
-            Ask Tura AI 💬
-          </button>
-        )}
-      </div>
-
-      {/* Tura AI Chat Panel */}
-      <div
-        className={`fixed bottom-8 right-0 h-[600px] w-80 bg-white border-l z-40 p-4 overflow-y-auto transition-transform duration-500 ${
-          showTura ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <button
-          onClick={() => setShowTura(false)}
-          className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-        >
-          ✕
-        </button>
-        <h3 className="text-xl font-semibold mb-4 text-[var(--primaryColor)]">Ask Tura</h3>
-        <textarea
-          value={turaQuestion}
-          onChange={(e) => setTuraQuestion(e.target.value)}
-          placeholder="Ask a cultural question..."
-          className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primaryColor)] mb-4"
-        ></textarea>
-        <button className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-yellow-600 w-full">
-          Submit
-        </button>
-      </div>
 
       {/* Community Link */}
       <div className="max-w-6xl mx-auto px-4 mb-12 flex justify-start">

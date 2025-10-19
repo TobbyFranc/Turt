@@ -145,7 +145,7 @@ const Nav = () => {
         </div>
       )}
 
-      <div className="fixed top-20 right-6 z-50">
+      <div className={`fixed z-50 ${isOpen ? "bottom-6 right-6" : "top-20 right-6"}`}>
         <button
           onClick={toggleTheme}
           className="bg-[var(--grayColor)] text-[var(--alertColor)] p-2 rounded-md shadow-lg hover:scale-105 hover:bg-[var(--primaryColor)] dark:hover:bg-[var(--accentColor)] transition duration-300"
