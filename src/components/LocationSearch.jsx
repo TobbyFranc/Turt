@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  lazy,
+  Suspense
+} from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
-import LocationInfo from "./LocationInfo";
 import SmartSearchInput from "./SmartSearchInput";
+import LocationInfo from "./LocationInfo";
 import regionMap from "./regionMap";
-
+import Skeleton from "./Skeleton";
+import {
+  generateContentMap,
+  defaultTabs,
+  extraTabs
+} from "../utils/contentMap";
 import globalCulture from "../assets/global-culture.jpg";
 import market from "../assets/market.jpg";
 import fashion from "../assets/fashion.jpg";
@@ -19,8 +23,9 @@ import indianwedding from "../assets/indianwedding.jpg";
 import marriage from "../assets/marriage.jpg";
 import cuisine from "../assets/cuisine.jpg";
 
-const defaultTabs = ["Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
-const extraTabs = ["Music", "Dance", "Spirituality", "Architecture", "Art"];
+const TabContent = lazy(() => import("./TabContent"));
+const ImageSlider = lazy(() => import("./ImageSlider"));
+const FilterModal = lazy(() => import("./FilterModal"));
 
 const fallbackImagesMap = {
   Fashion: [fashion, afrofashion],
@@ -52,24 +57,6 @@ const suggestTabs = (query) => {
   return defaultTabs;
 };
 
-const generateContentMap = (query, summary) => {
-  const base = summary || `Cultural insights about ${query} are currently limited.`;
-  return {
-    Description: base,
-    Fashion: `Fashion in ${query} blends tradition with modern styles. ${base}`,
-    Cuisine: `Cuisine in ${query} features unique flavors and regional dishes. ${base}`,
-    Greetings: `Greetings in ${query} reflect respect and warmth. ${base}`,
-    Taboos: `Taboos in ${query} are shaped by deep cultural values. ${base}`,
-    Marriage: `Marriage customs in ${query} involve rituals and family traditions. ${base}`,
-    Festival: `Festivals in ${query} celebrate heritage and community. ${base}`,
-    Music: `Music in ${query} ranges from folk rhythms to contemporary sounds. ${base}`,
-    Dance: `Dance in ${query} expresses joy, identity, and storytelling. ${base}`,
-    Spirituality: `Spirituality in ${query} is rooted in ancestral beliefs and modern faiths. ${base}`,
-    Architecture: `Architecture in ${query} reflects history, climate, and creativity. ${base}`,
-    Art: `Art in ${query} captures emotion, heritage, and innovation. ${base}`,
-  };
-};
-
 const LocationSearch = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,11 +80,26 @@ const LocationSearch = () => {
   const isValidCoordinates = locationData?.lat !== "Unknown" && locationData?.lon !== "Unknown";
 
   useEffect(() => {
+    const savedTabs = localStorage.getItem("turtura_tab_filters");
+    if (savedTabs) {
+      setAvailableTabs(JSON.parse(savedTabs));
+    }
+  }, []);
+
+  useEffect(() => {
     if (passedQuery && autoSearch) {
       setQuery(passedQuery);
       handleSearch({ preventDefault: () => {} }, passedQuery);
     }
   }, [passedQuery, autoSearch]);
+
+  const handleTabFilterChange = (tab, checked) => {
+    const updatedTabs = checked
+      ? [...availableTabs, tab]
+      : availableTabs.filter((t) => t !== tab);
+    setAvailableTabs(updatedTabs);
+    localStorage.setItem("turtura_tab_filters", JSON.stringify(updatedTabs));
+  };
 
   const fetchImagesForTab = async (topic, baseQuery) => {
     try {
@@ -158,7 +160,9 @@ const LocationSearch = () => {
 
       setTrendingToday([trending]);
       setAvailableTabs(suggested);
-      setContentMap(generateContentMap(finalQuery, wikiData.extract));
+
+      const map = await generateContentMap(finalQuery, wikiData.extract);
+      setContentMap(map);
       setActiveTab("Description");
     } catch (error) {
       console.error("Search error:", error);
@@ -203,128 +207,77 @@ const LocationSearch = () => {
         )}
       </div>
 
-      {/* Map or Image Slider */}
-      {locationData && (
-        <div className="max-w-6xl mx-auto px-4 mb-6">
-          {activeTab === "Description" && isValidCoordinates ? (
-            <iframe
-              title="Map"
-              src={`https://maps.google.com/maps?q=${locationData.lat},${locationData.lon}&z=6&output=embed`}
-              className="w-full h-[400px] rounded-md border-0"
-              allowFullScreen
-              loading="lazy"
-            />
-          ) : isValidCoordinates ? (
-            <Swiper key={activeTab} modules={[Navigation, Pagination]} spaceBetween={10} slidesPerView={1} navigation pagination={{ clickable: true }}>
-              {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => {
-                const imageUrl = img?.urls?.regular || img;
-                const caption = img?.alt_description || `${activeTab} culture`;
-                const credit = img?.user?.name || "Unknown";
+              {/*  */}
+        {trendingToday.length > 0 && (
+  <div className="max-w-6xl mx-auto px-4 mt-2 mb-4">
+    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md shadow-sm">
+      <strong className="block font-semibold">🌍 Turtura Tips:</strong>
+      <span className="block mt-1 text-sm">
+        Explore cultural topics by switching tabs. Use the filter icon to customize your view.
+      </span>
+    </div>
+  </div>
+)}
+        {/*  */}
 
-                return (
-                  <SwiperSlide key={index}>
-                    <div className="w-full h-[400px] rounded-md overflow-hidden relative">
-                      <img
-                        src={imageUrl}
-                        alt={caption}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-sm p-2 flex justify-between items-center">
-                        <span>{caption}</span>
-                        <span className="italic">📸 {credit}</span>
-                      </div>
-                      <button
-                        onClick={() => setSavedGallery((prev) => [...prev, imageUrl])}
-                        className="absolute top-2 right-2 bg-white text-[var(--primaryColor)] px-2 py-1 rounded-md text-xs shadow hover:bg-[var(--accentColor)] hover:text-white"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-          ) : (
-            <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded-md text-[var(--grayColor)]">
-              Map preview not available for this location.
-            </div>
-          )}
-        </div>
-      )}
+      {/* Image Slider */}
+      <div className="max-w-6xl mx-auto px-4 mb-6">
+        <Suspense fallback={<Skeleton height="200px" />}>
+          <ImageSlider
+            activeTab={activeTab}
+            images={images}
+            fallbackImagesMap={fallbackImagesMap}
+            locationData={locationData}
+            savedGallery={savedGallery}
+            setSavedGallery={setSavedGallery}
+          />
+        </Suspense>
+      </div>
 
-      {/* Tabs and Content */}
+            {/* Tabs and Content */}
       {locationData && (
         <div className="relative max-w-6xl mx-auto px-4 mb-6">
-          {isValidCoordinates && (
-            <>
-              <div className="flex justify-between items-center mb-4">
-                <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
-                <button onClick={() => setShowFilter(true)} title="Filter Tabs">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
-                    strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
-                    <path d="M4 6h16" />
-                    <path d="M6 12h12" />
-                    <path d="M10 18h4" />
-                  </svg>
-                </button>
-              </div>
+          <div className="flex justify-between items-center mb-4">
+            <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
+            <button onClick={() => setShowFilter(true)} title="Filter Tabs">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--grayColor)] hover:text-[var(--primaryColor)]">
+                <path d="M4 6h16" />
+                <path d="M6 12h12" />
+                <path d="M10 18h4" />
+              </svg>
+            </button>
+          </div>
 
-              <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
-                {["Description", ...availableTabs].map((tab) => (
-                  <li
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`p-2 border-b-2 cursor-pointer ${
-                      activeTab === tab
-                        ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
-                        : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
-                    }`}
-                  >
-                    {tab}
-                  </li>
-                ))}
-              </ul>
+          <ul className="flex gap-4 overflow-x-scroll text-sm font-medium">
+            {["Description", ...availableTabs].map((tab) => (
+              <li
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`p-2 border-b-2 cursor-pointer ${
+                  activeTab === tab
+                    ? "text-[var(--primaryColor)] border-[var(--primaryColor)]"
+                    : "text-[var(--grayColor)] hover:text-[var(--accentColor)] hover:border-b-[var(--accentColor)]"
+                }`}
+              >
+                {tab}
+              </li>
+            ))}
+          </ul>
 
-              {showFilter && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-                  <div className="bg-[var(--alertColor)] p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-                    <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
-                    {[...defaultTabs, ...extraTabs].map((tab) => (
-                      <label key={tab} className="block mb-2 text-[var(--grayColor)]">
-                        <input
-                          type="checkbox"
-                          checked={availableTabs.includes(tab)}
-                          onChange={(e) => {
-                            setAvailableTabs((prev) =>
-                              e.target.checked ? [...prev, tab] : prev.filter((t) => t !== tab)
-                            );
-                          }}
-                          className="mr-2"
-                        />
-                        {tab}
-                      </label>
-                    ))}
-                    <button
-                      onClick={() => setShowFilter(false)}
-                      className="mt-4 px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300 w-full"
-                    >
-                      Done
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-4 text-[var(--textColor)] text-justify">
-                {contentMap[activeTab] || "No content available for this topic."}
-              </div>
-            </>
+          {showFilter && (
+            <Suspense fallback={<Skeleton height="300px" />}>
+              <FilterModal
+                availableTabs={availableTabs}
+                setAvailableTabs={setAvailableTabs}
+                setShowFilter={setShowFilter}
+              />
+            </Suspense>
           )}
 
-          {!isValidCoordinates && (
-            <div className="mt-4 text-[var(--grayColor)] text-center">
-              Cultural details are unavailable due to missing location data.
-            </div>
-          )}
+          <Suspense fallback={<Skeleton height="100px" />}>
+            <TabContent activeTab={activeTab} contentMap={contentMap} />
+          </Suspense>
         </div>
       )}
 
