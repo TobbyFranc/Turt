@@ -20,7 +20,7 @@ import marriage from "../assets/marriage.jpg";
 import cuisine from "../assets/cuisine.jpg";
 
 const defaultTabs = ["Fashion", "Cuisine", "Greetings", "Taboos", "Marriage", "Festival"];
-
+const extraTabs = ["Music", "Dance", "Spirituality", "Architecture", "Art"];
 
 const fallbackImagesMap = {
   Fashion: [fashion, afrofashion],
@@ -29,6 +29,11 @@ const fallbackImagesMap = {
   Taboos: [globalCulture],
   Marriage: [afrowedding, indianwedding, marriage],
   Festival: [globalCulture],
+  Music: [globalCulture],
+  Dance: [globalCulture],
+  Spirituality: [globalCulture],
+  Architecture: [globalCulture],
+  Art: [globalCulture],
 };
 
 const languageMap = {
@@ -47,12 +52,28 @@ const suggestTabs = (query) => {
   return defaultTabs;
 };
 
+const generateContentMap = (query, summary) => {
+  const base = summary || `Cultural insights about ${query} are currently limited.`;
+  return {
+    Description: base,
+    Fashion: `Fashion in ${query} blends tradition with modern styles. ${base}`,
+    Cuisine: `Cuisine in ${query} features unique flavors and regional dishes. ${base}`,
+    Greetings: `Greetings in ${query} reflect respect and warmth. ${base}`,
+    Taboos: `Taboos in ${query} are shaped by deep cultural values. ${base}`,
+    Marriage: `Marriage customs in ${query} involve rituals and family traditions. ${base}`,
+    Festival: `Festivals in ${query} celebrate heritage and community. ${base}`,
+    Music: `Music in ${query} ranges from folk rhythms to contemporary sounds. ${base}`,
+    Dance: `Dance in ${query} expresses joy, identity, and storytelling. ${base}`,
+    Spirituality: `Spirituality in ${query} is rooted in ancestral beliefs and modern faiths. ${base}`,
+    Architecture: `Architecture in ${query} reflects history, climate, and creativity. ${base}`,
+    Art: `Art in ${query} captures emotion, heritage, and innovation. ${base}`,
+  };
+};
+
 const LocationSearch = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // console.log("Unsplash key:", import.meta.env.VITE_UNSPLASH_ACCESS_KEY);
-
 
   const passedQuery = location.state?.query || searchParams.get("q") || "";
   const autoSearch = searchParams.get("auto") === "true";
@@ -63,12 +84,11 @@ const LocationSearch = () => {
   const [activeTab, setActiveTab] = useState("Description");
   const [availableTabs, setAvailableTabs] = useState(defaultTabs);
   const [showFilter, setShowFilter] = useState(false);
-  const [showTura, setShowTura] = useState(false);
-  const [turaQuestion, setTuraQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trendingToday, setTrendingToday] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [savedGallery, setSavedGallery] = useState([]);
+  const [contentMap, setContentMap] = useState({});
 
   const isValidCoordinates = locationData?.lat !== "Unknown" && locationData?.lon !== "Unknown";
 
@@ -82,8 +102,7 @@ const LocationSearch = () => {
   const fetchImagesForTab = async (topic, baseQuery) => {
     try {
       const res = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(baseQuery + " " + topic)}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY
-}`
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(baseQuery + " " + topic)}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
       );
       const data = await res.json();
       return data.results || [];
@@ -114,11 +133,10 @@ const LocationSearch = () => {
       const trending = `#CulturalFusion — trending in ${finalQuery}`;
 
       const suggested = suggestTabs(finalQuery);
-      setAvailableTabs(suggested);
-      setActiveTab("Description");
+      const allTabs = [...new Set([...suggested, ...extraTabs])];
 
       const imageResults = {};
-      for (const tab of suggested) {
+      for (const tab of allTabs) {
         imageResults[tab] = await fetchImagesForTab(tab.toLowerCase(), finalQuery);
       }
 
@@ -139,21 +157,14 @@ const LocationSearch = () => {
       });
 
       setTrendingToday([trending]);
+      setAvailableTabs(suggested);
+      setContentMap(generateContentMap(finalQuery, wikiData.extract));
+      setActiveTab("Description");
     } catch (error) {
       console.error("Search error:", error);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const contentMap = {
-    Description: locationData?.summary || "No cultural summary available.",
-    Fashion: `Traditional fashion in ${locationData?.name} reflects elegance and heritage.`,
-    Cuisine: `${locationData?.name} offers a rich culinary tradition with diverse flavors.`,
-    Greetings: `In ${locationData?.name}, greetings are rituals of respect.`,
-    Taboos: `Every culture has its boundaries. In ${locationData?.name}, taboos are deeply rooted.`,
-    Marriage: `Marriage in ${locationData?.name} is a tapestry of rituals and family traditions.`,
-    Festival: `Festivals in ${locationData?.name} are vibrant expressions of joy and community.`,
   };
 
   return (
@@ -167,7 +178,6 @@ const LocationSearch = () => {
           >
             ←
           </button>
-
           <div className="flex-1 w-full">
             <SmartSearchInput
               onSearch={(incomingQuery) => {
@@ -184,21 +194,13 @@ const LocationSearch = () => {
       {/* Location Info */}
       <div className="flex items-center max-w-6xl mx-auto justify-between">
         <LocationInfo locationData={locationData} trendingToday={trendingToday} />
-        {/* image preview */}
-                {previewUrl && (
+        {previewUrl && (
           <div className="mt-6 text-center">
             <p className="text-sm text-[var(--grayColor)] mb-2">📷 Preview:</p>
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="w-32 h-32 object-cover rounded-md mx-auto shadow-md"
-            />
-            {query && (
-              <p className="text-sm text-[var(--grayColor)] mt-2">Detected: {query}</p>
-            )}
+            <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-md mx-auto shadow-md" />
+            {query && <p className="text-sm text-[var(--grayColor)] mt-2">Detected: {query}</p>}
           </div>
         )}
-
       </div>
 
       {/* Map or Image Slider */}
@@ -216,7 +218,7 @@ const LocationSearch = () => {
             <Swiper key={activeTab} modules={[Navigation, Pagination]} spaceBetween={10} slidesPerView={1} navigation pagination={{ clickable: true }}>
               {(images[activeTab]?.length > 0 ? images[activeTab] : fallbackImagesMap[activeTab] || [globalCulture]).map((img, index) => {
                 const imageUrl = img?.urls?.regular || img;
-                                const caption = img?.alt_description || `${activeTab} culture`;
+                const caption = img?.alt_description || `${activeTab} culture`;
                 const credit = img?.user?.name || "Unknown";
 
                 return (
@@ -287,7 +289,7 @@ const LocationSearch = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                   <div className="bg-[var(--alertColor)] p-6 rounded-lg shadow-lg w-[90%] max-w-md">
                     <h5 className="text-md font-semibold mb-4 text-[var(--primaryColor)]">Select Tabs to Display</h5>
-                    {defaultTabs.map((tab) => (
+                    {[...defaultTabs, ...extraTabs].map((tab) => (
                       <label key={tab} className="block mb-2 text-[var(--grayColor)]">
                         <input
                           type="checkbox"
@@ -313,7 +315,7 @@ const LocationSearch = () => {
               )}
 
               <div className="mt-4 text-[var(--textColor)] text-justify">
-                {contentMap[activeTab]}
+                {contentMap[activeTab] || "No content available for this topic."}
               </div>
             </>
           )}
