@@ -131,7 +131,7 @@ const SmartSearchInput = ({ onSearch, showRegionMap = false, onPreviewUpdate }) 
     <div className="w-full p-4 rounded-md">
       <div className="relative flex flex-col md:flex-row md:items-center gap-2">
         <div className="relative w-full md:flex-1">
-          <div className="flex items-stretch h-[56px] border border-gray-300 rounded-md overflow-hidden bg-transparent">
+          <div className="flex items-stretch h-[50px] border border-[var(--grayColor)] rounded-md overflow-hidden bg-transparent">
             <input
               type="text"
               value={query}

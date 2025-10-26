@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  lazy,
-  Suspense
-} from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import SmartSearchInput from "./SmartSearchInput";
 import LocationInfo from "./LocationInfo";
@@ -14,6 +9,7 @@ import {
   defaultTabs,
   extraTabs
 } from "../utils/contentMap";
+import { getTurturaTip } from "../utils/turturaTip";
 import globalCulture from "../assets/global-culture.jpg";
 import market from "../assets/market.jpg";
 import fashion from "../assets/fashion.jpg";
@@ -66,18 +62,24 @@ const LocationSearch = () => {
   const autoSearch = searchParams.get("auto") === "true";
 
   const [query, setQuery] = useState(passedQuery);
-  const [locationData, setLocationData] = useState(location.state?.locationData || null);
+  const [locationData, setLocationData] = useState(null);
   const [images, setImages] = useState({});
   const [activeTab, setActiveTab] = useState("Description");
   const [availableTabs, setAvailableTabs] = useState(defaultTabs);
   const [showFilter, setShowFilter] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(autoSearch);
   const [trendingToday, setTrendingToday] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [savedGallery, setSavedGallery] = useState([]);
   const [contentMap, setContentMap] = useState({});
+  const [turturaTip, setTurturaTip] = useState("");
 
-  const isValidCoordinates = locationData?.lat !== "Unknown" && locationData?.lon !== "Unknown";
+  const hasValidLocation = locationData &&
+    locationData.lat !== "Unknown" &&
+    locationData.lon !== "Unknown" &&
+    locationData.lat !== "0" &&
+    locationData.lon !== "0";
 
   useEffect(() => {
     const savedTabs = localStorage.getItem("turtura_tab_filters");
@@ -93,22 +95,16 @@ const LocationSearch = () => {
     }
   }, [passedQuery, autoSearch]);
 
-  const handleTabFilterChange = (tab, checked) => {
-    const updatedTabs = checked
-      ? [...availableTabs, tab]
-      : availableTabs.filter((t) => t !== tab);
-    setAvailableTabs(updatedTabs);
-    localStorage.setItem("turtura_tab_filters", JSON.stringify(updatedTabs));
-  };
-
   const fetchImagesForTab = async (topic, baseQuery) => {
     try {
+      const query = `${baseQuery} ${topic}`;
       const res = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(baseQuery + " " + topic)}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
       );
       const data = await res.json();
       return data.results || [];
-    } catch {
+    } catch (err) {
+      console.error("Unsplash fetch error:", err);
       return [];
     }
   };
@@ -119,6 +115,7 @@ const LocationSearch = () => {
     if (!finalQuery.trim()) return;
 
     setIsSubmitting(true);
+    setIsLoading(true);
 
     try {
       const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(finalQuery)}`);
@@ -133,6 +130,9 @@ const LocationSearch = () => {
       const language = languageMap[normalizedQuery] || "Unknown";
       const weather = "Mostly Cloudy, 29°C";
       const trending = `#CulturalFusion — trending in ${finalQuery}`;
+
+      const tip = await getTurturaTip(finalQuery);
+      setTurturaTip(tip);
 
       const suggested = suggestTabs(finalQuery);
       const allTabs = [...new Set([...suggested, ...extraTabs])];
@@ -168,6 +168,7 @@ const LocationSearch = () => {
       console.error("Search error:", error);
     } finally {
       setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
@@ -207,35 +208,56 @@ const LocationSearch = () => {
         )}
       </div>
 
-              {/*  */}
-        {trendingToday.length > 0 && (
-  <div className="max-w-6xl mx-auto px-4 mt-2 mb-4">
-    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md shadow-sm">
-      <strong className="block font-semibold">🌍 Turtura Tips:</strong>
-      <span className="block mt-1 text-sm">
-        Explore cultural topics by switching tabs. Use the filter icon to customize your view.
-      </span>
-    </div>
-  </div>
-)}
-        {/*  */}
+      {/* Turtura Tip */}
+      {hasValidLocation && turturaTip && (
+        <div className="max-w-6xl mx-auto px-4 mt-2 mb-4">
+          <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-md shadow-sm">
+            <strong className="block font-semibold">💡 Turtura Tip:</strong>
+                        <span className="block mt-1 text-sm">{turturaTip}</span>
+          </div>
+        </div>
+      )}
 
-      {/* Image Slider */}
+      {/* Image Slider or Fallback */}
       <div className="max-w-6xl mx-auto px-4 mb-6">
-        <Suspense fallback={<Skeleton height="200px" />}>
-          <ImageSlider
-            activeTab={activeTab}
-            images={images}
-            fallbackImagesMap={fallbackImagesMap}
-            locationData={locationData}
-            savedGallery={savedGallery}
-            setSavedGallery={setSavedGallery}
-          />
-        </Suspense>
+        {isLoading ? (
+          <Skeleton height="200px" />
+        ) : hasValidLocation ? (
+          <Suspense fallback={<Skeleton height="200px" />}>
+            <ImageSlider
+              activeTab={activeTab}
+              images={images}
+              fallbackImagesMap={fallbackImagesMap}
+              locationData={locationData}
+              savedGallery={savedGallery}
+              setSavedGallery={setSavedGallery}
+            />
+          </Suspense>
+        ) : (
+          <div className="w-full h-64 flex flex-col items-center justify-center bg-gray-100 rounded-md text-[var(--grayColor)] text-sm">
+            🗺️ No insight found for <strong>{query}</strong>
+            <div className="mt-2 text-xs text-center">
+              Try exploring:
+              <ul className="list-disc mt-1 ml-4 text-left text-sm text-[var(--grayColor)]">
+                <li>Try a broader cultural region (e.g. “Māori” → “Polynesia”, “Berber” → “North Africa”)</li>
+                <li>Explore related traditions or practices (e.g. “Tea ceremony” → “Japanese rituals”, “Henna” → “Wedding customs”)</li>
+                <li>Search by theme (e.g. “Traditional weddings”, “Spiritual dances”, “Cultural festivals”)</li>
+                <li>Use a more general term (e.g. “Igbo” → “Nigeria”, “Andean rituals” → “South American culture”)</li>
+                <li>Try a cultural keyword like “fashion”, “music”, “architecture”, or “spirituality”</li>
+              </ul>
+              <button
+                onClick={() => handleSearch({ preventDefault: () => {} }, query)}
+                className="mt-4 bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition"
+              >
+                🔄 Retry Search
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-            {/* Tabs and Content */}
-      {locationData && (
+      {/* Tabs and Content */}
+      {hasValidLocation && locationData && (
         <div className="relative max-w-6xl mx-auto px-4 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-lg font-semibold text-[var(--primaryColor)]">Explore Topics</h4>
@@ -295,12 +317,20 @@ const LocationSearch = () => {
 
       {/* Community Link */}
       <div className="max-w-6xl mx-auto px-4 mb-12 flex justify-start">
-        <a
-          href="/CommunityChatroom"
-          className="bg-[var(--accentColor)] text-white px-4 py-2 rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300"
+        <button
+          disabled={!hasValidLocation}
+          onClick={() => hasValidLocation && navigate("/CommunityChatroom")}
+          className={`px-4 py-2 flex items-center rounded-md transition-all duration-300 ${
+            hasValidLocation
+              ? "bg-[var(--accentColor)] text-white hover:bg-[var(--primaryColor)]"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
         >
-          Join Community 💬
-        </a>
+          Join Community
+          <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.84L3 20l1.4-3.6A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
       </div>
     </div>
   );

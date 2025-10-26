@@ -44,7 +44,7 @@ const ImageSlider = ({ activeTab, images, fallbackImagesMap, locationData, saved
             <div className="w-full h-[400px] rounded-md overflow-hidden relative">
               <img src={imageUrl} alt={caption} className="w-full h-full object-cover" />
               <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-sm p-2 flex justify-between items-center">
-                <span>{caption}</span>
+                {/* <span>{caption}</span> */}
                 <span className="italic">📸 {credit}</span>
               </div>
               <button
