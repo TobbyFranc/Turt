@@ -9,7 +9,7 @@ const DashMain = ({ isCollapsed, toggleCollapse, navOpen }) => {
   return (
     <main className="flex pt-20 h-[calc(100vh-80px)] overflow-hidden">
       {/* Sidebar Navigation */}
-      <div className={`transition-all duration-500 ease-in-out ${navOpen ? "block" : "hidden"} lg:block`} style={{ width: `${navWidth}px` }}>
+      <div className={`transition-all duration-500 ease-in-out md:${navOpen ? "block" : "hidden"} lg:block`} style={{ width: `${navWidth}px` }}>
         <Dashnav isCollapsed={isCollapsed} toggleCollapse={toggleCollapse} />
       </div>
 

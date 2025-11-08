@@ -1,10 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import Turtle from "../assets/Turtle.png";
+import indo from "../assets/indo.jpg";
+import kumbhMela from "../assets/kumbhMela.jpg";
+import experience from "../assets/experience.jpg";
+import travelfatigue from "../assets/travelfatigue.jpg";
 
 const facts = [
   {
     text: "85% of travelers want to experience local culture, but 60% feel unprepared.",
-    image: "https://images.unsplash.com/photo-1584467735875-1c1b1e6d7c4e?auto=format&fit=crop&w=1200&q=80",
+    image: travelfatigue,
     highlight: "85% of travelers",
     source: {
       name: "TravelPulse",
@@ -34,7 +38,7 @@ const facts = [
   },
   {
     text: "Travelers who research local customs are 50% more likely to have positive interactions.",
-    image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
+    image: experience,
     highlight: "50% more likely",
     source: {
       name: "Skift Research",
@@ -240,6 +244,136 @@ const facts = [
       name: "Forbes",
       year: "2022",
       url: "https://www.forbes.com/cultural-sensitivity-training",
+    },
+  },
+
+  {
+    text: "Travelers who respect local customs contribute to positive cross-cultural exchanges.",
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+    highlight: "respect local customs",
+    source: {
+      name: "UNWTO",
+      year: "2021",
+      url: "https://www.unwto.org/respecting-local-customs",
+    },
+  },
+  // wanep 2022 unaware of local customs caused 40% of travel mishaps
+  {
+    text: "A 2022 study found that 40% of travel mishaps were due to unawareness of local customs.",
+    image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1200&q=80",
+    highlight: "40% of travel mishaps",
+    source: {
+      name: "WANEp Study",
+      year: "2022",
+      url: "https://waneps.org/travel-mishaps-study-2022",
+    },
+  },
+  {
+    text: "Travelers increasingly seek authentic experiences over traditional tourist activities.",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    highlight: "authentic experiences",
+    source: {
+      name: "Skift",
+      year: "2023",
+      url: "https://skift.com/authentic-travel-experiences",
+    },
+  },
+  {
+    text: "Learning basic phrases in the local language enhances cultural respect and communication.",
+    image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1200&q=80",
+    highlight: "local language",
+    source: {
+      name: "Lonely Planet",
+      year: "2022",
+      url: "https://www.lonelyplanet.com/articles/learn-local-language",
+    },
+  },
+  // how many cultures worldwide
+  {
+    text: "There are over 7,000 distinct cultures worldwide, each with unique customs and traditions.",
+    image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
+    highlight: "over 7,000 distinct cultures",
+    source: {
+      name: "UNESCO",
+      year: "2021",
+      url: "https://en.unesco.org/cultures-of-the-world",
+    },
+  },
+  // make sure the image links are unique and relate with the highlight
+  // add more facts if needed
+  {
+    text: "Cultural festivals and events offer unique insights into local traditions and values.",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    highlight: "Cultural festivals",
+    source: {
+      name: "National Geographic",
+      year: "2021",
+      url: "https://www.nationalgeographic.com/cultural-festivals",
+    },
+  },
+  {
+    text: "Respecting cultural differences fosters mutual understanding and enriches travel experiences.",
+    image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
+    highlight: "Respecting cultural differences",
+    source: {
+      name: "HuffPost",
+      year: "2020",
+      url: "https://www.huffpost.com/respecting-cultural-differences",
+    },
+  },
+  // fesstivals growing in popularity
+  {
+    text: "Cultural tourism is one of the fastest-growing segments in the global travel industry.",
+    image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80",
+    highlight: "Cultural tourism",
+    source: {
+      name: "UNWTO",
+      year: "2022",
+      url: "https://www.unwto.org/cultural-tourism-growth",
+    },
+  },
+  // who has the best cultural heritage sites
+  {
+    text: "Italy has the highest number of UNESCO World Heritage Sites, boasting 58 cultural landmarks.",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    highlight: "Italy has the highest number of UNESCO World Heritage Sites",
+    source: {
+      name: "UNESCO",
+      year: "2023",
+      url: "https://whc.unesco.org/en/statesparties/it",
+    },
+  },
+  // most visited cultural destination
+  {
+    text: "France is the most visited country for cultural tourism, attracting over 89 million visitors annually.",
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+    highlight: "France is the most visited country for cultural tourism",
+    source: {
+      name: "UNWTO",
+      year: "2022",
+      url: "https://www.unwto.org/france-most-visited-cultural-destination",
+    },
+  },
+  // largest cultural festival
+  {
+    text: "The Kumbh Mela in India is the largest cultural festival in the world, attracting over 120 million people.",
+    image: kumbhMela,
+    highlight: "Kumbh Mela in India is the largest cultural festival",
+    source: {
+      name: "Guinness World Records",
+      year: "2019",
+      url: "https://www.guinnessworldrecords.com/world-records/largest-gathering-of-people-for-a-religious-event",
+    },
+  },
+  // indonesia most languages
+  {
+    text: "Indonesia is the most linguistically diverse country, with over 700 languages spoken across its islands.",
+    image: indo,
+    highlight: "Indonesia is the most linguistically diverse country",
+    source: {
+      name: "Ethnologue",
+      year: "2023",
+      url: "https://www.ethnologue.com/country/ID",
     },
   },
 

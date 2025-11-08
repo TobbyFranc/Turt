@@ -33,8 +33,8 @@ const cardDataLeft = [
 
 const cardDataRight = [
   {
-    title: "Ethical Impact",
-    description: "Support sustainable tourism that uplifts and preserves local cultures.",
+    title: "Digital Archives",
+    description: "Preserve historical artifacts and oral histories in accessible digital formats.",
     bgColor: "bg-[var(--darkGrayColor)]",
   },
   {
@@ -119,7 +119,7 @@ const AboutUs = () => {
       >
         <h2 className="text-2xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">Our Story</h2>
         <p className="text-[var(--textColor)] mb-4 open-sans-200">
-          At Turtura, we believe culture is a bridge—not a barrier. It connects people across borders, drives meaningful mobility, and fosters mutual respect. Our mission is to illuminate cultural blindspots and empower travelers with the intelligence to explore boldly, connect deeply, and move through the world with dignity and understanding.
+          At Turtura, we believe that culture is a bridge—not a barrier. It connects people across borders, fuels meaningful mobility, and fosters mutual respect. Born from a desire to illuminate cultural blindspots, Turtura empowers travelers, learners, and global citizens to explore boldly, connect deeply, and move through the world with dignity and understanding. We blend storytelling, community-driven research, and real-time data to create immersive experiences that celebrate the richness of global cultures—with a special focus on African heritage. From ancient traditions to digital innovations, we champion a future where people everywhere take pride in their roots while shaping a shared narrative of progress.
         </p>
       </section>
 
@@ -192,7 +192,7 @@ const AboutUs = () => {
       >
         <h2 className="text-2xl font-semibold mb-4 text-[var(--primaryColor)] cormorant-garamond-400">Our Commitment</h2>
         <p className="text-[var(--textColor)] mb-4 open-sans-200">
-          We are committed to providing you with a seamless and enjoyable travel experience. We strive to make every journey informed, dignified, and culturally aware. Your feedback is invaluable to us, and we continuously strive to improve our platform to better serve your needs.
+          We are committed to making every journey with Turtura informed, respectful, and transformative. Whether you're exploring a new culture, planning a trip, or engaging with our community, we ensure your experience is seamless, inclusive, and grounded in cultural intelligence. Through thoughtful design, ethical storytelling, and collaborative insight, we promise to be your trusted companion in navigating the world with curiosity, care, and cultural fluency.
         </p>
       </section>
 

@@ -332,6 +332,30 @@ const LocationSearch = () => {
           </svg>
         </button>
       </div>
+      {/* booking section */}
+      {/* Transport Booking (Phase 2 Ready) */}
+{/* <div className="max-w-6xl mx-auto px-4 mb-12">
+  <h4 className="text-lg font-semibold text-[var(--primaryColor)] mb-2">Book Culturally Guided Travel</h4>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <select className="p-2 border rounded-md text-[var(--textColor)] bg-white dark:bg-[var(--darkGrayColor)]">
+      <option>Group Travel</option>
+      <option>Personal Journey</option>
+      <option>Guided Experience</option>
+    </select>
+    <select className="p-2 border rounded-md text-[var(--textColor)] bg-white dark:bg-[var(--darkGrayColor)]">
+      <option>Bus</option>
+      <option>Flight</option>
+      <option>Boat</option>
+    </select>
+    <button className="px-4 py-2 bg-[var(--accentColor)] text-white rounded-md hover:bg-[var(--primaryColor)] transition-all duration-300">
+      Check Availability
+    </button>
+  </div>
+  <p className="text-sm text-[var(--grayColor)] italic">
+    Coming soon: connect with verified transport providers and select respectful, sustainable travel options.
+  </p>
+</div> */}
+
     </div>
   );
 };

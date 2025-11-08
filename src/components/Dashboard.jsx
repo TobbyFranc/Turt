@@ -7,7 +7,7 @@ const Dashboard = () => {
   const [navOpen, setNavOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[var(--backgroundColor)]">
+    <div className="min-h-screen bg-[var(--whiteColor)]">
       <DashHeader onToggleNav={() => setNavOpen(!navOpen)} />
       <DashMain
         isCollapsed={isCollapsed}

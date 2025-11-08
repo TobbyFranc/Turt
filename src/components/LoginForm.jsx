@@ -72,7 +72,7 @@ const LoginForm = () => {
           type="submit"
           className="w-full py-3 rounded-md text-white font-semibold bg-[var(--accentColor)] hover:bg-yellow-600 transition duration-300"
         >
-          Login
+          <a href="./Dashboard">Logiiin</a>
         </button>
       </form>
 
